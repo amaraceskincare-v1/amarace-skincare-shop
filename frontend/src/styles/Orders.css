@@ -1,0 +1,88 @@
+/* Add these styles to your existing Orders.css file */
+
+.order-item-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.review-action {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 50px;
+    /* Align with product name */
+}
+
+.review-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.review-btn:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.review-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.review-btn.reviewed {
+    background: #e5e7eb;
+    color: #10b981;
+    cursor: not-allowed;
+    border: 1px solid #10b981;
+}
+
+.review-btn.reviewed:hover {
+    background: #e5e7eb;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Make sure order items have proper spacing */
+.order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.order-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .review-action {
+        padding-left: 0;
+        margin-top: 8px;
+    }
+
+    .review-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

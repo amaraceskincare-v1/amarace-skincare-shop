@@ -1,0 +1,296 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+
+:root {
+    --primary-color: #ff9a9e;
+    --secondary-color: #fad0c4;
+    --accent-color: #ffd1ff;
+    --text-color: #5d4037;
+    --glass-bg: rgba(255, 255, 255, 0.25);
+    --glass-border: rgba(255, 255, 255, 0.18);
+}
+
+.auth-page-wrapper {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+    overflow: hidden;
+    position: relative;
+    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Background Scene */
+.scene-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Clouds */
+.clouds-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.cloud {
+    position: absolute;
+    background: #fff;
+    border-radius: 100px;
+    opacity: 0.8;
+    filter: blur(10px);
+    animation: floatCloud linear infinite;
+}
+
+.cloud::after,
+.cloud::before {
+    content: '';
+    position: absolute;
+    background: #fff;
+    border-radius: 100px;
+}
+
+@keyframes floatCloud {
+    from {
+        transform: translateX(-200px);
+    }
+
+    to {
+        transform: translateX(100vw);
+    }
+}
+
+/* Decorative Path */
+.ground-path {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(to top, rgba(226, 209, 195, 0.8), transparent);
+    clip-path: polygon(0 100%, 100% 100%, 100% 40%, 80% 60%, 60% 30%, 40% 70%, 20% 40%, 0 60%);
+    z-index: 1;
+}
+
+/* Login Form */
+.auth-form-card {
+    position: relative;
+    width: 420px;
+    padding: 45px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 30px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    animation: slideUpFade 0.8s ease-out forwards;
+}
+
+.auth-form-card h2 {
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 35px;
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: -0.5px;
+}
+
+.auth-input-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.auth-input-group svg {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color);
+    opacity: 0.6;
+    font-size: 1.1rem;
+}
+
+.auth-input-group input {
+    width: 100%;
+    padding: 14px 20px 14px 55px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid transparent;
+    outline: none;
+    border-radius: 15px;
+    color: var(--text-color);
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.auth-input-group input::placeholder {
+    color: var(--text-color);
+    opacity: 0.4;
+}
+
+.auth-input-group input:focus {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(255, 154, 158, 0.1);
+    transform: translateY(-2px);
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    border-radius: 15px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 10px 20px -5px rgba(255, 154, 158, 0.4);
+    margin-top: 10px;
+}
+
+.auth-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px -10px rgba(255, 154, 158, 0.6);
+}
+
+.auth-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.auth-footer {
+    margin-top: 25px;
+    text-align: center;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.auth-footer a,
+.auth-footer b {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.auth-footer a:hover,
+.auth-footer b:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+.auth-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 0.85rem;
+    color: var(--text-color);
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.show-password-toggle {
+    margin-top: -15px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+/* Animations */
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Social Login */
+.social-divider {
+    display: flex;
+    align-items: center;
+    margin: 25px 0;
+    color: var(--text-color);
+    font-size: 0.8rem;
+    opacity: 0.5;
+}
+
+.social-divider::before,
+.social-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--text-color);
+    margin: 0 15px;
+}
+
+.social-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.social-list div {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--glass-border);
+    font-size: 1.2rem;
+}
+
+.social-list div:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: translateY(-3px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .auth-page-wrapper {
+        width: 100%;
+        left: 0;
+        transform: none;
+    }
+
+    .auth-form-card {
+        width: 90%;
+        padding: 30px 20px;
+    }
+}
