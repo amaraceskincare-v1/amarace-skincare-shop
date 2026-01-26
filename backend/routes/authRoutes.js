@@ -48,11 +48,12 @@ router.post('/register', async (req, res) => {
       </div>
     `;
 
-    await sendEmail({
+    // Send email in background (non-blocking for faster response)
+    sendEmail({
       to: user.email,
       subject: 'Verify your email - AmaraCé Skin Care',
       html: emailHtml
-    });
+    }).catch(err => console.error('Email send error:', err));
 
     res.status(201).json({
       message: 'Registration successful. Please verify your email.',
@@ -134,11 +135,12 @@ router.post('/resend-otp', async (req, res) => {
       </div>
     `;
 
-    await sendEmail({
+    // Send email in background (non-blocking for faster response)
+    sendEmail({
       to: user.email,
       subject: 'Your new verification code',
       html: emailHtml
-    });
+    }).catch(err => console.error('Email send error:', err));
 
     res.json({ message: 'OTP resent successfully' });
   } catch (error) {
@@ -179,11 +181,12 @@ router.post('/forgot-password', async (req, res) => {
       </div>
     `;
 
-    await sendEmail({
+    // Send email in background (non-blocking for faster response)
+    sendEmail({
       to: user.email,
       subject: 'Password Reset Request',
       html: emailHtml
-    });
+    }).catch(err => console.error('Email send error:', err));
 
     res.json({ message: 'Email sent' });
   } catch (error) {
