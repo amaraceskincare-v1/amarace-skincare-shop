@@ -247,11 +247,41 @@ button:not(:disabled):active {
   transform: translateY(0);
 }
 
+@media (max-width: 1024px) {
+  .main-content {
+    padding: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
   .main-content {
     padding: 1rem;
+    min-height: calc(100vh - 200px);
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
   }
 }
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 0.75rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+}
+
 
 /* Common Pagination Styles */
 .pagination {
