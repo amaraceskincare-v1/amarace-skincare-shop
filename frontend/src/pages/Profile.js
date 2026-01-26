@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import '../styles/Profile.css';
 
 const Profile = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile, logout } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -58,9 +60,22 @@ const Profile = () => {
             <input type="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
           </div>
         </div>
-        <button type="submit" className="save-btn" disabled={loading}>
-          {loading ? 'Saving...' : 'Save Changes'}
-        </button>
+        <div className="profile-actions">
+          <button type="submit" className="save-btn" disabled={loading}>
+            {loading ? 'Saving...' : 'Save Changes'}
+          </button>
+          <button
+            type="button"
+            className="logout-btn"
+            onClick={() => {
+              logout();
+              navigate('/');
+              toast.info('Logged out successfully');
+            }}
+          >
+            Logout
+          </button>
+        </div>
       </form>
     </div>
   );
