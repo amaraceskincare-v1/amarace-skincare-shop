@@ -147,13 +147,13 @@ const Orders = () => {
 
                       <div className="order-summary-content">
                         <div className="mini-product-images">
-                          {order.items.slice(0, 3).map((item, idx) => (
+                          {order.items?.slice(0, 3).map((item, idx) => (
                             <img key={idx} src={item.product?.images?.[0] || '/placeholder.jpg'} alt="" title={item.product?.name} />
                           ))}
-                          {order.items.length > 3 && <span className="more-count">+{order.items.length - 3}</span>}
+                          {(order.items?.length || 0) > 3 && <span className="more-count">+{order.items.length - 3}</span>}
                         </div>
                         <div className="order-price-status">
-                          <span className="price">₱{order.total.toFixed(2)}</span>
+                          <span className="price">₱{(order.total || 0).toFixed(2)}</span>
                           <span className={`status-badge ${order.status}`}>{currentStatus.label}</span>
                         </div>
                       </div>
@@ -184,31 +184,31 @@ const Orders = () => {
                         <div className="details-grid">
                           <div className="details-section">
                             <h4>Shipping Address</h4>
-                            <p>{order.shippingAddress.fullName}</p>
-                            <p>{order.shippingAddress.street}</p>
-                            <p>{order.shippingAddress.barangay}, {order.shippingAddress.city}</p>
-                            <p>{order.shippingAddress.region} {order.shippingAddress.zipCode}</p>
-                            <p>Phone: {order.contactDetails.phone}</p>
+                            <p>{order.shippingAddress?.fullName || 'N/A'}</p>
+                            <p>{order.shippingAddress?.street || ''}</p>
+                            <p>{order.shippingAddress?.barangay || ''}, {order.shippingAddress?.city || ''}</p>
+                            <p>{order.shippingAddress?.region || ''} {order.shippingAddress?.zipCode || ''}</p>
+                            <p>Phone: {order.contactDetails?.phone || 'N/A'}</p>
                           </div>
 
                           <div className="details-section">
                             <h4>Order Items</h4>
                             <div className="expanded-items-list">
-                              {order.items.map(item => (
+                              {order.items?.map(item => (
                                 <div key={item._id} className="expanded-item">
                                   <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt="" />
                                   <div className="item-txt">
-                                    <p className="name">{item.product?.name}</p>
-                                    <p className="qty">Qty: {item.quantity} × ₱{item.price.toFixed(2)}</p>
+                                    <p className="name">{item.product?.name || 'Product deleted'}</p>
+                                    <p className="qty">Qty: {item.quantity} × ₱{(item.price || 0).toFixed(2)}</p>
                                   </div>
-                                  <span className="total">₱{(item.price * item.quantity).toFixed(2)}</span>
-                                  {order.status === 'delivered' && (
+                                  <span className="total">₱{((item.price || 0) * item.quantity).toFixed(2)}</span>
+                                  {order.status === 'delivered' && item.product?._id && (
                                     <button
-                                      className={`rev-btn ${userReviews.has(item.product?._id) ? 'done' : ''}`}
-                                      disabled={userReviews.has(item.product?._id)}
-                                      onClick={() => handleWriteReview(item.product?._id)}
+                                      className={`rev-btn ${userReviews.has(item.product._id) ? 'done' : ''}`}
+                                      disabled={userReviews.has(item.product._id)}
+                                      onClick={() => handleWriteReview(item.product._id)}
                                     >
-                                      {userReviews.has(item.product?._id) ? 'Reviewed' : 'Review'}
+                                      {userReviews.has(item.product._id) ? 'Reviewed' : 'Review'}
                                     </button>
                                   )}
                                 </div>
@@ -219,9 +219,9 @@ const Orders = () => {
 
                         <div className="order-footer-details">
                           <div className="cost-breakdown">
-                            <div className="row"><span>Subtotal</span><span>₱{order.subtotal.toFixed(2)}</span></div>
-                            <div className="row"><span>Shipping</span><span>₱{order.shippingCost.toFixed(2)}</span></div>
-                            <div className="row grand-total"><span>Total</span><span>₱{order.total.toFixed(2)}</span></div>
+                            <div className="row"><span>Subtotal</span><span>₱{(order.subtotal || 0).toFixed(2)}</span></div>
+                            <div className="row"><span>Shipping</span><span>₱{(order.shippingCost || 0).toFixed(2)}</span></div>
+                            <div className="row grand-total"><span>Total</span><span>₱{(order.total || 0).toFixed(2)}</span></div>
                           </div>
                           <button className="buy-again-btn" onClick={() => navigate('/products')}>Buy More Products</button>
                         </div>
