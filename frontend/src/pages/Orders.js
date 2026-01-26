@@ -88,103 +88,183 @@ const Orders = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const [expandedOrders, setExpandedOrders] = useState(new Set());
+
+  const toggleOrderDetails = (orderId) => {
+    const newExpanded = new Set(expandedOrders);
+    if (newExpanded.has(orderId)) {
+      newExpanded.delete(orderId);
+    } else {
+      newExpanded.add(orderId);
+    }
+    setExpandedOrders(newExpanded);
+  };
+
+  const statusMap = {
+    'awaiting_payment_verification': { label: 'Verification', step: 1 },
+    'processing': { label: 'Processing', step: 2 },
+    'shipped': { label: 'Shipped', step: 3 },
+    'delivered': { label: 'Delivered', step: 4 },
+    'cancelled': { label: 'Cancelled', step: 0 }
+  };
+
   return (
     <div className="orders-page">
-      <h1>My Orders</h1>
-      {orders.length === 0 ? (
-        <div className="no-orders">
-          <p>You haven't placed any orders yet</p>
-          <Link to="/products" className="shop-link">Start Shopping</Link>
-        </div>
-      ) : (
-        <>
-          <div className="orders-list">
-            {currentOrders.map(order => (
-              <div key={order._id} className="order-card">
-                <div className="order-header">
-                  <div>
-                    <span className="order-id">
-                      Order #{(() => {
-                        const d = new Date(order.createdAt);
-                        const year = d.getFullYear();
-                        const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-                        const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
-                        return `${year}-${mmdd}-${hhmm}`;
-                      })()}
-                    </span>
-                    <span className="order-date">
-                      {new Date(order.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <span className="order-status" style={{ background: getStatusColor(order.status) }}>
-                    {order.status}
-                  </span>
-                </div>
-                <div className="order-items">
-                  {order.items.slice(0, 3).map(item => (
-                    <div key={item._id} className="order-item-wrapper">
-                      <div className="order-item">
-                        <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt="" />
-                        <span>{item.product?.name}</span>
-                        <span>x{item.quantity}</span>
+      <div className="orders-container">
+        <header className="page-header">
+          <h1>My Orders</h1>
+          <p>Track and manage your recent purchases</p>
+        </header>
+
+        {orders.length === 0 ? (
+          <div className="no-orders">
+            <FiShoppingBag size={48} />
+            <p>You haven't placed any orders yet</p>
+            <Link to="/products" className="shop-link">Start Shopping</Link>
+          </div>
+        ) : (
+          <>
+            <div className="orders-list">
+              {currentOrders.map(order => {
+                const currentStatus = statusMap[order.status] || { label: order.status, step: 0 };
+                const isExpanded = expandedOrders.has(order._id);
+
+                return (
+                  <div key={order._id} className={`order-card ${isExpanded ? 'expanded' : ''}`}>
+                    <div className="order-main-info" onClick={() => toggleOrderDetails(order._id)}>
+                      <div className="order-meta">
+                        <span className="order-number">
+                          Order #{(() => {
+                            const d = new Date(order.createdAt);
+                            const year = d.getFullYear();
+                            const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+                            const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
+                            return `${year}-${mmdd}-${hhmm}`;
+                          })()}
+                        </span>
+                        <span className="order-date">{new Date(order.createdAt).toLocaleDateString()}</span>
                       </div>
 
-                      {/* Show Review Button only for Delivered orders */}
-                      {order.status === 'delivered' && item.product?._id && (
-                        <div className="review-action">
-                          {userReviews.has(item.product._id) ? (
-                            <button
-                              className="review-btn reviewed"
-                              onClick={() => navigate(`/products/${item.product._id}`)}
-                              disabled
-                            >
-                              <FiStar fill="#10b981" color="#10b981" />
-                              Reviewed
-                            </button>
-                          ) : (
-                            <button
-                              className="review-btn"
-                              onClick={() => handleWriteReview(item.product._id)}
-                            >
-                              <FiStar />
-                              Write Review
-                            </button>
-                          )}
+                      <div className="order-summary-content">
+                        <div className="mini-product-images">
+                          {order.items.slice(0, 3).map((item, idx) => (
+                            <img key={idx} src={item.product?.images?.[0] || '/placeholder.jpg'} alt="" title={item.product?.name} />
+                          ))}
+                          {order.items.length > 3 && <span className="more-count">+{order.items.length - 3}</span>}
                         </div>
-                      )}
+                        <div className="order-price-status">
+                          <span className="price">₱{order.total.toFixed(2)}</span>
+                          <span className={`status-badge ${order.status}`}>{currentStatus.label}</span>
+                        </div>
+                      </div>
+                      <button className="expand-trigger">{isExpanded ? 'Hide Details' : 'View Details'}</button>
                     </div>
-                  ))}
-                  {order.items.length > 3 && <span>+{order.items.length - 3} more items</span>}
-                </div>
-                <div className="order-footer">
-                  <span className="order-total">Total: ₱{order.total.toFixed(2)}</span>
-                </div>
-              </div>
-            ))}
-          </div>
 
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <div className="pagination" style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '20px' }}>
-              <button
-                onClick={() => paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-                style={{ padding: '8px 16px', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
-              >
-                Previous
-              </button>
-              <span style={{ alignSelf: 'center' }}>Page {currentPage} of {totalPages}</span>
-              <button
-                onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                style={{ padding: '8px 16px', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }}
-              >
-                Next
-              </button>
+                    {isExpanded && (
+                      <div className="order-details-expanded animate-fadeIn">
+                        {/* Progress Tracker */}
+                        {order.status !== 'cancelled' ? (
+                          <div className="status-tracker">
+                            {[
+                              { id: 1, label: 'Payment' },
+                              { id: 2, label: 'Processing' },
+                              { id: 3, label: 'Shipped' },
+                              { id: 4, label: 'Delivered' }
+                            ].map((step) => (
+                              <div key={step.id} className={`tracker-step ${currentStatus.step >= step.id ? 'active' : ''}`}>
+                                <div className="step-circle">{currentStatus.step >= step.id ? '✓' : step.id}</div>
+                                <span>{step.label}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="cancelled-notice">This order has been cancelled.</div>
+                        )}
+
+                        <div className="details-grid">
+                          <div className="details-section">
+                            <h4>Shipping Address</h4>
+                            <p>{order.shippingAddress.fullName}</p>
+                            <p>{order.shippingAddress.street}</p>
+                            <p>{order.shippingAddress.barangay}, {order.shippingAddress.city}</p>
+                            <p>{order.shippingAddress.region} {order.shippingAddress.zipCode}</p>
+                            <p>Phone: {order.contactDetails.phone}</p>
+                          </div>
+
+                          <div className="details-section">
+                            <h4>Order Items</h4>
+                            <div className="expanded-items-list">
+                              {order.items.map(item => (
+                                <div key={item._id} className="expanded-item">
+                                  <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt="" />
+                                  <div className="item-txt">
+                                    <p className="name">{item.product?.name}</p>
+                                    <p className="qty">Qty: {item.quantity} × ₱{item.price.toFixed(2)}</p>
+                                  </div>
+                                  <span className="total">₱{(item.price * item.quantity).toFixed(2)}</span>
+                                  {order.status === 'delivered' && (
+                                    <button
+                                      className={`rev-btn ${userReviews.has(item.product?._id) ? 'done' : ''}`}
+                                      disabled={userReviews.has(item.product?._id)}
+                                      onClick={() => handleWriteReview(item.product?._id)}
+                                    >
+                                      {userReviews.has(item.product?._id) ? 'Reviewed' : 'Review'}
+                                    </button>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="order-footer-details">
+                          <div className="cost-breakdown">
+                            <div className="row"><span>Subtotal</span><span>₱{order.subtotal.toFixed(2)}</span></div>
+                            <div className="row"><span>Shipping</span><span>₱{order.shippingCost.toFixed(2)}</span></div>
+                            <div className="row grand-total"><span>Total</span><span>₱{order.total.toFixed(2)}</span></div>
+                          </div>
+                          <button className="buy-again-btn" onClick={() => navigate('/products')}>Buy More Products</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-          )}
-        </>
-      )}
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="pagination">
+                <button
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="page-nav-btn"
+                >
+                  Previous
+                </button>
+                <div className="page-numbers">
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => paginate(i + 1)}
+                      className={`page-btn ${currentPage === i + 1 ? 'active' : ''}`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="page-nav-btn"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
