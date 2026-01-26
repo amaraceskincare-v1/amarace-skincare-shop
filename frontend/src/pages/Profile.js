@@ -41,43 +41,46 @@ const Profile = () => {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    toast.info('Logged out successfully');
+  };
+
   return (
     <div className="profile-page">
-      <header className="profile-header">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
         <h1>My Profile</h1>
-        <button className="view-orders-btn" onClick={() => navigate('/orders')}>
+        <button
+          onClick={() => navigate('/orders')}
+          style={{ padding: '10px 20px', background: 'white', border: '1px solid #4f46e5', color: '#4f46e5', borderRadius: '8px', cursor: 'pointer' }}
+        >
           View My Orders
         </button>
-      </header>
+      </div>
+
       <form onSubmit={handleSubmit} className="profile-form">
         <div className="form-section">
-          <h2>Account Info</h2>
+          <h2>Account Information</h2>
           <div className="form-group">
-            <label>Name</label>
+            <label>Full Name</label>
             <input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
           </div>
           <div className="form-group">
-            <label>Email</label>
+            <label>Email Address</label>
             <input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
           </div>
           <div className="form-group">
-            <label>New Password (leave blank to keep current)</label>
+            <label>New Password (Optional)</label>
             <input type="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
           </div>
         </div>
-        <div className="profile-actions">
-          <button type="submit" className="save-btn" disabled={loading}>
+
+        <div style={{ display: 'flex', gap: '15px', marginTop: '30px' }}>
+          <button type="submit" className="save-btn" disabled={loading} style={{ flex: 2 }}>
             {loading ? 'Saving...' : 'Save Changes'}
           </button>
-          <button
-            type="button"
-            className="logout-btn"
-            onClick={() => {
-              logout();
-              navigate('/');
-              toast.info('Logged out successfully');
-            }}
-          >
+          <button type="button" onClick={handleLogout} className="logout-btn" style={{ flex: 1 }}>
             Logout
           </button>
         </div>
