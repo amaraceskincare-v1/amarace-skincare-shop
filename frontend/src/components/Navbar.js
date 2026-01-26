@@ -88,6 +88,17 @@ const Navbar = () => {
                   </Link>
                 </li>
               ))}
+              {user && (
+                <li>
+                  <Link
+                    to="/orders"
+                    className={`nav-link ${isActive('/orders') ? 'active' : ''}`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    My Orders
+                  </Link>
+                </li>
+              )}
               {user?.role === 'admin' && (
                 <li>
                   <Link
@@ -107,6 +118,9 @@ const Navbar = () => {
                 <>
                   <Link to="/profile" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
                     My Account
+                  </Link>
+                  <Link to="/orders" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
+                    My Orders
                   </Link>
                   <button onClick={handleLogout} className="mobile-logout-btn">
                     Logout
