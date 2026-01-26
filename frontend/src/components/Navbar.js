@@ -69,6 +69,11 @@ const Navbar = () => {
                   <Link to="/orders" className={`nav-link ${isActive('/orders') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>My Orders</Link>
                 </li>
               )}
+              {user?.role === 'admin' && (
+                <li>
+                  <Link to="/admin" className={`nav-link admin-link ${isActive('/admin') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Admin</Link>
+                </li>
+              )}
             </ul>
           </div>
 
