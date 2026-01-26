@@ -4,9 +4,43 @@ const mongoose = require('mongoose');
 const cron = require('node-cron');
 const Newsletter = require('./models/Newsletter');
 const Product = require('./models/Product');
+const User = require('./models/User');
 const sendEmail = require('./utils/sendEmail');
 const { weeklyNewsletter } = require('./utils/newsletterEmailTemplate');
 require('dotenv').config(); // ✅ must be first
+
+// Auto-seed admin user function
+const seedAdminUser = async () => {
+  try {
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'adminpassword123';
+
+    const adminExists = await User.findOne({ email: adminEmail });
+    if (adminExists) {
+      // Ensure existing user has admin role
+      if (adminExists.role !== 'admin') {
+        adminExists.role = 'admin';
+        adminExists.isVerified = true;
+        await adminExists.save();
+        console.log('✅ Existing user upgraded to admin:', adminEmail);
+      } else {
+        console.log('✅ Admin user already exists:', adminEmail);
+      }
+      return;
+    }
+
+    await User.create({
+      name: 'Admin User',
+      email: adminEmail,
+      password: adminPassword,
+      role: 'admin',
+      isVerified: true,
+    });
+    console.log('✅ Admin user created successfully:', adminEmail);
+  } catch (error) {
+    console.error('❌ Error seeding admin user:', error.message);
+  }
+};
 
 const app = express();
 
@@ -49,7 +83,10 @@ app.use((err, req, res, next) => {
 // Database connection
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB Connected'))
+  .then(async () => {
+    console.log('MongoDB Connected');
+    await seedAdminUser(); // Auto-seed admin on startup
+  })
   .catch(err => console.error('MongoDB Error:', err));
 
 // Schedule: Every Monday at 9:00 AM
