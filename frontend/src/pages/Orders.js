@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiStar } from 'react-icons/fi';
+import { FiStar, FiShoppingBag } from 'react-icons/fi';
 import api from '../utils/api';
 import '../styles/Orders.css';
 
