@@ -43,7 +43,12 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
-      <h1>My Profile</h1>
+      <header className="profile-header">
+        <h1>My Profile</h1>
+        <button className="view-orders-btn" onClick={() => navigate('/orders')}>
+          View My Orders
+        </button>
+      </header>
       <form onSubmit={handleSubmit} className="profile-form">
         <div className="form-section">
           <h2>Account Info</h2>
