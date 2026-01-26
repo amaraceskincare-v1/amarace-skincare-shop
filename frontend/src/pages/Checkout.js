@@ -16,7 +16,15 @@ const zipCodes = {
 const barangayList = {
   "Panabo City": ["A. O. Floirendo", "Buenavista", "Cacao", "Cagangohan", "Consolacion", "Dapco", "Gredu (Pob.)", "J.P. Laurel", "Kasilak", "Katipunan", "Kauswagan", "Little Panay", "Mabunao", "Maduao", "Malativas", "Manay", "Nanyo", "New Malaga", "New Pandan (Pob.)", "Quezon", "San Francisco (Pob.)", "San Nicolas", "San Pedro", "Santa Cruz", "Santo Niño (Pob.)", "Sindaton", "Tagpore", "Tibungol"],
   "Tagum City": ["Apokon", "Bincungan", "Busaon", "Canocotan", "Cuambogan", "La Filipina", "Liboganon", "Madaum", "Magdum", "Magugpo East", "Magugpo North", "Magugpo Poblacion", "Magugpo South", "Magugpo West", "Mankilam", "New Balamban", "Nueva Fuerza", "Pagsabangan", "Pandapan", "San Agustin", "San Isidro", "Visayan Village"],
-  "Carmen": ["Alejal", "Anibongan", "Asuncion", "Cebulano", "Guadalupe", "Ising (Poblacion)", "La Paz", "Mabaus", "Mabuhay", "Magsaysay", "Mangalcal", "Minda", "New Camiling", "Salvacion", "San Isidro", "Santo Niño", "Taba", "Tibulao", "Tubod", "Tuganay"]
+  "Island Garden City of Samal": ["Adecor", "Anonang", "Aumbay", "Babak (Pob.)", "Balet", "Cahayag", "Caliclic (Pob.)", "Camudmud", "Catagman", "Cogon", "Cogon (Pob.)", "Dadatan", "Del Monte", "Guilon", "Kanaan", "Kinawitnon", "Libertad", "Libuak", "Liling", "Limba", "Linabuan", "Mambago-A", "Mambago-B", "Miranda (Pob.)", "Moncado (Pob.)", "Pangubatan", "Poblacion (Kaputian)", "Quiola", "San Agustin (Pob.)", "San Antonio", "San Isidro (Babak)", "San Jose (Samal)", "San Miguel (Pob.)", "San Remigio", "Santa Cruz (Pob.)", " some others..."],
+  "Carmen": ["Alejal", "Anibongan", "Asuncion", "Cebulano", "Guadalupe", "Ising (Poblacion)", "La Paz", "Mabaus", "Mabuhay", "Magsaysay", "Mangalcal", "Minda", "New Camiling", "Salvacion", "San Isidro", "Santo Niño", "Taba", "Tibulao", "Tubod", "Tuganay"],
+  "Sto. Tomas": ["Balagunan", "Bobongon", "Esperanza", "Kimamon", "Kinamayan", "La Libertad", "Lunga-og", "Magwawa", "New Katipunan", "Pantaron", "Salvacion", "San Jose", "San Miguel", "San Vicente", "Talomo", "Tibal-og (Pob.)", "Tulalian", "New Visayas"],
+  "Kapalong": ["Gupitan", "Mabantao", "Mamacao", "Pag-asa", "Semong", "Sua-on", "Tibungol", "Katipunan", "Maniki (Pob.)", "San Roque"],
+  "Talaingod": ["Dagohoy", "Palma Gil", "Santo Niño"],
+  "Asuncion": ["Binancian", "Buan", "Buclad", "Cabaywa", "Camanchiles", "Camansa", "Canatan", "Concepcion", "Doña Andrea", "Magatos", "Napungas", "New Bantayan", "New Santiago", "Pamimon", "Pob. (Cambanogoy)", "Sagayen", "San Vicente", "Santa Filomena", "Sonlon", "Tibungol"],
+  "Braulio E. Dujali": ["Cabay-Angan", "Dujali", "Magupising", "New Casay", "Tanglaw"],
+  "San Isidro": ["Dacudao", "Datu Balong", "Igangon", "Libuton", "Mamacao", "Pinamuno", "Sabangan", "San Miguel", "San Roque", "Sawata (Poblacion)", "Santo Niño"],
+  "New Corella": ["Cabidianan", "Carcor", "Del Monte", "El Salvador", "Limba-an", "Lucob", "Macgum", "Mambing", "Mesaoy", "New Bohol", "New Sambog", "Patrocenio", "Poblacion", "San Roque", "Santa Cruz", "Santa Fe", "Santo Niño", "Suawon", "Ubayon"]
 };
 
 const Checkout = () => {
