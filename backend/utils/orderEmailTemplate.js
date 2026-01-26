@@ -1,10 +1,10 @@
 const orderEmailTemplate = (order, title = 'Order Summary') => {
-  // Format date
-  const date = new Date(order.createdAt).toLocaleDateString('en-PH', {
-    year: 'numeric', month: 'long', day: 'numeric'
-  });
+    // Format date
+    const date = new Date(order.createdAt).toLocaleDateString('en-PH', {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
 
-  return `
+    return `
     <!DOCTYPE html>
     <html>
     <head>
@@ -50,20 +50,26 @@ const orderEmailTemplate = (order, title = 'Order Summary') => {
             </div>
             
             <div class="content">
-                <div class="receipt-details">
-                    <div><span>Date</span> ${date}</div>
-                    <div>
-                        <span>Order Number</span> 
-                        ${(() => {
-      const d = new Date(order.createdAt);
-      const year = d.getFullYear();
-      const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-      const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
-      return `${year}-${mmdd}-${hhmm}`;
-    })()}
-                    </div>
-                    <div><span>Payment Method</span> ${order.paymentMethod.toUpperCase()}</div>
-                </div>
+                <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px; font-size: 13px; color: #666; background: #f9fafb; padding: 20px; border-radius: 8px;">
+                    <tr>
+                        <td style="padding-bottom: 5px;"><strong>Date</strong></td>
+                        <td style="padding-bottom: 5px;"><strong>Order Number</strong></td>
+                        <td style="padding-bottom: 5px;"><strong>Payment Method</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="color: #333;">${date}</td>
+                        <td style="color: #333;">
+                            ${(() => {
+            const d = new Date(order.createdAt);
+            const year = d.getFullYear();
+            const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+            const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
+            return `${year}-${mmdd}-${hhmm}`;
+        })()}
+                        </td>
+                        <td style="color: #333;">${order.paymentMethod.toUpperCase()}</td>
+                    </tr>
+                </table>
 
                 <!-- Items -->
                 ${order.items.map(item => `
