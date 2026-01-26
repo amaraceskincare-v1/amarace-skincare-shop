@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import api from '../utils/api';
 import { toast } from 'react-toastify';
-import { FiFacebook, FiTwitter, FiInstagram, FiYoutube, FiArrowRight } from "react-icons/fi";
+import { FiFacebook, FiArrowRight } from "react-icons/fi";
 import '../styles/Footer.css';
 
 const Footer = () => {
@@ -88,17 +88,8 @@ const Footer = () => {
             <p>amarace.skincare@gmail.com</p>
             <p>+63 915 266 2648</p>
             <div className="footer-social">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.facebook.com/AmaraCeSkinCare/" target="_blank" rel="noopener noreferrer">
                 <FiFacebook />
-              </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                <FiTwitter />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                <FiInstagram />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-                <FiYoutube />
               </a>
             </div>
           </div>

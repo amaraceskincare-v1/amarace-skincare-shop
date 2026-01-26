@@ -54,7 +54,7 @@ const AuthPage = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            await login(email, password);
+            await login(email, password, rememberMe);
             toast.success('Login successful!');
             navigate(redirect);
         } catch (error) {

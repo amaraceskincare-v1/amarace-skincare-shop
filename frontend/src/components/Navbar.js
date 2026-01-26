@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FiSearch, FiUser, FiShoppingBag, FiMenu, FiX, FiInstagram, FiFacebook } from 'react-icons/fi';
-import { useState, useEffect } from 'react';
+import { FiSearch, FiUser, FiShoppingBag, FiMenu, FiX, FiChevronDown } from 'react-icons/fi';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import '../styles/Navbar.css';
@@ -10,10 +10,20 @@ const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const [selectedLang, setSelectedLang] = useState({ code: 'PH', flag: '🇵🇭', name: 'Philippines' });
+  const langRef = useRef(null);
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const languages = [
+    { code: 'PH', flag: '🇵🇭', name: 'Philippines' },
+    { code: 'US', flag: '🇺🇸', name: 'United States' },
+    { code: 'JP', flag: '🇯🇵', name: 'Japan' },
+    { code: 'KR', flag: '🇰🇷', name: 'South Korea' },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +31,17 @@ const Navbar = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close language dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (langRef.current && !langRef.current.contains(e.target)) {
+        setLangOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleLogout = () => {
@@ -43,17 +64,38 @@ const Navbar = () => {
     return location.pathname.startsWith(path);
   };
 
+  const handleLangSelect = (lang) => {
+    setSelectedLang(lang);
+    setLangOpen(false);
+  };
+
   return (
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="announcement-bar">
-        <div className="announcement-social">
-          <a href="https://instagram.com/amarace" target="_blank" rel="noopener noreferrer"><FiInstagram /></a>
-          <a href="https://facebook.com/amarace" target="_blank" rel="noopener noreferrer"><FiFacebook /></a>
-        </div>
         <div className="announcement-text">
           <span>Free shipping for all orders over ₱500+ • Premium beauty essentials</span>
         </div>
-        <div className="announcement-right"><span>🇵🇭 PHP</span></div>
+        <div className="language-dropdown" ref={langRef}>
+          <button className="language-btn" onClick={() => setLangOpen(!langOpen)}>
+            <span className="lang-flag">{selectedLang.flag}</span>
+            <span className="lang-code">{selectedLang.code}</span>
+            <FiChevronDown className={`lang-arrow ${langOpen ? 'open' : ''}`} />
+          </button>
+          {langOpen && (
+            <div className="language-menu">
+              {languages.map((lang) => (
+                <button
+                  key={lang.code}
+                  className={`language-option ${selectedLang.code === lang.code ? 'active' : ''}`}
+                  onClick={() => handleLangSelect(lang)}
+                >
+                  <span className="lang-flag">{lang.flag}</span>
+                  <span className="lang-name">{lang.name}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <nav className="navbar">

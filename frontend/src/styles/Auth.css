@@ -125,6 +125,32 @@
     font-size: 1.1rem;
 }
 
+/* Password toggle icon (eye) - positioned on right side */
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.password-toggle svg {
+    position: static;
+    transform: none;
+    left: auto;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.password-toggle:hover svg {
+    opacity: 1;
+}
+
 .auth-input-group input {
     width: 100%;
     padding: 14px 20px 14px 55px;

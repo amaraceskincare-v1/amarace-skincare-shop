@@ -10,18 +10,30 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
+    // Check localStorage first (Remember Me), then sessionStorage (current session only)
+    let token = localStorage.getItem('token');
+    let userData = localStorage.getItem('user');
+
+    if (!token) {
+      token = sessionStorage.getItem('token');
+      userData = sessionStorage.getItem('user');
+    }
+
     if (token && userData) {
       setUser(JSON.parse(userData));
     }
     setLoading(false);
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, rememberMe = true) => {
     const { data } = await api.post('/auth/login', { email, password });
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data));
+    const storage = rememberMe ? localStorage : sessionStorage;
+    storage.setItem('token', data.token);
+    storage.setItem('user', JSON.stringify(data));
+    // Clear the other storage to avoid conflicts
+    const otherStorage = rememberMe ? sessionStorage : localStorage;
+    otherStorage.removeItem('token');
+    otherStorage.removeItem('user');
     setUser(data);
     return data;
   };
