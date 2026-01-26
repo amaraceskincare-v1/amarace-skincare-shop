@@ -143,7 +143,7 @@ const Orders = () => {
                           {(order.items || []).slice(0, 3).map((item, idx) => (
                             <img key={idx} src={item?.product?.images?.[0] || '/placeholder.jpg'} alt="" title={item?.product?.name || 'Product'} />
                           ))}
-                          {(order.items?.length || 0) > 3 && <span className="more-count">+{order.items.length - 3}</span>}
+                          {(order.items?.length || 0) > 3 && <span className="more-count">+{(order.items?.length || 0) - 3}</span>}
                         </div>
                         <div className="order-price-status">
                           <span className="price">₱{(order.total || 0).toFixed(2)}</span>
