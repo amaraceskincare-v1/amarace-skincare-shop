@@ -57,7 +57,8 @@ export const LanguageProvider = ({ children }) => {
     }, [lang]);
 
     const t = (key) => {
-        return translations[lang][key] || key;
+        const currentTranslations = translations[lang] || translations['US'];
+        return currentTranslations[key] || key;
     };
 
     return (
