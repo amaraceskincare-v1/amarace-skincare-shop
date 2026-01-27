@@ -68,12 +68,6 @@ const Cart = () => {
                   </div>
                   <div className="product-details">
                     <h4>{item.product?.name}</h4>
-                    <button
-                      className="remove-btn"
-                      onClick={() => removeFromCart(item.product?._id)}
-                    >
-                      <FiTrash2 /> Remove
-                    </button>
                   </div>
                 </div>
 
@@ -82,13 +76,21 @@ const Cart = () => {
                 </div>
 
                 <div className="col-quantity">
-                  <div className="quantity-control">
-                    <button onClick={() => updateQuantity(item.product?._id, item.quantity - 1)}>
-                      <FiMinus />
-                    </button>
-                    <span>{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.product?._id, item.quantity + 1)}>
-                      <FiPlus />
+                  <div className="quantity-control-wrapper">
+                    <div className="quantity-control">
+                      <button onClick={() => updateQuantity(item.product?._id, item.quantity - 1)}>
+                        <FiMinus />
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item.product?._id, item.quantity + 1)}>
+                        <FiPlus />
+                      </button>
+                    </div>
+                    <button
+                      className="remove-btn"
+                      onClick={() => removeFromCart(item.product?._id)}
+                    >
+                      <FiTrash2 /> Remove
                     </button>
                   </div>
                 </div>
@@ -120,7 +122,7 @@ const Cart = () => {
             CHECK OUT
           </Link>
 
-          <p className="tax-note">Taxes and shipping calculated at checkout</p>
+          <p className="shipping-note">Shipping cost calculated at checkout</p>
         </div>
       </div>
     </div>
