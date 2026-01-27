@@ -10,7 +10,7 @@ const policyContent = {
                 heading: 'Returns',
                 content: `We accept returns within 7 days of delivery for products that are unopened and unused. To be eligible for a return, your item must be in the same condition that you received it, in the original packaging.
 
-To initiate a return, please contact us at hello@amarace.com with your order number and reason for return.`
+To initiate a return, please contact us at amarace.skincare@gmail.com with your order number and reason for return.`
             },
             {
                 heading: 'Refunds',
@@ -20,7 +20,7 @@ If approved, your refund will be processed within 5-7 business days. The refund 
             },
             {
                 heading: 'Exchanges',
-                content: `We only replace items if they are defective or damaged. If you need to exchange an item, please contact us at hello@amarace.com and we will guide you through the process.`
+                content: `we only replace items if they are defective or damaged. If you need to exchange an item, please contact us at amarace.skincare@gmail.com and we will guide you through the process.`
             },
             {
                 heading: 'Non-Returnable Items',
@@ -68,7 +68,7 @@ We do not store your actual payment details. All payments are processed through 
             },
             {
                 heading: 'Contact Us',
-                content: `If you have any questions about this Privacy Policy, please contact us at hello@amarace.com.`
+                content: `If you have any questions about this Privacy Policy, please contact us at amarace.skincare@gmail.com.`
             }
         ]
     },
@@ -257,7 +257,7 @@ const PolicyPage = ({ type }) => {
                 </div>
 
                 <div className="policy-footer">
-                    <p>If you have any questions, please contact us at <a href="mailto:hello@amarace.com">hello@amarace.com</a></p>
+                    <p>If you have any questions, please contact us at <a href="mailto:amarace.skincare@gmail.com">amarace.skincare@gmail.com</a></p>
                     <Link to="/" className="back-link">← Back to Home</Link>
                 </div>
             </div>

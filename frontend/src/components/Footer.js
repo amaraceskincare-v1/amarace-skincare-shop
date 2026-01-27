@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import api from '../utils/api';
 import { toast } from 'react-toastify';
-import { FiFacebook, FiArrowRight } from "react-icons/fi";
+import { useLanguage } from '../context/LanguageContext';
 import '../styles/Footer.css';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const { t } = useLanguage();
 
   // Footer year range
   const startYear = 2025;
@@ -35,12 +36,12 @@ const Footer = () => {
       <div className="wix-help-banner">
         <div className="help-banner-content">
           <div className="help-text-side">
-            <h2>Need Help? Check Out Our Help Center</h2>
-            <p>I'm a paragraph. Click here to add your own text and edit me. Let your users get to know you.</p>
-            <Link to="/help" className="go-help-btn">Go to Help Center</Link>
+            <h2>{t('need_help')} {t('check_help')}</h2>
+            <p>{t('footer_text')}</p>
+            <Link to="/products" className="go-help-btn">{t('go_shop')}</Link>
           </div>
           <div className="help-image-side">
-            <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=2070&auto=format&fit=crop" alt="Help Center" />
+            <img src="https://i.ibb.co/p6Vp9XJ/composite-skincare.jpg" alt="AmaraCé Products" />
           </div>
         </div>
       </div>
@@ -56,7 +57,9 @@ const Footer = () => {
               <p>amarace.skincare@gmail.com</p>
               <p>+63 915 266 2648</p>
               <div className="social-links-v2">
-                <a href="https://facebook.com" target="_blank" rel="noreferrer"><FiFacebook /></a>
+                <a href="https://www.facebook.com/AmaraCeSkinCare/" target="_blank" rel="noreferrer">
+                  <img src="https://i.ibb.co/hK8bQfP/fb-logo.png" alt="Facebook" style={{ width: '24px', height: '24px' }} />
+                </a>
               </div>
             </div>
           </div>
@@ -65,11 +68,10 @@ const Footer = () => {
           <div className="footer-v2-column">
             <h4>Shop</h4>
             <ul>
-              <li><Link to="/products">SHOP ALL</Link></li>
-              <li><Link to="/products?category=Lip%20Tint">LIP TINTS</Link></li>
-              <li><Link to="/products?category=Perfume">PERFUMES</Link></li>
-              <li><Link to="/products?category=Beauty%20Soap">BEAUTY SOAPS</Link></li>
-              <li><Link to="/products?sale=true">SALE</Link></li>
+              <li><Link to="/products">{t('shop_all')}</Link></li>
+              <li><Link to="/products?category=Lip%20Tint">{t('lip_tints')}</Link></li>
+              <li><Link to="/products?category=Perfume">{t('perfumes')}</Link></li>
+              <li><Link to="/products?category=Beauty%20Soap">{t('beauty_soaps')}</Link></li>
             </ul>
           </div>
 
@@ -77,10 +79,8 @@ const Footer = () => {
           <div className="footer-v2-column">
             <h4>Customer Support</h4>
             <ul>
-              <li><Link to="/contact">Contact Us</Link></li>
-              <li><Link to="/help">Help Center</Link></li>
-              <li><Link to="/about">About Us</Link></li>
-              <li><Link to="/careers">Careers</Link></li>
+              <li><Link to="/contact">{t('contact')}</Link></li>
+              <li><Link to="/about">{t('about')}</Link></li>
             </ul>
           </div>
 
@@ -88,10 +88,10 @@ const Footer = () => {
           <div className="footer-v2-column">
             <h4>Policy</h4>
             <ul>
-              <li><Link to="/policies/shipping">Shipping & Returns</Link></li>
-              <li><Link to="/policies/terms">Terms & Conditions</Link></li>
-              <li><Link to="/policies/payment">Payment Methods</Link></li>
-              <li><Link to="/faq">FAQ</Link></li>
+              <li><Link to="/policies/shipping">{t('shipping_returns')}</Link></li>
+              <li><Link to="/policies/terms">{t('terms_conditions')}</Link></li>
+              <li><Link to="/policies/payment">{t('payment_methods')}</Link></li>
+              <li><Link to="/faq">{t('faq')}</Link></li>
             </ul>
           </div>
         </div>
@@ -100,7 +100,7 @@ const Footer = () => {
       {/* Footer Payment & Copyright */}
       <div className="footer-bottom-skincare">
         <div className="payment-methods-row">
-          <span>We accept the following paying methods</span>
+          <span>{t('we_accept')}</span>
           <div className="gcash-logo-v2">
             <img src="https://i.ibb.co/L5fX0gD/gcash-logo.png" alt="GCash" />
           </div>

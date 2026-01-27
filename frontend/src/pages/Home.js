@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiTruck, FiRefreshCw, FiMessageCircle, FiCreditCard, FiStar } from 'react-icons/fi';
 import api from '../utils/api';
+import { useLanguage } from '../context/LanguageContext';
 import ProductCard from '../components/ProductCard';
 import '../styles/Home.css';
 
@@ -16,6 +17,7 @@ const Home = () => {
   });
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { t } = useLanguage();
 
   const heroSlides = [
     {
@@ -140,7 +142,7 @@ const Home = () => {
               <h1 className="hero-title">{slide.title}</h1>
               <div className="hero-actions">
                 <Link to="/products" className="hero-btn primary">{slide.cta}</Link>
-                <Link to="/about" className="hero-btn secondary">Our Story</Link>
+                <Link to="/about" className="hero-btn secondary">{t('about')}</Link>
               </div>
             </div>
           </div>
@@ -178,7 +180,7 @@ const Home = () => {
       {featuredProducts.length > 0 && (
         <section className="featured-section">
           <div className="section-header">
-            <h2>Featured <span>Products</span></h2>
+            <h2>{t('featured')} <span>Products</span></h2>
           </div>
           <div className="products-grid">
             {featuredProducts.map((product) => (
@@ -194,7 +196,7 @@ const Home = () => {
       {/* Best Sellers Section */}
       <section className="bestsellers-section">
         <div className="section-header">
-          <h2>You are in <span>best sellers</span></h2>
+          <h2>You are in <span>{t('best_sellers')}</span></h2>
         </div>
         <div className="products-grid">
           {loading ? (
@@ -271,27 +273,12 @@ const Home = () => {
       {/* Facebook Feed */}
       <section className="facebook-section">
         <h2 className="section-title">
-          Follow us <span>Facebook</span>
+          {t('follow_fb')}
         </h2>
-        <div className="facebook-grid">
-          {[
-            'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&q=80',
-            'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&q=80',
-            'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=400&q=80',
-            'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80',
-            'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&q=80',
-            'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400&q=80'
-          ].map((img, index) => (
-            <a
-              key={index}
-              href="https://facebook.com/amarace"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="facebook-item"
-            >
-              <img src={img} alt="facebook" />
-            </a>
-          ))}
+        <div className="facebook-single-image">
+          <a href="https://www.facebook.com/AmaraCeSkinCare/" target="_blank" rel="noopener noreferrer">
+            <img src="https://i.ibb.co/VvzK99F/fb-feed-single.jpg" alt="Follow us on Facebook" />
+          </a>
         </div>
       </section>
 

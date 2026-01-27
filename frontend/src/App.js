@@ -1,59 +1,29 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import LoadingScreen from './components/LoadingScreen';
-import CartDrawer from './components/CartDrawer';
-import Home from './pages/Home';
-import Products from './pages/Products';
-import ProductDetail from './pages/ProductDetail';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import AuthPage from './pages/AuthPage';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import VerifyEmail from './pages/VerifyEmail';
-import Profile from './pages/Profile';
-import Orders from './pages/Orders';
-import OrderSuccess from './pages/OrderSuccess';
-import AdminDashboard from './pages/admin/Dashboard';
-import AdminProducts from './pages/admin/Products';
-import AdminOrders from './pages/admin/Orders';
-import AdminReviews from './pages/admin/Reviews';
-import AdminPayments from './pages/admin/Payments';
-import AdminLayout from './components/AdminLayout';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import FAQs from './pages/FAQs';
-import PolicyPage from './pages/PolicyPage';
+import { LanguageProvider } from './context/LanguageContext';
+import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
-function App() {
+const AppContent = () => {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
 
-  // Show loading screen on route change
+  const { lang } = useLanguage();
+
+  // Show loading screen on route change or language change
   useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1200);
     return () => clearTimeout(timer);
-  }, [location.pathname]);
+  }, [location.pathname, lang, location.search]);
 
   // Make cart drawer controls available globally
   useEffect(() => {
     window.openCartDrawer = () => setCartDrawerOpen(true);
     window.closeCartDrawer = () => setCartDrawerOpen(false);
   }, []);
-
-  const isAdminPath = location.pathname.startsWith('/admin');
 
   return (
     <div className="app">
@@ -156,6 +126,20 @@ function App() {
       <ToastContainer position="bottom-right" />
     </div>
   );
-}
+};
+
+const App = () => {
+  return (
+    <Router>
+      <AuthProvider>
+        <LanguageProvider>
+          <CartProvider>
+            <AppContent />
+          </CartProvider>
+        </LanguageProvider>
+      </AuthProvider>
+    </Router>
+  );
+};
 
 export default App;

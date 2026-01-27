@@ -3,6 +3,7 @@ import { FiSearch, FiUser, FiShoppingBag, FiMenu, FiX, FiChevronDown, FiHeart } 
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import '../styles/Navbar.css';
 
 const Navbar = () => {
@@ -17,6 +18,7 @@ const Navbar = () => {
   const userRef = useRef(null);
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
+  const { lang, setLang, t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -80,12 +82,11 @@ const Navbar = () => {
       {/* Level 1: Announcement Bar */}
       <div className="announcement-bar">
         <div className="announcement-left">
-          <FiShoppingBag /> <span>Free Shipping for orders over ₱500</span>
+          <FiShoppingBag /> <span>{t('free_shipping')}</span>
         </div>
         <div className="announcement-right">
-          <Link to="/about">About</Link>
-          <Link to="/contact">Contact</Link>
-          <Link to="/help">Help Center</Link>
+          <Link to="/about">{t('about')}</Link>
+          <Link to="/contact">{t('contact')}</Link>
           <a href="tel:+639152662648">Call Us: +639152662648</a>
         </div>
       </div>
@@ -101,6 +102,20 @@ const Navbar = () => {
           </Link>
 
           <div className="nav-actions">
+            <div className="lang-nav-wrapper" ref={langRef}>
+              <button className="nav-action-btn" onClick={() => setLangOpen(!langOpen)}>
+                {selectedLang.flag}
+              </button>
+              {langOpen && (
+                <div className="lang-dropdown">
+                  {languages.map((l) => (
+                    <button key={l.code} onClick={() => { setLang(l.code); handleLangSelect(l); }}>
+                      {l.flag} {l.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <button className="nav-action-btn search-btn" onClick={() => setSearchOpen(true)}>
               <FiSearch />
             </button>
@@ -130,9 +145,6 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-            <Link to="/wishlist" className="nav-action-btn wishlist-icon">
-              <FiHeart />
-            </Link>
             <Link to="/cart" className="nav-action-btn cart-icon">
               <FiShoppingBag />
               <span className="cart-count">{cartCount}</span>
@@ -147,10 +159,11 @@ const Navbar = () => {
       {/* Level 3: Main Navigation Bar */}
       <nav className="main-nav-bar">
         <ul className="nav-links-centered">
-          <li><Link to="/" className={isActive('/') ? 'active' : ''}>HOME</Link></li>
-          <li><Link to="/products?category=Lip%20Tint" className={location.search.includes('Lip%20Tint') || location.search.includes('Lip+Tint') ? 'active' : ''}>LIP TINTS</Link></li>
-          <li><Link to="/products?category=Perfume" className={location.search.includes('Perfume') ? 'active' : ''}>PERFUMES</Link></li>
-          <li><Link to="/products?category=Beauty%20Soap" className={location.search.includes('Beauty%20Soap') || location.search.includes('Beauty+Soap') ? 'active' : ''}>BEAUTY SOAPS</Link></li>
+          <li><Link to="/" className={isActive('/') ? 'active' : ''}>{t('home')}</Link></li>
+          <li><Link to="/products" className={location.pathname === '/products' && !location.search ? 'active' : ''}>{t('shop_all')}</Link></li>
+          <li><Link to="/products?category=Lip%20Tint" className={location.search.includes('Lip%20Tint') ? 'active' : ''}>{t('lip_tints')}</Link></li>
+          <li><Link to="/products?category=Perfume" className={location.search.includes('Perfume') ? 'active' : ''}>{t('perfumes')}</Link></li>
+          <li><Link to="/products?category=Beauty%20Soap" className={location.search.includes('Beauty%20Soap') ? 'active' : ''}>{t('beauty_soaps')}</Link></li>
         </ul>
       </nav>
 

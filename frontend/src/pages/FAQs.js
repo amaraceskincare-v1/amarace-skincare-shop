@@ -122,7 +122,7 @@ const FAQs = () => {
             <div className="faqs-cta">
                 <h3>Still have questions?</h3>
                 <p>Our support team is here to help</p>
-                <a href="mailto:hello@amarace.com" className="cta-btn">Contact Us</a>
+                <a href="mailto:amarace.skincare@gmail.com" className="cta-btn">Contact Us</a>
             </div>
         </div>
     );
