@@ -117,6 +117,23 @@ const Navbar = () => {
                 </li>
               )}
             </ul>
+
+            <div className="mobile-nav-actions">
+              {user ? (
+                <>
+                  <Link to="/profile" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
+                    <FiUser className="mobile-nav-icon" /> My Account
+                  </Link>
+                  <button className="mobile-logout-btn" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
+                  <FiUser className="mobile-nav-icon" /> Member Login
+                </Link>
+              )}
+            </div>
           </div>
 
           <Link to="/" className="navbar-logo">AmaraCé</Link>
