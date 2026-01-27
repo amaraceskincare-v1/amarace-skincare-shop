@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FiMinus, FiPlus, FiTrash2, FiArrowLeft } from 'react-icons/fi';
+import { FiMinus, FiPlus, FiX, FiArrowLeft } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
 import '../styles/Cart.css';
 
