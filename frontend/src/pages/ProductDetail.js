@@ -177,7 +177,18 @@ const ProductDetail = () => {
               </button>
             </div>
 
-            <button className="wix-buy-now-btn" onClick={() => navigate('/checkout')}>
+            <button
+              className="wix-buy-now-btn"
+              onClick={async () => {
+                try {
+                  await addToCart(product._id, quantity, product);
+                  navigate('/checkout');
+                } catch (error) {
+                  toast.error('Failed to process Buy Now');
+                }
+              }}
+              disabled={product.stock === 0}
+            >
               Buy Now
             </button>
           </div>

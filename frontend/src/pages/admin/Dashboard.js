@@ -1,10 +1,17 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import AdminSidebar from '../../components/AdminSidebar';
+import { FiPackage, FiShoppingCart, FiCreditCard } from 'react-icons/fi';
+import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
+import api from '../../utils/api';
 import '../../styles/Admin.css';
 
 // Currency formatter (Philippine Peso)
-// ... (rest of imports)
-import { motion } from 'framer-motion';
-import api from '../../utils/api';
+const pesoFormatter = new Intl.NumberFormat('en-PH', {
+  style: 'currency',
+  currency: 'PHP',
+});
 
 const Dashboard = () => {
   const [stats, setStats] = useState({ products: 0, orders: 0, revenue: 0 });
