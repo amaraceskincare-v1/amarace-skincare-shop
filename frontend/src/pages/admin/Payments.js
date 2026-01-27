@@ -58,8 +58,8 @@ const AdminPayments = () => {
     };
 
     return (
-        <div className="admin-page">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div className="admin-content-inner">
+            <div className="admin-header">
                 <h1>GCash Payment Management</h1>
                 <button
                     onClick={copyToExcel}
@@ -134,7 +134,9 @@ const AdminPayments = () => {
                                         )}
                                     </td>
                                     <td>
-                                        <span className={`status ${order.status}`}>{order.status}</span>
+                                        <span className={`status-badge ${order.status.toLowerCase()}`}>
+                                            {order.status.replace(/_/g, ' ')}
+                                        </span>
                                     </td>
                                 </tr>
                             ))

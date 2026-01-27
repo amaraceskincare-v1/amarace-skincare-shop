@@ -90,7 +90,7 @@ const AdminProducts = () => {
   };
 
   return (
-    <div className="admin-page">
+    <div className="admin-content-inner">
       <div className="admin-header">
         <h1>Manage Products</h1>
         <button className="add-btn" onClick={() => setShowModal(true)}><FiPlus /> Add Product</button>

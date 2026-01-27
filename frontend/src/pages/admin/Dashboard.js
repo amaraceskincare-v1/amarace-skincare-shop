@@ -20,10 +20,12 @@ const statAnimation = {
 const Dashboard = () => {
   const [stats, setStats] = useState({ products: 0, orders: 0, revenue: 0 });
   const [recentOrders, setRecentOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const [productsRes, ordersRes] = await Promise.all([
           api.get('/products?limit=1'),
           api.get('/orders'),
@@ -43,121 +45,110 @@ const Dashboard = () => {
         setRecentOrders(ordersRes.data.slice(0, 5));
       } catch (error) {
         console.error('Error fetching admin dashboard data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
+  if (loading) return <div className="admin-loading">Loading Dashboard...</div>;
+
   return (
-    <div className="admin-layout">
-      {/* Sidebar */}
-      <aside className="admin-sidebar">
-        <div className="sidebar-logo">
-          AmaraCé <span>Admin</span>
+    <div className="admin-content-inner">
+      <div className="admin-header">
+        <h1>Dashboard Overview</h1>
+      </div>
+
+      {/* Stats */}
+      <div className="stats-grid">
+        <StatCard
+          icon={<FiPackage />}
+          label="Total Products"
+          value={stats.products}
+          type="products"
+        />
+        <StatCard
+          icon={<FiShoppingCart />}
+          label="Total Orders"
+          value={stats.orders}
+          type="orders"
+        />
+        <StatCard
+          icon={<FiCreditCard />}
+          label="Total Revenue"
+          value={pesoFormatter.format(stats.revenue)}
+          type="revenue"
+        />
+      </div>
+
+      {/* Recent Orders */}
+      <div className="admin-section">
+        <div className="section-header">
+          <h2>Recent Orders</h2>
+          <Link to="/admin/orders" className="view-all-link">View All</Link>
         </div>
-        <nav className="sidebar-nav">
-          <Link to="/admin" className="nav-item active">
-            <FiShoppingCart /> Dashboard
-          </Link>
-          <Link to="/admin/products" className="nav-item">
-            <FiPackage /> Products
-          </Link>
-          <Link to="/admin/orders" className="nav-item">
-            <FiShoppingCart /> Orders
-          </Link>
-          <Link to="/admin/payments" className="nav-item">
-            <FiCreditCard /> GCash Payments
-          </Link>
-          <Link to="/" className="nav-item return-site">
-            Return to Site
-          </Link>
-        </nav>
-      </aside>
-
-      {/* Main Content */}
-      <main className="admin-main">
-        <div className="admin-header">
-          <h1>Dashboard Overview</h1>
-        </div>
-
-        {/* Stats */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon-wrapper products">
-              <FiPackage />
-            </div>
-            <div className="stat-info">
-              <p>Total Products</p>
-              <h3>{stats.products}</h3>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon-wrapper orders">
-              <FiShoppingCart />
-            </div>
-            <div className="stat-info">
-              <p>Total Orders</p>
-              <h3>{stats.orders}</h3>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon-wrapper revenue">
-              <FiCreditCard />
-            </div>
-            <div className="stat-info">
-              <p>Total Revenue</p>
-              <h3>{pesoFormatter.format(stats.revenue)}</h3>
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Orders */}
-        <div className="admin-section">
-          <div className="section-header">
-            <h2>Recent Orders</h2>
-            <Link to="/admin/orders" className="view-all-link">View All</Link>
-          </div>
-          <div className="admin-table-container">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Customer</th>
-                  <th>Total</th>
-                  <th>Status</th>
+        <div className="admin-table-container">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentOrders.map(order => (
+                <tr key={order._id}>
+                  <td className="order-id-cell">
+                    # {(() => {
+                      const d = new Date(order.createdAt);
+                      const year = d.getFullYear();
+                      const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+                      const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
+                      return `${year}-${mmdd}-${hhmm}`;
+                    })()}
+                  </td>
+                  <td>
+                    <div className="customer-cell">
+                      <span>{order.user?.name || 'Guest User'}</span>
+                      <small>{order.user?.email}</small>
+                    </div>
+                  </td>
+                  <td className="total-cell">{pesoFormatter.format(order.total)}</td>
+                  <td>
+                    <span className={`status-badge ${order.status.toLowerCase()}`}>
+                      {order.status.replace(/_/g, ' ')}
+                    </span>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {recentOrders.map(order => (
-                  <tr key={order._id}>
-                    <td className="order-id-cell">
-                      # {(() => {
-                        const d = new Date(order.createdAt);
-                        const year = d.getFullYear();
-                        const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-                        const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
-                        return `${year}-${mmdd}-${hhmm}`;
-                      })()}
-                    </td>
-                    <td>{order.user?.name || 'N/A'}</td>
-                    <td className="total-cell">{pesoFormatter.format(order.total)}</td>
-                    <td>
-                      <span className={`status-badge ${order.status.toLowerCase()}`}>
-                        {order.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+              {recentOrders.length === 0 && (
+                <tr>
+                  <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>No orders yet</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
-      </main>
+      </div>
     </div>
   );
 };
+
+// Sub-component for Stat Cards
+const StatCard = ({ icon, label, value, type }) => (
+  <div className={`stat-card ${type}`}>
+    <div className={`stat-icon-wrapper ${type}`}>
+      {icon}
+    </div>
+    <div className="stat-info">
+      <p>{label}</p>
+      <h3>{value}</h3>
+    </div>
+  </div>
+);
 
 export default Dashboard;

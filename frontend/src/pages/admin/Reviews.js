@@ -56,8 +56,8 @@ const AdminReviews = () => {
     };
 
     return (
-        <div className="admin-page">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div className="admin-content-inner">
+            <div className="admin-header">
                 <h1>Review Management</h1>
             </div>
 
@@ -94,7 +94,7 @@ const AdminReviews = () => {
                                     </td>
                                     <td style={{ maxWidth: '300px' }}>{review.comment}</td>
                                     <td>
-                                        <span className={`status ${review.status}`}>{review.status}</span>
+                                        <span className={`status-badge ${review.status.toLowerCase()}`}>{review.status}</span>
                                     </td>
                                     <td>
                                         <div style={{ display: 'flex', gap: '8px' }}>

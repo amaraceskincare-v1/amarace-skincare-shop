@@ -26,6 +26,7 @@ import AdminProducts from './pages/admin/Products';
 import AdminOrders from './pages/admin/Orders';
 import AdminReviews from './pages/admin/Reviews';
 import AdminPayments from './pages/admin/Payments';
+import AdminLayout from './components/AdminLayout';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import FAQs from './pages/FAQs';
@@ -111,7 +112,9 @@ function App() {
             path="/admin"
             element={
               <ProtectedRoute adminOnly>
-                <AdminDashboard />
+                <AdminLayout>
+                  <AdminDashboard />
+                </AdminLayout>
               </ProtectedRoute>
             }
           />
@@ -119,7 +122,9 @@ function App() {
             path="/admin/products"
             element={
               <ProtectedRoute adminOnly>
-                <AdminProducts />
+                <AdminLayout>
+                  <AdminProducts />
+                </AdminLayout>
               </ProtectedRoute>
             }
           />
@@ -127,7 +132,9 @@ function App() {
             path="/admin/orders"
             element={
               <ProtectedRoute adminOnly>
-                <AdminOrders />
+                <AdminLayout>
+                  <AdminOrders />
+                </AdminLayout>
               </ProtectedRoute>
             }
           />
@@ -135,7 +142,9 @@ function App() {
             path="/admin/reviews"
             element={
               <ProtectedRoute adminOnly>
-                <AdminReviews />
+                <AdminLayout>
+                  <AdminReviews />
+                </AdminLayout>
               </ProtectedRoute>
             }
           />
@@ -143,7 +152,9 @@ function App() {
             path="/admin/payments"
             element={
               <ProtectedRoute adminOnly>
-                <AdminPayments />
+                <AdminLayout>
+                  <AdminPayments />
+                </AdminLayout>
               </ProtectedRoute>
             }
           />

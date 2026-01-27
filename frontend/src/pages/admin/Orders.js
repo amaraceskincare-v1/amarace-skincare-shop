@@ -46,8 +46,10 @@ const AdminOrders = () => {
   };
 
   return (
-    <div className="admin-page">
-      <h1>Manage Orders</h1>
+    <div className="admin-content-inner">
+      <div className="admin-header">
+        <h1>Manage Orders</h1>
+      </div>
       <table className="admin-table">
         <thead>
           <tr>
@@ -63,7 +65,7 @@ const AdminOrders = () => {
         <tbody>
           {orders.map(order => (
             <tr key={order._id}>
-              <td>
+              <td className="order-id-cell">
                 # {(() => {
                   const d = new Date(order.createdAt);
                   const year = d.getFullYear();
@@ -72,70 +74,64 @@ const AdminOrders = () => {
                   return `${year}-${mmdd}-${hhmm}`;
                 })()}
               </td>
-              <td>{order.user?.name}<br /><small>{order.user?.email}</small></td>
               <td>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                <div className="customer-cell">
+                  <span>{order.user?.name || 'Guest User'}</span>
+                  <small>{order.user?.email || 'No Email'}</small>
+                </div>
+              </td>
+              <td>
+                <div className="order-items-summary">
                   {order.items.map((item, index) => (
-                    <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <img
-                        src={item.product?.images?.[0] || '/placeholder.jpg'}
-                        alt=""
-                        style={{ width: '30px', height: '30px', objectFit: 'cover', borderRadius: '4px' }}
-                      />
-                      <span style={{ fontSize: '0.9rem' }}>{item.product?.name} (x{item.quantity})</span>
+                    <div key={index} className="item-token">
+                      <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt="" />
+                      <span>{item.quantity}x {item.product?.name || 'Deleted Product'}</span>
                     </div>
                   ))}
                 </div>
               </td>
-              <td>₱{order.total.toFixed(2)}</td>
+              <td className="total-cell">₱{(order.total || 0).toFixed(2)}</td>
               <td>
-                <span style={{ textTransform: 'uppercase', fontWeight: 'bold' }}>{order.paymentMethod}</span>
-                {order.paymentProof && (
-                  <div style={{ marginTop: '5px' }}>
-                    <a
-                      href={order.paymentProof}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: '#007bff', fontSize: '0.85rem', textDecoration: 'underline' }}
-                    >
+                <div className="payment-info">
+                  <span className="method">{order.paymentMethod}</span>
+                  {order.paymentProof && (
+                    <a href={order.paymentProof} target="_blank" rel="noopener noreferrer" className="proof-link">
                       View Proof
                     </a>
-                  </div>
-                )}
-              </td>
-              <td><span className={`status ${order.status}`}>{order.status}</span></td>
-              <td>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                  <select
-                    value={order.status}
-                    onChange={(e) => updateStatus(order._id, e.target.value)}
-                    style={{ padding: '5px', borderRadius: '4px' }}
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="processing">Processing</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
-
-                  <button
-                    onClick={() => deleteOrder(order._id)}
-                    style={{
-                      background: '#ff4d4d',
-                      color: 'white',
-                      border: 'none',
-                      padding: '5px 10px',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '0.85rem'
-                    }}
-                  >
-                    Delete
-                  </button>
+                  )}
                 </div>
+              </td>
+              <td>
+                <span className={`status-badge ${(order.status || 'pending').toLowerCase()}`}>
+                  {order.status?.replace(/_/g, ' ') || 'pending'}
+                </span>
+              </td>
+              <td className="actions-cell">
+                <select
+                  value={order.status}
+                  onChange={(e) => updateStatus(order._id, e.target.value)}
+                  className="status-select"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="processing">Processing</option>
+                  <option value="shipped">Shipped</option>
+                  <option value="delivered">Delivered</option>
+                  <option value="cancelled">Cancelled</option>
+                  <option value="awaiting_payment_verification">Verify Payment</option>
+                </select>
+
+                <button
+                  className="delete-item-btn"
+                  onClick={() => deleteOrder(order._id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
+          {orders.length === 0 && (
+            <tr><td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>No orders found</td></tr>
+          )}
         </tbody>
       </table>
     </div>
