@@ -58,7 +58,7 @@ function App() {
   return (
     <div className="app">
       <LoadingScreen isLoading={isLoading} />
-      {!isAdminPath && <Navbar />}
+      <Navbar />
       <CartDrawer isOpen={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
 
       <main className="main-content">
@@ -112,9 +112,7 @@ function App() {
             path="/admin"
             element={
               <ProtectedRoute adminOnly>
-                <AdminLayout>
-                  <AdminDashboard />
-                </AdminLayout>
+                <AdminDashboard />
               </ProtectedRoute>
             }
           />
@@ -122,9 +120,7 @@ function App() {
             path="/admin/products"
             element={
               <ProtectedRoute adminOnly>
-                <AdminLayout>
-                  <AdminProducts />
-                </AdminLayout>
+                <AdminProducts />
               </ProtectedRoute>
             }
           />
@@ -132,9 +128,7 @@ function App() {
             path="/admin/orders"
             element={
               <ProtectedRoute adminOnly>
-                <AdminLayout>
-                  <AdminOrders />
-                </AdminLayout>
+                <AdminOrders />
               </ProtectedRoute>
             }
           />
@@ -142,9 +136,7 @@ function App() {
             path="/admin/reviews"
             element={
               <ProtectedRoute adminOnly>
-                <AdminLayout>
-                  <AdminReviews />
-                </AdminLayout>
+                <AdminReviews />
               </ProtectedRoute>
             }
           />
@@ -152,9 +144,7 @@ function App() {
             path="/admin/payments"
             element={
               <ProtectedRoute adminOnly>
-                <AdminLayout>
-                  <AdminPayments />
-                </AdminLayout>
+                <AdminPayments />
               </ProtectedRoute>
             }
           />
@@ -162,7 +152,7 @@ function App() {
         </Routes>
       </main>
 
-      {!isAdminPath && <Footer />}
+      <Footer />
       <ToastContainer position="bottom-right" />
     </div>
   );

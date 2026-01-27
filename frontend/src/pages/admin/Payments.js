@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { FiPackage, FiShoppingCart, FiCreditCard } from 'react-icons/fi';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
 import '../../styles/Admin.css';
@@ -58,92 +60,106 @@ const AdminPayments = () => {
     };
 
     return (
-        <div className="admin-content-inner">
-            <div className="admin-header">
-                <h1>GCash Payment Management</h1>
-                <button
-                    onClick={copyToExcel}
-                    style={{
-                        background: '#28a745',
-                        color: 'white',
-                        border: 'none',
-                        padding: '10px 20px',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontWeight: '600'
-                    }}
-                >
-                    Copy for Excel
-                </button>
-            </div>
+        <div className="admin-layout">
+            <aside className="admin-sidebar">
+                <div className="sidebar-logo">
+                    AmaraCé <span>Admin</span>
+                </div>
+                <nav className="sidebar-nav">
+                    <Link to="/admin" className="nav-item">
+                        <FiShoppingCart /> Dashboard
+                    </Link>
+                    <Link to="/admin/products" className="nav-item">
+                        <FiPackage /> Products
+                    </Link>
+                    <Link to="/admin/orders" className="nav-item">
+                        <FiShoppingCart /> Orders
+                    </Link>
+                    <Link to="/admin/payments" className="nav-item active">
+                        <FiCreditCard /> GCash Payments
+                    </Link>
+                    <Link to="/" className="nav-item return-site">
+                        Return to Site
+                    </Link>
+                </nav>
+            </aside>
 
-            <div className="admin-table-container">
+            <main className="admin-main">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                    <h1>GCash Payment Management</h1>
+                    <button
+                        onClick={copyToExcel}
+                        style={{ background: '#28a745', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '4px', cursor: 'pointer' }}
+                    >
+                        Export to CSV
+                    </button>
+                </div>
+
                 <table className="admin-table">
                     <thead>
                         <tr>
-                            <th>Paid?</th>
                             <th>Order ID</th>
-                            <th>Name</th>
-                            <th>Number</th>
-                            <th>Amount Sent</th>
-                            <th>Reference No.</th>
-                            <th>Date Sent</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>GCash Info</th>
                             <th>Proof</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {loading ? (
-                            <tr><td colSpan="9" style={{ textAlign: 'center' }}>Loading...</td></tr>
-                        ) : orders.length === 0 ? (
-                            <tr><td colSpan="9" style={{ textAlign: 'center' }}>No GCash orders found.</td></tr>
-                        ) : (
-                            orders.map(order => (
-                                <tr key={order._id}>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={order.status !== 'awaiting_payment_verification' && order.status !== 'cancelled'}
-                                            onChange={(e) => verifyPayment(order._id, e.target.checked)}
-                                            style={{ width: '20px', height: '20px', cursor: 'pointer' }}
-                                        />
-                                    </td>
-                                    <td># {(() => {
-                                        const date = new Date(order.createdAt);
-                                        const year = date.getFullYear();
-                                        const mmdd = `${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
-                                        const hhmm = `${String(date.getHours()).padStart(2, '0')}${String(date.getMinutes()).padStart(2, '0')}`;
+                        {orders.map(order => (
+                            <tr key={order._id}>
+                                <td>
+                                    # {(() => {
+                                        const d = new Date(order.createdAt);
+                                        const year = d.getFullYear();
+                                        const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+                                        const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
                                         return `${year}-${mmdd}-${hhmm}`;
-                                    })()}</td>
-                                    <td>{order.paymentData?.name || '-'}</td>
-                                    <td>{order.paymentData?.number || '-'}</td>
-                                    <td>₱{order.paymentData?.amountSent || '0.00'}</td>
-                                    <td
-                                        onClick={() => alert(`Full Extracted Data:\nName: ${order.paymentData?.name}\nNumber: ${order.paymentData?.number}\nAmount: ${order.paymentData?.amountSent}\nRef: ${order.paymentData?.referenceNo}`)}
-                                        style={{ cursor: 'pointer', color: '#1a1a1a', textDecoration: 'underline' }}
-                                        title="Click to view full details"
-                                    >
-                                        {order.paymentData?.referenceNo || '-'}
-                                    </td>
-                                    <td>{order.paymentData?.dateSent || '-'}</td>
-                                    <td>
-                                        {order.paymentProof && (
-                                            <a href={order.paymentProof} target="_blank" rel="noopener noreferrer" style={{ color: '#007bff' }}>
-                                                View
-                                            </a>
-                                        )}
-                                    </td>
-                                    <td>
-                                        <span className={`status-badge ${order.status.toLowerCase()}`}>
-                                            {order.status.replace(/_/g, ' ')}
-                                        </span>
-                                    </td>
-                                </tr>
-                            ))
+                                    })()}
+                                </td>
+                                <td>{order.user?.name}<br /><small>{order.user?.email}</small></td>
+                                <td>₱{order.total.toFixed(2)}</td>
+                                <td>
+                                    {order.gcashName || 'N/A'}<br />
+                                    <small>{order.gcashNumber || 'N/A'}</small><br />
+                                    <small>Ref: {order.gcashRef || 'N/A'}</small>
+                                </td>
+                                <td>
+                                    {order.paymentProof ? (
+                                        <a href={order.paymentProof} target="_blank" rel="noopener noreferrer">
+                                            <img
+                                                src={order.paymentProof}
+                                                alt="Proof"
+                                                style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
+                                            />
+                                        </a>
+                                    ) : 'No Proof'}
+                                </td>
+                                <td>
+                                    <span className={`status ${order.status}`}>{order.status}</span>
+                                </td>
+                                <td>
+                                    {order.status === 'awaiting_payment_verification' && (
+                                        <button
+                                            onClick={() => verifyPayment(order._id)}
+                                            style={{ background: '#007bff', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}
+                                        >
+                                            Verify
+                                        </button>
+                                    )}
+                                    {order.status === 'pending' && <small>Awaiting GCash Info</small>}
+                                    {order.status !== 'pending' && order.status !== 'awaiting_payment_verification' && <small>Processed</small>}
+                                </td>
+                            </tr>
+                        ))}
+                        {orders.length === 0 && (
+                            <tr><td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>No GCash orders found</td></tr>
                         )}
                     </tbody>
                 </table>
-            </div>
+            </main>
         </div>
     );
 };

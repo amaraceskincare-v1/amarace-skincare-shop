@@ -90,127 +90,152 @@ const AdminProducts = () => {
   };
 
   return (
-    <div className="admin-content-inner">
-      <div className="admin-header">
-        <h1>Manage Products</h1>
-        <button className="add-btn" onClick={() => setShowModal(true)}><FiPlus /> Add Product</button>
-      </div>
+    <div className="admin-layout">
+      <aside className="admin-sidebar">
+        <div className="sidebar-logo">
+          AmaraCé <span>Admin</span>
+        </div>
+        <nav className="sidebar-nav">
+          <Link to="/admin" className="nav-item">
+            <FiShoppingCart /> Dashboard
+          </Link>
+          <Link to="/admin/products" className="nav-item active">
+            <FiPackage /> Products
+          </Link>
+          <Link to="/admin/orders" className="nav-item">
+            <FiShoppingCart /> Orders
+          </Link>
+          <Link to="/admin/payments" className="nav-item">
+            <FiCreditCard /> GCash Payments
+          </Link>
+          <Link to="/" className="nav-item return-site">
+            Return to Site
+          </Link>
+        </nav>
+      </aside>
 
-      <table className="admin-table">
-        <thead>
-          <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr>
-        </thead>
-        <tbody>
-          {products.map(product => (
-            <tr key={product._id}>
-              <td><img src={product.images?.[0] || '/placeholder.jpg'} alt="" className="product-thumb" /></td>
-              <td>{product.name}</td>
-              <td>{product.category}</td>
-              <td>₱{product.price}</td>
-              <td>{product.stock}</td>
-              <td>
-                <button className="edit-btn" onClick={() => openEdit(product)}><FiEdit /></button>
-                <button className="delete-btn" onClick={() => handleDelete(product._id)}><FiTrash2 /></button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <main className="admin-main">
+        <div className="admin-header">
+          <h1>Manage Products</h1>
+          <button className="add-btn" onClick={() => setShowModal(true)}><FiPlus /> Add Product</button>
+        </div>
 
-      {totalPages > 1 && (
-        <div className="pagination">
-          <button
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="page-nav-btn"
-          >
-            Previous
-          </button>
-
-          <div className="page-numbers" style={{ display: 'flex', gap: '0.5rem' }}>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`page-btn ${currentPage === page ? 'active' : ''}`}
-                disabled={Math.abs(currentPage - page) > 1}
-              >
-                {page}
-              </button>
+        <table className="admin-table">
+          <thead>
+            <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            {products.map(product => (
+              <tr key={product._id}>
+                <td><img src={product.images?.[0] || '/placeholder.jpg'} alt="" className="product-thumb" /></td>
+                <td>{product.name}</td>
+                <td>{product.category}</td>
+                <td>₱{product.price}</td>
+                <td>{product.stock}</td>
+                <td>
+                  <button className="edit-btn" onClick={() => openEdit(product)}><FiEdit /></button>
+                  <button className="delete-btn" onClick={() => handleDelete(product._id)}><FiTrash2 /></button>
+                </td>
+              </tr>
             ))}
-          </div>
+          </tbody>
+        </table>
 
-          <button
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="page-nav-btn"
-          >
-            Next
-          </button>
-        </div>
-      )}
+        {totalPages > 1 && (
+          <div className="pagination">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="page-nav-btn"
+            >
+              Previous
+            </button>
 
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>{editProduct ? 'Edit Product' : 'Add Product'}</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label>Product Images</label>
-                <input
-                  type="file"
-                  multiple
-                  onChange={(e) => setImages(e.target.files)}
-                  className="file-input"
-                />
-              </div>
-              <input placeholder="Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
-              <textarea placeholder="Description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
-              <input type="number" placeholder="Price" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} required />
-              <div className="form-group">
-                <label>Category</label>
-                <select
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  required
-                  style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd', marginBottom: '1rem' }}
+            <div className="page-numbers" style={{ display: 'flex', gap: '0.5rem' }}>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`page-btn ${currentPage === page ? 'active' : ''}`}
+                  disabled={Math.abs(currentPage - page) > 1}
                 >
-                  <option value="Lip Tint">Lip Tint</option>
-                  <option value="Perfume">Perfume</option>
-                  <option value="Beauty Soap">Beauty Soap</option>
-                </select>
-              </div>
-              <input placeholder="Brand" value={formData.brand} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} />
-              <input type="number" placeholder="Stock" value={formData.stock} onChange={(e) => setFormData({ ...formData, stock: e.target.value })} required />
+                  {page}
+                </button>
+              ))}
+            </div>
 
-              <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '1rem' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                  <input
-                    type="checkbox"
-                    checked={formData.featured}
-                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                    style={{ width: '20px', height: '20px' }}
-                  />
-                  Featured
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                  <input
-                    type="checkbox"
-                    checked={formData.bestSeller}
-                    onChange={(e) => setFormData({ ...formData, bestSeller: e.target.checked })}
-                    style={{ width: '20px', height: '20px' }}
-                  />
-                  Best Seller
-                </label>
-              </div>
-              <div className="modal-actions">
-                <button type="button" onClick={() => { setShowModal(false); setEditProduct(null); }}>Cancel</button>
-                <button type="submit">{editProduct ? 'Update' : 'Create'}</button>
-              </div>
-            </form>
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="page-nav-btn"
+            >
+              Next
+            </button>
           </div>
-        </div>
-      )}
+        )}
+
+        {showModal && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h2>{editProduct ? 'Edit Product' : 'Add Product'}</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label>Product Images</label>
+                  <input
+                    type="file"
+                    multiple
+                    onChange={(e) => setImages(e.target.files)}
+                    className="file-input"
+                  />
+                </div>
+                <input placeholder="Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
+                <textarea placeholder="Description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
+                <input type="number" placeholder="Price" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} required />
+                <div className="form-group">
+                  <label>Category</label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    required
+                    style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ddd', marginBottom: '1rem' }}
+                  >
+                    <option value="Lip Tint">Lip Tint</option>
+                    <option value="Perfume">Perfume</option>
+                    <option value="Beauty Soap">Beauty Soap</option>
+                  </select>
+                </div>
+                <input placeholder="Brand" value={formData.brand} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} />
+                <input type="number" placeholder="Stock" value={formData.stock} onChange={(e) => setFormData({ ...formData, stock: e.target.value })} required />
+
+                <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '1rem' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={formData.featured}
+                      onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                      style={{ width: '20px', height: '20px' }}
+                    />
+                    Featured
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={formData.bestSeller}
+                      onChange={(e) => setFormData({ ...formData, bestSeller: e.target.checked })}
+                      style={{ width: '20px', height: '20px' }}
+                    />
+                    Best Seller
+                  </label>
+                </div>
+                <div className="modal-actions">
+                  <button type="button" onClick={() => { setShowModal(false); setEditProduct(null); }}>Cancel</button>
+                  <button type="submit">{editProduct ? 'Update' : 'Create'}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 };
