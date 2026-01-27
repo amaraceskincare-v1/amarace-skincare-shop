@@ -66,9 +66,9 @@ const Footer = () => {
             <h4>Shop</h4>
             <ul>
               <li><Link to="/products">SHOP ALL</Link></li>
-              <li><Link to="/products?category=Lip+Tints">LIP TINTS</Link></li>
-              <li><Link to="/products?category=Perfumes">PERFUMES</Link></li>
-              <li><Link to="/products?category=Beauty+Soaps">BEAUTY SOAPS</Link></li>
+              <li><Link to="/products?category=Lip+Tint">LIP TINTS</Link></li>
+              <li><Link to="/products?category=Perfume">PERFUMES</Link></li>
+              <li><Link to="/products?category=Beauty+Soap">BEAUTY SOAPS</Link></li>
               <li><Link to="/products?sale=true">SALE</Link></li>
             </ul>
           </div>

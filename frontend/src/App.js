@@ -52,10 +52,12 @@ function App() {
     window.closeCartDrawer = () => setCartDrawerOpen(false);
   }, []);
 
+  const isAdminPath = location.pathname.startsWith('/admin');
+
   return (
     <div className="app">
       <LoadingScreen isLoading={isLoading} />
-      <Navbar />
+      {!isAdminPath && <Navbar />}
       <CartDrawer isOpen={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
 
       <main className="main-content">
@@ -149,7 +151,7 @@ function App() {
         </Routes>
       </main>
 
-      <Footer />
+      {!isAdminPath && <Footer />}
       <ToastContainer position="bottom-right" />
     </div>
   );

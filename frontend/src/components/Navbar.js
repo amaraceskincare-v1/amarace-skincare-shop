@@ -12,7 +12,9 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState({ code: 'PH', flag: '🇵🇭', name: 'Philippines' });
+  const [userDropdown, setUserDropdown] = useState(false);
   const langRef = useRef(null);
+  const userRef = useRef(null);
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
   const navigate = useNavigate();
@@ -33,11 +35,14 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close language dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (langRef.current && !langRef.current.contains(e.target)) {
         setLangOpen(false);
+      }
+      if (userRef.current && !userRef.current.contains(e.target)) {
+        setUserDropdown(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -48,6 +53,7 @@ const Navbar = () => {
     logout();
     navigate('/');
     setMenuOpen(false);
+    setUserDropdown(false);
   };
 
   const handleSearch = (e) => {
@@ -98,14 +104,34 @@ const Navbar = () => {
             <button className="nav-action-btn search-btn" onClick={() => setSearchOpen(true)}>
               <FiSearch />
             </button>
-            <div className="user-nav-wrapper">
-              <Link to={user ? '/profile' : '/login'} className="nav-action-btn">
+            <div className="user-nav-wrapper" ref={userRef}>
+              <button className="nav-action-btn" onClick={() => setUserDropdown(!userDropdown)}>
                 <FiUser />
-                <FiChevronDown className="user-arrow" />
-              </Link>
+                <FiChevronDown className={`user-arrow ${userDropdown ? 'open' : ''}`} />
+              </button>
+              {userDropdown && (
+                <div className="user-dropdown-menu">
+                  {user ? (
+                    <>
+                      <div className="user-info-header">Hi, {user.name}</div>
+                      <Link to="/profile" onClick={() => setUserDropdown(false)}>My Profile</Link>
+                      <Link to="/orders" onClick={() => setUserDropdown(false)}>My Orders</Link>
+                      {user.role === 'admin' && (
+                        <Link to="/admin" className="admin-special-link" onClick={() => setUserDropdown(false)}>Admin Dashboard</Link>
+                      )}
+                      <button onClick={handleLogout} className="nav-logout-btn">Logout</button>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/login" onClick={() => setUserDropdown(false)}>Login</Link>
+                      <Link to="/register" onClick={() => setUserDropdown(false)}>Register</Link>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
             <Link to="/wishlist" className="nav-action-btn">
-              <FiX className="wishlist-icon" /> {/* Placeholder for Heart/Wishlist if not available */}
+              <FiHeart />
             </Link>
             <Link to="/cart" className="nav-action-btn cart-icon">
               <FiShoppingBag />
@@ -122,10 +148,9 @@ const Navbar = () => {
       <nav className="main-nav-bar">
         <ul className="nav-links-centered">
           <li><Link to="/products" className={isActive('/products') ? 'active' : ''}>SHOP ALL</Link></li>
-          <li><Link to="/products?category=Lip+Tints" className={location.search.includes('Lip+Tints') ? 'active' : ''}>LIP TINTS</Link></li>
-          <li><Link to="/products?category=Perfumes" className={location.search.includes('Perfumes') ? 'active' : ''}>PERFUMES</Link></li>
-          <li><Link to="/products?category=Beauty+Soaps" className={location.search.includes('Beauty+Soaps') ? 'active' : ''}>BEAUTY SOAPS</Link></li>
-          <li><Link to="/products?sale=true" className="sale-link">SALE</Link></li>
+          <li><Link to="/products?category=Lip+Tint" className={location.search.includes('Lip+Tint') ? 'active' : ''}>LIP TINTS</Link></li>
+          <li><Link to="/products?category=Perfume" className={location.search.includes('Perfume') ? 'active' : ''}>PERFUMES</Link></li>
+          <li><Link to="/products?category=Beauty+Soap" className={location.search.includes('Beauty+Soap') ? 'active' : ''}>BEAUTY SOAPS</Link></li>
         </ul>
       </nav>
 
@@ -137,13 +162,14 @@ const Navbar = () => {
         </div>
         <ul className="mobile-links">
           <li><Link to="/products" onClick={() => setMenuOpen(false)}>SHOP ALL</Link></li>
-          <li><Link to="/products?category=Lip+Tints" onClick={() => setMenuOpen(false)}>LIP TINTS</Link></li>
-          <li><Link to="/products?category=Perfumes" onClick={() => setMenuOpen(false)}>PERFUMES</Link></li>
-          <li><Link to="/products?category=Beauty+Soaps" onClick={() => setMenuOpen(false)}>BEAUTY SOAPS</Link></li>
+          <li><Link to="/products?category=Lip+Tint" onClick={() => setMenuOpen(false)}>LIP TINTS</Link></li>
+          <li><Link to="/products?category=Perfume" onClick={() => setMenuOpen(false)}>PERFUMES</Link></li>
+          <li><Link to="/products?category=Beauty+Soap" onClick={() => setMenuOpen(false)}>BEAUTY SOAPS</Link></li>
           <li><Link to="/products?sale=true" onClick={() => setMenuOpen(false)}>SALE</Link></li>
           <hr />
           <li><Link to="/about" onClick={() => setMenuOpen(false)}>About Us</Link></li>
           <li><Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link></li>
+          <li><Link to="/orders" onClick={() => setMenuOpen(false)}>My Orders</Link></li>
           {user?.role === 'admin' && (
             <li><Link to="/admin" onClick={() => setMenuOpen(false)}>Admin Dashboard</Link></li>
           )}
