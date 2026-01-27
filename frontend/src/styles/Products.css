@@ -123,20 +123,24 @@
   gap: 1.5rem;
 }
 
-/* Responsive */
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
   .products-grid-new {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 768px) {
+  .products-grid-new {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
   .cashier-header {
     padding: 1rem;
   }
 
   .cashier-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
   }
 
   .header-hint {
@@ -147,11 +151,6 @@
     grid-template-columns: 1fr;
     gap: 0.75rem;
     padding: 1rem;
-  }
-
-  .products-grid-new {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
   }
 
   .category-group {

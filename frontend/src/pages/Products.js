@@ -123,11 +123,6 @@ const Products = () => {
               className="cashier-search"
             />
           </div>
-
-          <div className="view-toggle">
-            <FiList />
-            <FiGrid className="active" />
-          </div>
         </div>
 
         {/* Main Products Area */}
