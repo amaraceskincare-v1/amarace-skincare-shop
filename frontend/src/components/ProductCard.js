@@ -18,8 +18,6 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const hasDiscount = product.originalPrice && product.originalPrice > product.price;
-
   return (
     <div className="product-card">
       <Link to={`/products/${product._id}`} className="product-link">
@@ -28,9 +26,14 @@ const ProductCard = ({ product }) => {
             src={product.images?.[0] || '/placeholder.jpg'}
             alt={product.name}
           />
+          {product.stock === 0 && (
+            <span className="badge badge-out">Out of Stock</span>
+          )}
+        </div>
 
-          {/* Quick Actions */}
-          <div className="product-actions">
+        <div className="product-info centered">
+          {/* Quick Actions moved above name */}
+          <div className="product-actions-inline">
             <button
               className="action-btn cart-action"
               onClick={handleAddToCart}
@@ -44,13 +47,6 @@ const ProductCard = ({ product }) => {
             </button>
           </div>
 
-          {/* Badges */}
-          {product.stock === 0 && (
-            <span className="badge badge-out">Out of Stock</span>
-          )}
-        </div>
-
-        <div className="product-info">
           <h3 className="product-name">{product.name}</h3>
           <div className="product-price">
             <span className="current-price">

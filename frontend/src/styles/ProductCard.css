@@ -53,27 +53,58 @@
   transform: scale(1.05) !important;
 }
 
-.product-info {
-  padding: 1rem !important;
-  text-align: left !important;
+.product-info.centered {
+  padding: 1rem 0 !important;
+  text-align: center !important;
   display: flex !important;
   flex-direction: column !important;
+  align-items: center !important;
+}
+
+.product-actions-inline {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 1rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.product-actions-inline .action-btn {
+  background: #f8f9fa !important;
+  border: 1px solid #eee !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #333 !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+.product-actions-inline .action-btn:hover {
+  background: #007bff !important;
+  color: #fff !important;
+  border-color: #007bff !important;
 }
 
 .product-name {
-  font-size: 0.875rem !important;
+  font-size: 0.9rem !important;
   font-weight: 400 !important;
   color: #1a1a1a !important;
   margin: 0 0 0.25rem 0 !important;
   line-height: 1.4 !important;
+  text-align: center !important;
 }
 
 .product-price {
-  margin-top: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .current-price {
-  font-size: 0.8125rem !important;
+  font-size: 0.85rem !important;
   font-weight: 400 !important;
   color: #1a1a1a !important;
 }
