@@ -19,35 +19,31 @@ const Home = () => {
 
   const heroSlides = [
     {
-      title: 'New Arrivals',
-      subtitle: 'Premium Beauty Collection',
-      image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=1920&q=80',
+      title: 'THE FUTURE OF SKINCARE',
+      subtitle: 'Experience the Ultimate Glow',
+      image: 'https://images.unsplash.com/photo-1598440447192-383794a08832?w=1920&q=80',
       cta: 'Shop Now'
     },
     {
-      title: 'Best Sellers',
-      subtitle: 'Discover Our Top Picks',
-      image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1920&q=80',
-      cta: 'Explore'
+      title: 'BEST SELLERS 2026',
+      subtitle: 'Discover Your New Routine',
+      image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1920&q=80',
+      cta: 'Explore All'
     }
   ];
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch best sellers
         const bestSellersRes = await api.get('/products?bestSeller=true&limit=5');
         setBestSellers(bestSellersRes.data.products || []);
 
-        // Fetch featured products
         const featuredRes = await api.get('/products?featured=true&limit=5');
         setFeaturedProducts(featuredRes.data.products || []);
 
-        // Fetch all products to count by category
         const allProductsRes = await api.get('/products?limit=1000');
         const allProducts = allProductsRes.data.products || [];
 
-        // Count products by category
         const counts = {
           'Lip Tint': allProducts.filter(p => p.category === 'Lip Tint').length,
           'Perfume': allProducts.filter(p => p.category === 'Perfume').length,
@@ -55,7 +51,6 @@ const Home = () => {
           'All': allProducts.length
         };
         setCategoryCounts(counts);
-
       } catch (error) {
         console.error('Error fetching products:', error);
       } finally {
@@ -65,40 +60,12 @@ const Home = () => {
     fetchData();
   }, []);
 
-  // Auto-slide hero
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(timer);
   }, []);
-
-  const categories = [
-    {
-      name: 'Lip Tints',
-      count: `${categoryCounts['Lip Tint']} items`,
-      image: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&q=80',
-      path: '/products?category=Lip%20Tint'
-    },
-    {
-      name: 'Perfumes',
-      count: `${categoryCounts['Perfume']} items`,
-      image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80',
-      path: '/products?category=Perfume'
-    },
-    {
-      name: 'Beauty Soaps',
-      count: `${categoryCounts['Beauty Soap']} items`,
-      image: 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&q=80',
-      path: '/products?category=Beauty%20Soap'
-    },
-    {
-      name: 'All Products',
-      count: `${categoryCounts['All']} items`,
-      image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&q=80',
-      path: '/products'
-    }
-  ];
 
   const features = [
     { icon: FiTruck, title: 'Free Shipping', desc: 'On orders over ₱500' },
@@ -130,6 +97,33 @@ const Home = () => {
 
   const marqueeTexts = ['Premium Quality', 'Fast Delivery', 'Best Sellers', 'New Arrivals'];
 
+  const categories = [
+    {
+      name: 'Lip Tints',
+      count: `${categoryCounts['Lip Tint']} items`,
+      image: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&q=80',
+      path: '/products?category=Lip%20Tint'
+    },
+    {
+      name: 'Perfumes',
+      count: `${categoryCounts['Perfume']} items`,
+      image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80',
+      path: '/products?category=Perfume'
+    },
+    {
+      name: 'Beauty Soaps',
+      count: `${categoryCounts['Beauty Soap']} items`,
+      image: 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&q=80',
+      path: '/products?category=Beauty%20Soap'
+    },
+    {
+      name: 'All Best Sellers',
+      count: `${categoryCounts['All']} items`,
+      image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&q=80',
+      path: '/products'
+    }
+  ];
+
   return (
     <div className="home-page">
       {/* Hero Slider */}
@@ -144,7 +138,10 @@ const Home = () => {
             <div className="hero-content">
               <span className="hero-label">{slide.subtitle}</span>
               <h1 className="hero-title">{slide.title}</h1>
-              <Link to="/products" className="hero-btn">{slide.cta}</Link>
+              <div className="hero-actions">
+                <Link to="/products" className="hero-btn primary">{slide.cta}</Link>
+                <Link to="/about" className="hero-btn secondary">Our Story</Link>
+              </div>
             </div>
           </div>
         ))}
@@ -159,29 +156,19 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Intro Section */}
-      <section className="intro-section">
-        <p className="intro-text">
-          Living out every single day with confidence and beauty.
-        </p>
-        <p className="intro-subtext">
-          Discover our curated collection of premium beauty products designed to enhance your natural glow.
-        </p>
-        <Link to="/products" className="intro-link">
-          Shop Collection
-        </Link>
-      </section>
-
-      {/* Category Slider */}
-      <section className="category-section">
-        <div className="category-slider">
+      {/* Category Circles (Wix Signature) */}
+      <section className="category-circles-section">
+        <div className="section-header">
+          <h2>Shop by Category</h2>
+        </div>
+        <div className="category-circles-grid">
           {categories.map((cat, index) => (
-            <Link to={cat.path} key={index} className="category-item">
-              <div className="category-image">
+            <Link to={cat.path} key={index} className="category-circle-item">
+              <div className="circle-image">
                 <img src={cat.image} alt={cat.name} />
               </div>
               <h3>{cat.name}</h3>
-              <span>{cat.count}</span>
+              <p>{cat.count}</p>
             </Link>
           ))}
         </div>

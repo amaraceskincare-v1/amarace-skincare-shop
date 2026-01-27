@@ -1,240 +1,270 @@
-/* Admin Dashboard Styles */
+/* =========================================
+   PROFESSIONAL ADMIN DASHBOARD - WIX STYLE
+   ========================================= */
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--light);
+}
+
+/* Sidebar */
+.admin-sidebar {
+    width: 260px;
+    background: var(--dark);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 0;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 1001;
+}
+
+.sidebar-logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    padding: 0 2rem;
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.sidebar-logo span {
+    color: var(--primary);
+    font-size: 0.7rem;
+    display: block;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 2rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 4px solid var(--primary);
+}
+
+.nav-item svg {
+    font-size: 1.25rem;
+    color: var(--primary);
+}
+
+.return-site {
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+}
+
+/* Main Content Area */
+.admin-main {
+    flex: 1;
+    margin-left: 260px;
+    padding: 3rem;
+}
 
 .admin-header {
+    margin-bottom: 3rem;
+}
+
+.admin-header h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--dark);
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.stat-card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border: 1px solid var(--gray);
+}
+
+.stat-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-icon-wrapper.products {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.stat-icon-wrapper.orders {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.stat-icon-wrapper.revenue {
+    background: #fef9c3;
+    color: #a16207;
+}
+
+.stat-info p {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+}
+
+.stat-info h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--dark);
+}
+
+/* Recent Orders Section */
+.admin-section {
+    background: #fff;
+    padding: 2rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
 }
 
-.add-btn {
-    background: var(--primary);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.section-header h2 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--dark);
+    text-transform: uppercase;
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.stat-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.stat-icon {
-    font-size: 2rem;
+.view-all-link {
+    font-size: 0.85rem;
+    font-weight: 700;
     color: var(--primary);
+    text-decoration: none;
 }
 
-.stat-card h3 {
-    font-size: 1.5rem;
-}
-
-.stat-card p {
-    color: var(--secondary);
-}
-
-.stat-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.stat-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
-}
-
-.admin-nav {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.admin-nav-link {
-    background: white;
-    padding: 1rem 2rem;
-    border-radius: var(--radius);
-    font-weight: 500;
-}
-
-.admin-nav-link:hover {
-    background: var(--primary);
-    color: white;
+/* Admin Table */
+.admin-table-container {
+    overflow-x: auto;
 }
 
 .admin-table {
     width: 100%;
-    background: white;
-    border-radius: var(--radius);
-    overflow: hidden;
     border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-.admin-table th,
-.admin-table td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--gray);
 }
 
 .admin-table th {
-    background: var(--light);
-    font-weight: 600;
+    text-align: left;
+    padding: 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--secondary);
+    border-bottom: 2px solid var(--gray);
 }
 
-.product-thumb {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: var(--radius);
+.admin-table td {
+    padding: 1.25rem 1rem;
+    font-size: 0.95rem;
+    color: var(--dark);
+    border-bottom: 1px solid var(--gray);
 }
 
-.edit-btn,
-.delete-btn {
-    background: none;
-    padding: 0.5rem;
-    margin-right: 0.5rem;
-}
-
-.edit-btn {
+.order-id-cell {
+    font-family: monospace;
+    font-weight: 700;
     color: var(--primary);
 }
 
-.delete-btn {
-    color: var(--danger);
+.total-cell {
+    font-weight: 700;
 }
 
-.status {
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    text-transform: capitalize;
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-.status.pending {
+.status-badge.pending {
     background: #fef3c7;
     color: #92400e;
 }
 
-.status.processing {
+.status-badge.processing {
     background: #dbeafe;
     color: #1e40af;
 }
 
-.status.shipped {
+.status-badge.shipped {
     background: #ede9fe;
     color: #5b21b6;
 }
 
-.status.delivered {
+.status-badge.delivered {
     background: #d1fae5;
     color: #065f46;
 }
 
-.status.cancelled,
-.status.rejected {
+.status-badge.cancelled {
     background: #fee2e2;
     color: #991b1b;
 }
 
-.status.approved {
-    background: #d1fae5;
-    color: #065f46;
-}
+@media (max-width: 1024px) {
+    .admin-sidebar {
+        width: 80px;
+    }
 
-.admin-table-container {
-    overflow-x: auto;
-    background: white;
-    border-radius: var(--radius);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
+    .sidebar-logo,
+    .nav-item span {
+        display: none;
+    }
 
-.admin-page h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1a1a1a;
-}
+    .admin-main {
+        margin-left: 80px;
+    }
 
-.recent-orders h2 {
-    margin-bottom: 1rem;
-}
-
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 300;
-}
-
-.modal {
-    background: white;
-    padding: 2rem;
-    border-radius: var(--radius);
-    width: 90%;
-    max-width: 500px;
-}
-
-.modal h2 {
-    margin-bottom: 1.5rem;
-}
-
-.modal input,
-.modal textarea,
-.modal select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--gray);
-    border-radius: var(--radius);
-    margin-bottom: 1rem;
-}
-
-.modal textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.modal label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.modal-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 1rem;
-}
-
-.modal-actions button {
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius);
-}
-
-.modal-actions button:first-child {
-    background: var(--gray);
-}
-
-.modal-actions button:last-child {
-    background: var(--primary);
-    color: white;
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
 }

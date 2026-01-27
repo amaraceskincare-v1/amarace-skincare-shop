@@ -1,5 +1,5 @@
 /* =========================================
-   ABOUT PAGE - CLEAN MINIMAL DESIGN
+   ABOUT PAGE - WIX INSPIRED TECH/SKINCARE
    ========================================= */
 
 .about-page {
@@ -9,182 +9,218 @@
 /* Page Header */
 .page-header {
     text-align: center;
-    padding: 3rem 2rem;
-    background: #fafafa;
-    border-bottom: 1px solid #eee;
+    padding: 6rem 2rem;
+    background: var(--light);
+    border-bottom: 1px solid var(--gray);
 }
 
 .page-header h1 {
-    font-size: 2.25rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 0.5rem;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--dark);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
 }
 
 .page-header p {
-    font-size: 1rem;
-    color: #666;
+    font-size: 1.1rem;
+    color: var(--secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
 }
 
 /* Story Section */
 .story-section {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 4rem 2rem;
+    padding: 6rem 2rem;
 }
 
 .story-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    gap: 6rem;
     align-items: center;
 }
 
 .story-image {
-    border-radius: 8px;
+    border-radius: var(--radius);
     overflow: hidden;
+    box-shadow: var(--shadow);
 }
 
 .story-image img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
+    object-fit: cover;
 }
 
 .story-text h2 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.story-text h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: var(--primary);
 }
 
 .story-text p {
-    font-size: 1rem;
+    font-size: 1.1rem;
     line-height: 1.8;
-    color: #666;
-    margin-bottom: 1rem;
-}
-
-.story-text p:last-child {
-    margin-bottom: 0;
+    color: #444;
+    margin-bottom: 1.5rem;
 }
 
 /* Mission Section */
 .mission-section {
-    background: #fafafa;
-    padding: 4rem 2rem;
-}
-
-.mission-content {
-    max-width: 800px;
-    margin: 0 auto;
+    background: var(--dark);
+    color: #fff;
+    padding: 8rem 2rem;
     text-align: center;
 }
 
+.mission-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
 .mission-content h2 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 2rem;
+    text-transform: uppercase;
 }
 
 .mission-content p {
-    font-size: 1.125rem;
-    line-height: 1.8;
-    color: #666;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    opacity: 0.9;
+    font-weight: 300;
 }
 
 /* Values Section */
 .values-section {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 4rem 2rem;
+    padding: 6rem 2rem;
     text-align: center;
 }
 
 .values-section h2 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 2.5rem;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 4rem;
+    text-transform: uppercase;
 }
 
 .values-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
+    gap: 3rem;
 }
 
 .value-card {
-    padding: 2rem 1.5rem;
-    text-align: center;
+    padding: 3rem 2rem;
+    background: #fff;
+    border: 1px solid var(--gray);
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
+}
+
+.value-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 }
 
 .value-icon {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 1.25rem;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f5f5f5;
+    background: var(--light);
     border-radius: 50%;
-    font-size: 1.5rem;
-    color: #5161ce;
+    font-size: 2rem;
+    color: var(--primary);
+    transition: all 0.3s ease;
+}
+
+.value-card:hover .value-icon {
+    background: var(--primary);
+    color: #fff;
 }
 
 .value-card h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 0.75rem;
-}
-
-.value-card p {
-    font-size: 0.875rem;
-    line-height: 1.6;
-    color: #666;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
 }
 
 /* Team Section */
 .team-section {
-    background: #fafafa;
-    padding: 4rem 2rem;
+    background: var(--light);
+    padding: 6rem 2rem;
     text-align: center;
 }
 
 .team-section h2 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: #1a1a1a;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--dark);
     margin-bottom: 1rem;
+    text-transform: uppercase;
 }
 
 .team-intro {
-    font-size: 1rem;
-    color: #666;
-    max-width: 600px;
-    margin: 0 auto 2.5rem;
+    font-size: 1.1rem;
+    color: var(--secondary);
+    max-width: 700px;
+    margin: 0 auto 4rem;
 }
 
 .team-grid {
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    max-width: 1000px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
 .team-member {
     text-align: center;
+    background: #fff;
+    padding: 3rem 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
 }
 
 .member-image {
-    width: 180px;
-    height: 180px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
     overflow: hidden;
-    margin: 0 auto 1.25rem;
+    margin: 0 auto 2rem;
+    border: 4px solid var(--light);
 }
 
 .member-image img {
@@ -194,73 +230,38 @@
 }
 
 .team-member h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 0.25rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
 }
 
 .team-member p {
-    font-size: 0.875rem;
-    color: #666;
+    font-size: 0.95rem;
+    color: var(--secondary);
+    font-weight: 500;
 }
 
-/* =========================================
-   RESPONSIVE
-   ========================================= */
-@media (max-width: 1024px) {
-    .values-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+@media (max-width: 992px) {
 
+    .values-grid,
     .team-grid {
-        flex-wrap: wrap;
-        gap: 2rem;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
     .story-content {
         grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .story-image {
-        order: -1;
-    }
-
-    .values-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-
-    .team-grid {
-        flex-direction: column;
-        align-items: center;
-    }
-}
-
-@media (max-width: 640px) {
-    .page-header {
-        padding: 2rem 1rem;
+        gap: 3rem;
     }
 
     .page-header h1 {
-        font-size: 1.75rem;
+        font-size: 2.5rem;
     }
 
-    .story-section,
-    .values-section {
-        padding: 3rem 1rem;
-    }
-
-    .mission-section,
-    .team-section {
-        padding: 3rem 1rem;
-    }
-
-    .member-image {
-        width: 140px;
-        height: 140px;
+    .values-grid,
+    .team-grid {
+        grid-template-columns: 1fr;
     }
 }

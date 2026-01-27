@@ -1,170 +1,164 @@
 /* =========================================
-   CONTACT PAGE - CLEAN MINIMAL DESIGN
+   CONTACT PAGE - WIX TECH STYLE
    ========================================= */
 
 .contact-page {
     background: #fff;
 }
 
-/* Page Header */
-.page-header {
-    text-align: center;
-    padding: 3rem 2rem;
-    background: #fafafa;
-    border-bottom: 1px solid #eee;
-}
-
-.page-header h1 {
-    font-size: 2.25rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 0.5rem;
-}
-
-.page-header p {
-    font-size: 1rem;
-    color: #666;
-}
-
-/* Contact Container */
 .contact-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 4rem 2rem;
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 4rem;
+    grid-template-columns: 450px 1fr;
+    gap: 5rem;
+    padding: 6rem 2rem;
 }
 
-/* Contact Info Cards */
+/* Info Column */
 .contact-info {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2.5rem;
 }
 
 .info-card {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    padding: 1.5rem;
-    background: #fafafa;
-    border-radius: 8px;
+    gap: 1.5rem;
+    padding: 2rem;
+    background: var(--light);
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateX(10px);
+    background: #fff;
+    box-shadow: var(--shadow);
 }
 
 .info-icon {
-    width: 48px;
-    height: 48px;
+    font-size: 1.75rem;
+    color: var(--primary);
+    background: #fff;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #5161ce;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 1.25rem;
-    flex-shrink: 0;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .info-content h3 {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
 }
 
 .info-content p,
 .info-content a {
-    font-size: 0.9375rem;
-    color: #666;
+    font-size: 1.1rem;
+    color: var(--secondary);
     text-decoration: none;
+    font-weight: 500;
 }
 
 .info-content a:hover {
-    color: #5161ce;
+    color: var(--primary);
 }
 
-/* Contact Form */
+/* Form Column */
+.contact-form-wrapper {
+    background: #fff;
+}
+
 .contact-form-wrapper h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--dark);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
 }
 
-.contact-form-wrapper>p {
-    color: #666;
-    margin-bottom: 2rem;
+.contact-form-wrapper p {
+    font-size: 1.1rem;
+    color: var(--secondary);
+    margin-bottom: 3rem;
 }
 
 .contact-form {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1.5rem;
 }
 
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
+    gap: 1.5rem;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
 }
 
 .form-group label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #1a1a1a;
-    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--dark);
 }
 
 .form-group input,
 .form-group textarea {
-    padding: 0.875rem 1rem;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    font-size: 0.9375rem;
-    color: #1a1a1a;
-    transition: border-color 0.2s ease;
+    padding: 1rem;
+    border: 1px solid var(--gray);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+    background: var(--light);
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-    outline: none;
-    border-color: #5161ce;
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-    color: #999;
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 120px;
+    border-color: var(--primary);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(0, 178, 189, 0.1);
 }
 
 .submit-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem 2rem;
-    background: #5161ce;
+    margin-top: 1rem;
+    padding: 1.25rem;
+    background: var(--dark);
     color: #fff;
     border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 600;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
     cursor: pointer;
-    transition: background 0.2s ease;
-    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
 }
 
-.submit-btn:hover:not(:disabled) {
-    background: #4050b5;
+.submit-btn:hover {
+    background: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 178, 189, 0.2);
 }
 
 .submit-btn:disabled {
@@ -172,52 +166,19 @@
     cursor: not-allowed;
 }
 
-/* =========================================
-   RESPONSIVE
-   ========================================= */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .contact-container {
         grid-template-columns: 1fr;
-        gap: 3rem;
-    }
-
-    .contact-info {
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-
-    .info-card {
-        flex: 1 1 calc(50% - 0.75rem);
-        min-width: 200px;
+        gap: 4rem;
     }
 }
 
-@media (max-width: 640px) {
-    .page-header {
-        padding: 2rem 1rem;
-    }
-
-    .page-header h1 {
-        font-size: 1.75rem;
-    }
-
-    .contact-container {
-        padding: 2rem 1rem;
-    }
-
-    .contact-info {
-        flex-direction: column;
-    }
-
-    .info-card {
-        flex: none;
-    }
-
+@media (max-width: 768px) {
     .form-row {
         grid-template-columns: 1fr;
     }
 
-    .submit-btn {
-        width: 100%;
+    .contact-form-wrapper h2 {
+        font-size: 2rem;
     }
 }

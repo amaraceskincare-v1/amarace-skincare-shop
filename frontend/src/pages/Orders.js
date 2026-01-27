@@ -26,33 +26,47 @@ const Orders = () => {
   if (loading) return <div style={{ padding: '50px', textAlign: 'center' }}>Loading orders...</div>;
 
   return (
-    <div className="orders-page" style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '20px' }}>My Orders</h1>
-      {orders.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '40px' }}>
-          <p>No orders found.</p>
-          <Link to="/products" style={{ color: '#4f46e5', textDecoration: 'underline' }}>Start Shopping</Link>
-        </div>
-      ) : (
-        <div className="orders-list">
-          {orders.map(order => (
-            <div key={order._id} style={{ background: 'white', padding: '20px', borderRadius: '12px', marginBottom: '15px', border: '1px solid #eee' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <strong>Order #{order._id?.substring(0, 8)}</strong>
-                <span style={{ textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: 'bold' }}>{order.status}</span>
+    <div className="orders-page">
+      <div className="orders-container">
+        <h1>My Orders</h1>
+        {orders.length === 0 ? (
+          <div className="no-orders-box">
+            <p>You haven't placed any orders yet.</p>
+            <Link to="/products" className="start-shopping-link">Start Shopping</Link>
+          </div>
+        ) : (
+          <div className="orders-list">
+            {orders.map(order => (
+              <div key={order._id} className="order-card">
+                <div className="order-header">
+                  <div className="order-id">Order #{order.orderId || order._id?.substring(0, 8)}</div>
+                  <div className={`order-status status-${order.status?.toLowerCase()}`}>
+                    {order.status}
+                  </div>
+                </div>
+
+                <div className="order-items">
+                  {order.items?.map((item, idx) => (
+                    <div key={idx} className="order-item">
+                      <span className="item-name">{item.product?.name || 'Product'}</span>
+                      <span className="item-qty">x{item.quantity}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="order-footer">
+                  <div className="order-date">
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </div>
+                  <div className="order-total">
+                    ₱{order.total?.toFixed(2)}
+                  </div>
+                </div>
               </div>
-              <div style={{ color: '#666', fontSize: '0.9rem' }}>
-                {order.items?.map((item, idx) => (
-                  <div key={idx}>{item.product?.name} x{item.quantity}</div>
-                ))}
-              </div>
-              <div style={{ marginTop: '10px', textAlign: 'right', fontWeight: 'bold' }}>
-                Total: ₱{order.total?.toFixed(2)}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

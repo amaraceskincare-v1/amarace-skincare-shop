@@ -117,7 +117,6 @@ const Navbar = () => {
                 </li>
               )}
             </ul>
-
             <div className="mobile-nav-actions">
               {user ? (
                 <>
@@ -139,8 +138,18 @@ const Navbar = () => {
           <Link to="/" className="navbar-logo">AmaraCé</Link>
 
           <div className="nav-right">
-            <button className="nav-icon" onClick={() => setSearchOpen(!searchOpen)}><FiSearch /></button>
-            <Link to={user ? '/profile' : '/login'} className="nav-icon desktop-only"><FiUser /></Link>
+            <div className="header-search desktop-only">
+              <form onSubmit={handleSearch}>
+                <FiSearch />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </form>
+            </div>
+            <Link to={user ? '/profile' : '/login'} className="nav-icon"><FiUser /></Link>
             <Link to="/cart" className="nav-icon cart-icon">
               <FiShoppingBag />
               {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}

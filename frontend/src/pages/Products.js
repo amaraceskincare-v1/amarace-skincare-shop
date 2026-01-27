@@ -87,48 +87,95 @@ const Products = () => {
   }, {});
 
   return (
-    <div className="products-page cashier-theme">
-      {/* Top Navigation Bar */}
-      <div className="cashier-header">
-        <button className="back-btn" onClick={() => navigate(-1)}>
-          <FiX /> <span>Back</span>
-        </button>
-        <h1 className="cashier-title">Products</h1>
-        <div className="header-hint">Add products to cart</div>
-      </div>
-
-      <div className="products-layout-new">
-        {/* Simplified Filter Row */}
-        <div className="filter-row">
-          <div className="category-select-wrapper">
-            <select
-              value={category}
-              onChange={(e) => updateFilter('category', e.target.value)}
-              className="cashier-select"
-            >
-              <option value="">All Categories</option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-            <FiChevronDown />
-          </div>
-
-          <div className="search-input-wrapper">
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={search}
-              onChange={(e) => updateFilter('search', e.target.value)}
-              className="cashier-search"
-            />
+    <div className="products-page">
+      <div className="shop-header">
+        <div className="shop-header-content">
+          <h1>Shop All</h1>
+          <div className="breadcrumbs">
+            <Link to="/">Home</Link> / <span>Shop</span>
           </div>
         </div>
+      </div>
 
-        {/* Main Products Area */}
-        <div className="products-main-new">
+      <div className="shop-container">
+        {/* Sidebar Filters */}
+        <aside className="shop-sidebar">
+          <div className="sidebar-section">
+            <h3>Categories</h3>
+            <ul className="category-list">
+              <li className={!category ? 'active' : ''} onClick={() => updateFilter('category', '')}>
+                All Products
+              </li>
+              {categories.map((cat) => (
+                <li
+                  key={cat}
+                  className={category === cat ? 'active' : ''}
+                  onClick={() => updateFilter('category', cat)}
+                >
+                  {cat}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="sidebar-section">
+            <h3>Filter by Price</h3>
+            <div className="price-inputs">
+              <input
+                type="number"
+                placeholder="Min"
+                value={minPrice}
+                onChange={(e) => updateFilter('minPrice', e.target.value)}
+              />
+              <span>-</span>
+              <input
+                type="number"
+                placeholder="Max"
+                value={maxPrice}
+                onChange={(e) => updateFilter('maxPrice', e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="sidebar-section">
+            <h3>Sort By</h3>
+            <select
+              value={sort}
+              onChange={(e) => updateFilter('sort', e.target.value)}
+              className="sort-select"
+            >
+              <option value="">Default</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="newest">Newest First</option>
+            </select>
+          </div>
+
+          {hasActiveFilters && (
+            <button className="clear-all-btn" onClick={clearFilters}>
+              Clear All Filters <FiX />
+            </button>
+          )}
+        </aside>
+
+        {/* Products Grid Area */}
+        <main className="shop-main">
+          <div className="shop-toolbar">
+            <div className="search-bar">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={search}
+                onChange={(e) => updateFilter('search', e.target.value)}
+              />
+            </div>
+            <div className="product-count">
+              Showing {products.length} of {totalProducts} items
+            </div>
+          </div>
+
           {loading ? (
-            <div className="products-grid-new">
+            <div className="shop-grid">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="product-skeleton">
                   <div className="skeleton-image"></div>
@@ -137,17 +184,12 @@ const Products = () => {
                 </div>
               ))}
             </div>
-          ) : Object.keys(groupedProducts).length > 0 ? (
-            Object.entries(groupedProducts).map(([catName, catProducts]) => (
-              <div key={catName} className="category-group">
-                <h2 className="category-heading">{catName}</h2>
-                <div className="products-grid-new">
-                  {catProducts.map((product) => (
-                    <ProductCard key={product._id} product={product} />
-                  ))}
-                </div>
-              </div>
-            ))
+          ) : products.length > 0 ? (
+            <div className="shop-grid">
+              {products.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </div>
           ) : (
             <div className="no-products">
               <h3>No products found</h3>
@@ -170,7 +212,7 @@ const Products = () => {
               ))}
             </div>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );

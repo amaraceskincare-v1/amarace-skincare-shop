@@ -50,111 +50,112 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="admin-page">
-      <div className="admin-header">
-        <h1>Admin Dashboard</h1>
-      </div>
+    <div className="admin-layout">
+      {/* Sidebar */}
+      <aside className="admin-sidebar">
+        <div className="sidebar-logo">
+          AmaraCé <span>Admin</span>
+        </div>
+        <nav className="sidebar-nav">
+          <Link to="/admin" className="nav-item active">
+            <FiShoppingCart /> Dashboard
+          </Link>
+          <Link to="/admin/products" className="nav-item">
+            <FiPackage /> Products
+          </Link>
+          <Link to="/admin/orders" className="nav-item">
+            <FiShoppingCart /> Orders
+          </Link>
+          <Link to="/admin/payments" className="nav-item">
+            <FiCreditCard /> GCash Payments
+          </Link>
+          <Link to="/" className="nav-item return-site">
+            Return to Site
+          </Link>
+        </nav>
+      </aside>
 
-      {/* Stats */}
-      <div className="stats-grid">
-        <motion.div
-          className="stat-card"
-          variants={statAnimation}
-          initial="initial"
-          animate="animate"
-          whileHover="hover"
-          transition={{ duration: 0.3 }}
-        >
-          <FiPackage className="stat-icon" />
-          <div>
-            <h3>{stats.products}</h3>
-            <p>Products</p>
+      {/* Main Content */}
+      <main className="admin-main">
+        <div className="admin-header">
+          <h1>Dashboard Overview</h1>
+        </div>
+
+        {/* Stats */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-icon-wrapper products">
+              <FiPackage />
+            </div>
+            <div className="stat-info">
+              <p>Total Products</p>
+              <h3>{stats.products}</h3>
+            </div>
           </div>
-        </motion.div>
 
-        <motion.div
-          className="stat-card"
-          variants={statAnimation}
-          initial="initial"
-          animate="animate"
-          whileHover="hover"
-          transition={{ duration: 0.35 }}
-        >
-          <FiShoppingCart className="stat-icon" />
-          <div>
-            <h3>{stats.orders}</h3>
-            <p>Orders</p>
+          <div className="stat-card">
+            <div className="stat-icon-wrapper orders">
+              <FiShoppingCart />
+            </div>
+            <div className="stat-info">
+              <p>Total Orders</p>
+              <h3>{stats.orders}</h3>
+            </div>
           </div>
-        </motion.div>
 
-        <motion.div
-          className="stat-card"
-          variants={statAnimation}
-          initial="initial"
-          animate="animate"
-          whileHover="hover"
-          transition={{ duration: 0.4 }}
-        >
-          <FiCreditCard className="stat-icon" />
-          <div>
-            <h3>{pesoFormatter.format(stats.revenue)}</h3>
-            <p>Revenue</p>
+          <div className="stat-card">
+            <div className="stat-icon-wrapper revenue">
+              <FiCreditCard />
+            </div>
+            <div className="stat-info">
+              <p>Total Revenue</p>
+              <h3>{pesoFormatter.format(stats.revenue)}</h3>
+            </div>
           </div>
-        </motion.div>
-      </div>
+        </div>
 
-      {/* Admin Navigation */}
-      <div className="admin-nav" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '2rem' }}>
-        <Link to="/admin/products" className="admin-nav-link">
-          Manage Products
-        </Link>
-        <Link to="/admin/orders" className="admin-nav-link">
-          Manage Orders
-        </Link>
-        <Link to="/admin/reviews" className="admin-nav-link">
-          Manage Reviews (Star Ratings)
-        </Link>
-        <Link to="/admin/payments" className="admin-nav-link">
-          GCash Payment Management
-        </Link>
-      </div>
-
-      {/* Recent Orders */}
-      <div className="recent-orders">
-        <h2>Recent Orders</h2>
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Customer</th>
-              <th>Total</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recentOrders.map(order => (
-              <tr key={order._id}>
-                <td>
-                  # {(() => {
-                    const d = new Date(order.createdAt);
-                    const year = d.getFullYear();
-                    const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-                    const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
-                    return `${year}-${mmdd}-${hhmm}`;
-                  })()}
-                </td>
-                <td>{order.user?.name || 'N/A'}</td>
-                <td>{pesoFormatter.format(order.total)}</td>
-                <td>
-                  <span className={`status ${order.status.toLowerCase()}`}>
-                    {order.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+        {/* Recent Orders */}
+        <div className="admin-section">
+          <div className="section-header">
+            <h2>Recent Orders</h2>
+            <Link to="/admin/orders" className="view-all-link">View All</Link>
+          </div>
+          <div className="admin-table-container">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentOrders.map(order => (
+                  <tr key={order._id}>
+                    <td className="order-id-cell">
+                      # {(() => {
+                        const d = new Date(order.createdAt);
+                        const year = d.getFullYear();
+                        const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+                        const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
+                        return `${year}-${mmdd}-${hhmm}`;
+                      })()}
+                    </td>
+                    <td>{order.user?.name || 'N/A'}</td>
+                    <td className="total-cell">{pesoFormatter.format(order.total)}</td>
+                    <td>
+                      <span className={`status-badge ${order.status.toLowerCase()}`}>
+                        {order.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
