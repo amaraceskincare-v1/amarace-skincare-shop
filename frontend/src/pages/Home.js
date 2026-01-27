@@ -17,7 +17,20 @@ const Home = () => {
   });
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [settings, setSettings] = useState(null);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const { data } = await api.get('/settings');
+        setSettings(data);
+      } catch (error) {
+        console.error('Error fetching settings:', error);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   const heroSlides = [
     {
@@ -134,7 +147,7 @@ const Home = () => {
           <div
             key={index}
             className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
-            style={{ backgroundImage: `url(${slide.image})` }}
+            style={{ backgroundImage: `url(${index === 0 && settings?.heroImage ? settings.heroImage : slide.image})` }}
           >
             <div className="hero-overlay"></div>
             <div className="hero-content">
@@ -277,7 +290,10 @@ const Home = () => {
         </h2>
         <div className="facebook-single-image">
           <a href="https://www.facebook.com/AmaraCeSkinCare/" target="_blank" rel="noopener noreferrer">
-            <img src="https://i.ibb.co/VvzK99F/fb-feed-single.jpg" alt="Follow us on Facebook" />
+            <img
+              src={settings?.fbSectionImage || "https://i.ibb.co/VvzK99F/fb-feed-single.jpg"}
+              alt="Follow us on Facebook"
+            />
           </a>
         </div>
       </section>

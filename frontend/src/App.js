@@ -1,4 +1,35 @@
-import { LanguageProvider } from './context/LanguageContext';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import LoadingScreen from './components/LoadingScreen';
+import CartDrawer from './components/CartDrawer';
+import Home from './pages/Home';
+import Products from './pages/Products';
+import ProductDetail from './pages/ProductDetail';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import AuthPage from './pages/AuthPage';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import VerifyEmail from './pages/VerifyEmail';
+import Profile from './pages/Profile';
+import Orders from './pages/Orders';
+import OrderSuccess from './pages/OrderSuccess';
+import AdminDashboard from './pages/admin/Dashboard';
+import AdminProducts from './pages/admin/Products';
+import AdminOrders from './pages/admin/Orders';
+import AdminReviews from './pages/admin/Reviews';
+import AdminPayments from './pages/admin/Payments';
+import AdminSettings from './pages/admin/Settings';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import FAQs from './pages/FAQs';
+import PolicyPage from './pages/PolicyPage';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -115,6 +146,14 @@ const AppContent = () => {
             element={
               <ProtectedRoute adminOnly>
                 <AdminPayments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminSettings />
               </ProtectedRoute>
             }
           />

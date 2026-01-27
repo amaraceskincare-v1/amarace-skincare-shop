@@ -19,8 +19,21 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
   const { lang, setLang, t } = useLanguage();
+  const [settings, setSettings] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const { data } = await api.get('/settings');
+        setSettings(data);
+      } catch (error) {
+        console.error('Error fetching settings:', error);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   const languages = [
     { code: 'PH', flag: '🇵🇭', name: 'Philippines' },
@@ -78,7 +91,10 @@ const Navbar = () => {
   };
 
   return (
-    <header className={`header ${scrolled ? 'scrolled' : ''}`}>
+    <header
+      className={`header ${scrolled ? 'scrolled' : ''}`}
+      style={settings?.headerBackground ? { backgroundImage: `url(${settings.headerBackground})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+    >
       {/* Level 1: Announcement Bar */}
       <div className="announcement-bar">
         <div className="announcement-left">
@@ -92,13 +108,19 @@ const Navbar = () => {
       </div>
 
       {/* Level 2: Logo & Actions Bar */}
-      <div className="logo-bar">
+      <div className="logo-bar" style={settings?.headerBackground ? { background: 'transparent', borderBottom: 'none' } : {}}>
         <div className="logo-bar-container">
           <div className="logo-spacer"></div> {/* For centering logo */}
 
           <Link to="/" className="navbar-logo">
-            <div className="logo-emblem">AC</div>
-            <span>AmaraCé Skin Care</span>
+            {settings?.logo ? (
+              <img src={settings.logo} alt="AmaraCé" style={{ height: '50px' }} />
+            ) : (
+              <>
+                <div className="logo-emblem">AC</div>
+                <span>AmaraCé Skin Care</span>
+              </>
+            )}
           </Link>
 
           <div className="nav-actions">

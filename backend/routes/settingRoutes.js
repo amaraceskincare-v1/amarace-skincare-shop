@@ -31,17 +31,26 @@ router.get('/', async (req, res) => {
 });
 
 // Update Settings (Admin)
-router.put('/', protect, admin, upload.fields([{ name: 'logo', maxCount: 1 }, { name: 'sideAd', maxCount: 1 }]), async (req, res) => {
+router.put('/', protect, admin, upload.fields([
+    { name: 'logo', maxCount: 1 },
+    { name: 'sideAd', maxCount: 1 },
+    { name: 'headerBackground', maxCount: 1 },
+    { name: 'heroImage', maxCount: 1 },
+    { name: 'fbSectionImage', maxCount: 1 },
+    { name: 'footerHelpImage', maxCount: 1 },
+    { name: 'gcashQRCode', maxCount: 1 }
+]), async (req, res) => {
     try {
         let settings = await SiteSettings.findOne();
         if (!settings) settings = await SiteSettings.create({});
 
-        if (req.files['logo']) {
-            settings.logo = req.files['logo'][0].path;
-        }
-        if (req.files['sideAd']) {
-            settings.sideAd = req.files['sideAd'][0].path;
-        }
+        const fields = ['logo', 'sideAd', 'headerBackground', 'heroImage', 'fbSectionImage', 'footerHelpImage', 'gcashQRCode'];
+
+        fields.forEach(field => {
+            if (req.files[field]) {
+                settings[field] = req.files[field][0].path;
+            }
+        });
 
         await settings.save();
         res.json(settings);

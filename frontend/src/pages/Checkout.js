@@ -34,6 +34,19 @@ const Checkout = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [proofImage, setProofImage] = useState(null);
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const { data } = await api.get('/settings');
+        setSettings(data);
+      } catch (error) {
+        console.error('Error fetching settings:', error);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   // Get items array safely
   const items = cart?.items || [];
@@ -196,7 +209,11 @@ const Checkout = () => {
                 <div className="gcash-body">
                   <p>Scan the QR code below and pay <strong>₱{total.toFixed(2)}</strong></p>
                   <div className="qr-container">
-                    <img src="/gcash-qr.png" alt="GCash QR" className="qr-code" />
+                    <img
+                      src={settings?.gcashQRCode || "/gcash-qr.png"}
+                      alt="GCash QR"
+                      className="qr-code"
+                    />
                   </div>
 
 
