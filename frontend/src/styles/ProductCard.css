@@ -29,7 +29,8 @@
 .product-image {
   position: relative !important;
   width: 100% !important;
-  aspect-ratio: 1 / 1 !important;
+  aspect-ratio: 4 / 5 !important;
+  /* Vertical portrait ratio for perfume bottles */
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;

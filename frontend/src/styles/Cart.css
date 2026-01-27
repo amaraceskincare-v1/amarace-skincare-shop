@@ -149,13 +149,14 @@
 }
 
 .table-header .col-product {
-  padding-left: 95px !important;
+  padding-left: 135px !important;
   /* Align "PRODUCT" text with the item name */
 }
 
 .product-image {
-  width: 80px !important;
-  height: 80px !important;
+  width: 96px !important;
+  /* 4:5 ratio for 120px height */
+  height: 120px !important;
   background: #fff !important;
   border: 1px solid #eee !important;
   border-radius: 4px !important;
