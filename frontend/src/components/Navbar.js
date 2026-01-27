@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FiSearch, FiUser, FiShoppingBag, FiMenu, FiX, FiChevronDown } from 'react-icons/fi';
+import { FiSearch, FiUser, FiShoppingBag, FiMenu, FiX, FiChevronDown, FiHeart } from 'react-icons/fi';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -71,95 +71,89 @@ const Navbar = () => {
 
   return (
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
+      {/* Level 1: Announcement Bar */}
       <div className="announcement-bar">
-        <div className="announcement-text">
-          <span>Free shipping for all orders over ₱500+ • Premium beauty essentials</span>
+        <div className="announcement-left">
+          <FiShoppingBag /> <span>Free Shipping for orders over ₱500</span>
         </div>
-        <div className="language-dropdown" ref={langRef}>
-          <button className="language-btn" onClick={() => setLangOpen(!langOpen)}>
-            <span className="lang-flag">{selectedLang.flag}</span>
-            <span className="lang-code">{selectedLang.code}</span>
-            <FiChevronDown className={`lang-arrow ${langOpen ? 'open' : ''}`} />
-          </button>
-          {langOpen && (
-            <div className="language-menu">
-              {languages.map((lang) => (
-                <button
-                  key={lang.code}
-                  className={`language-option ${selectedLang.code === lang.code ? 'active' : ''}`}
-                  onClick={() => handleLangSelect(lang)}
-                >
-                  <span className="lang-flag">{lang.flag}</span>
-                  <span className="lang-name">{lang.name}</span>
-                </button>
-              ))}
-            </div>
-          )}
+        <div className="announcement-right">
+          <Link to="/about">About</Link>
+          <Link to="/contact">Contact</Link>
+          <Link to="/help">Help Center</Link>
+          <a href="tel:+639152662648">Call Us: +639152662648</a>
         </div>
       </div>
 
-      <nav className="navbar">
-        <div className="navbar-container">
-          <div className={`nav-left ${menuOpen ? 'active' : ''}`}>
-            <ul className="nav-links">
-              <li><Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Home</Link></li>
-              <li><Link to="/products" className={`nav-link ${isActive('/products') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Shop</Link></li>
-              <li><Link to="/about" className={`nav-link ${isActive('/about') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>About</Link></li>
-              <li><Link to="/contact" className={`nav-link ${isActive('/contact') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Contact</Link></li>
-              {user && (
-                <li>
-                  <Link to="/orders" className={`nav-link ${isActive('/orders') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>My Orders</Link>
-                </li>
-              )}
-              {user?.role === 'admin' && (
-                <li>
-                  <Link to="/admin" className={`nav-link admin-link ${isActive('/admin') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Admin</Link>
-                </li>
-              )}
-            </ul>
-            <div className="mobile-nav-actions">
-              {user ? (
-                <>
-                  <Link to="/profile" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
-                    <FiUser className="mobile-nav-icon" /> My Account
-                  </Link>
-                  <button className="mobile-logout-btn" onClick={handleLogout}>
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <Link to="/login" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
-                  <FiUser className="mobile-nav-icon" /> Member Login
-                </Link>
-              )}
-            </div>
-          </div>
+      {/* Level 2: Logo & Actions Bar */}
+      <div className="logo-bar">
+        <div className="logo-bar-container">
+          <div className="logo-spacer"></div> {/* For centering logo */}
 
-          <Link to="/" className="navbar-logo">AmaraCé</Link>
+          <Link to="/" className="navbar-logo">
+            <div className="logo-emblem">AC</div>
+            <span>AmaraCé Skin Care</span>
+          </Link>
 
-          <div className="nav-right">
-            <div className="header-search desktop-only">
-              <form onSubmit={handleSearch}>
-                <FiSearch />
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </form>
+          <div className="nav-actions">
+            <button className="nav-action-btn search-btn" onClick={() => setSearchOpen(true)}>
+              <FiSearch />
+            </button>
+            <div className="user-nav-wrapper">
+              <Link to={user ? '/profile' : '/login'} className="nav-action-btn">
+                <FiUser />
+                <FiChevronDown className="user-arrow" />
+              </Link>
             </div>
-            <Link to={user ? '/profile' : '/login'} className="nav-icon"><FiUser /></Link>
-            <Link to="/cart" className="nav-icon cart-icon">
-              <FiShoppingBag />
-              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            <Link to="/wishlist" className="nav-action-btn">
+              <FiX className="wishlist-icon" /> {/* Placeholder for Heart/Wishlist if not available */}
             </Link>
-            <button className="nav-icon menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+            <Link to="/cart" className="nav-action-btn cart-icon">
+              <FiShoppingBag />
+              <span className="cart-count">{cartCount}</span>
+            </Link>
+            <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
               {menuOpen ? <FiX /> : <FiMenu />}
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Level 3: Main Navigation Bar */}
+      <nav className="main-nav-bar">
+        <ul className="nav-links-centered">
+          <li><Link to="/products" className={isActive('/products') ? 'active' : ''}>SHOP ALL</Link></li>
+          <li><Link to="/products?category=Lip+Tints" className={location.search.includes('Lip+Tints') ? 'active' : ''}>LIP TINTS</Link></li>
+          <li><Link to="/products?category=Perfumes" className={location.search.includes('Perfumes') ? 'active' : ''}>PERFUMES</Link></li>
+          <li><Link to="/products?category=Beauty+Soaps" className={location.search.includes('Beauty+Soaps') ? 'active' : ''}>BEAUTY SOAPS</Link></li>
+          <li><Link to="/products?sale=true" className="sale-link">SALE</Link></li>
+        </ul>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`mobile-nav ${menuOpen ? 'active' : ''}`}>
+        <div className="mobile-nav-header">
+          <Link to="/" className="mobile-logo" onClick={() => setMenuOpen(false)}>AmaraCé</Link>
+          <button className="close-menu" onClick={() => setMenuOpen(false)}><FiX /></button>
+        </div>
+        <ul className="mobile-links">
+          <li><Link to="/products" onClick={() => setMenuOpen(false)}>SHOP ALL</Link></li>
+          <li><Link to="/products?category=Lip+Tints" onClick={() => setMenuOpen(false)}>LIP TINTS</Link></li>
+          <li><Link to="/products?category=Perfumes" onClick={() => setMenuOpen(false)}>PERFUMES</Link></li>
+          <li><Link to="/products?category=Beauty+Soaps" onClick={() => setMenuOpen(false)}>BEAUTY SOAPS</Link></li>
+          <li><Link to="/products?sale=true" onClick={() => setMenuOpen(false)}>SALE</Link></li>
+          <hr />
+          <li><Link to="/about" onClick={() => setMenuOpen(false)}>About Us</Link></li>
+          <li><Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link></li>
+          {user?.role === 'admin' && (
+            <li><Link to="/admin" onClick={() => setMenuOpen(false)}>Admin Dashboard</Link></li>
+          )}
+          {user ? (
+            <li><button onClick={handleLogout} className="logout-link">Logout</button></li>
+          ) : (
+            <li><Link to="/login" onClick={() => setMenuOpen(false)}>Login / Register</Link></li>
+          )}
+        </ul>
+      </div>
 
       {searchOpen && (
         <div className="search-overlay">

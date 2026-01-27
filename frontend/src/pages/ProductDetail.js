@@ -148,25 +148,51 @@ const ProductDetail = () => {
             )}
           </div>
 
-          <p className="product-description">{product.description}</p>
-
           {/* Quantity & Add to Cart */}
-          <div className="purchase-section">
-            <div className="quantity-selector">
-              <button onClick={() => setQuantity(q => Math.max(1, q - 1))}><FiMinus /></button>
-              <span>{quantity}</span>
-              <button onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}><FiPlus /></button>
+          <div className="wix-purchase-section">
+            <div className="q-label">Quantity *</div>
+            <div className="wix-controls-row">
+              <div className="wix-quantity-selector">
+                <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="q-btn"><FiMinus /></button>
+                <input type="number" value={quantity} readOnly />
+                <button onClick={() => setQuantity(q => Math.min(product.stock, q + 1))} className="q-btn"><FiPlus /></button>
+              </div>
             </div>
-            <button
-              className="add-to-cart-btn"
-              onClick={handleAddToCart}
-              disabled={product.stock === 0}
-            >
-              {product.stock === 0 ? 'Out of Stock' : 'Add to cart'}
+
+            <div className="cta-row">
+              <button
+                className="wix-add-to-cart-btn"
+                onClick={handleAddToCart}
+                disabled={product.stock === 0}
+              >
+                {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+              </button>
+              <button className="wishlist-btn-round">
+                <FiHeart />
+              </button>
+            </div>
+
+            <button className="wix-buy-now-btn" onClick={() => navigate('/checkout')}>
+              Buy Now
             </button>
           </div>
 
+          <div className="product-highlights">
+            <p className="mood-text">Bold. Elegant. Unforgettable.</p>
+            <p className="main-desc">{product.description}</p>
 
+            <div className="love-it-section">
+              <h3>Why you'll love it:</h3>
+              <ul className="love-list">
+                <li>❤️ <strong>Deep crimson shade</strong> for a bold, elegant look</li>
+                <li>💄 <strong>Lip & cheek 2-in-1 tint</strong></li>
+                <li>⏳ <strong>Long-lasting, vibrant color</strong></li>
+                <li>🧚 <strong>Lightweight & non-sticky feel</strong></li>
+                <li>🌿 <strong>Hydrating, skin-friendly formula</strong></li>
+                <li>👜 <strong>Easy to carry</strong> for touchups</li>
+              </ul>
+            </div>
+          </div>
 
           {/* Shipping Info */}
           <div className="shipping-info">

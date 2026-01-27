@@ -30,83 +30,83 @@ const Footer = () => {
   };
 
   return (
-    <footer className="footer">
-      {/* Newsletter Section */}
-      <div className="footer-newsletter">
-        <div className="newsletter-content">
-          <h3>Let's get in touch</h3>
-          <p>Subscribe to our newsletter and get 10% off your first purchase</p>
-          <form className="newsletter-form" onSubmit={handleSubscribe}>
-            <input
-              type="email"
-              placeholder="Your email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <button type="submit" disabled={loading}>
-              {loading ? '...' : 'Subscribe'} <FiArrowRight />
-            </button>
-          </form>
+    <footer className="footer-v2">
+      {/* Help Center Banner */}
+      <div className="wix-help-banner">
+        <div className="help-banner-content">
+          <div className="help-text-side">
+            <h2>Need Help? Check Out Our Help Center</h2>
+            <p>I'm a paragraph. Click here to add your own text and edit me. Let your users get to know you.</p>
+            <Link to="/help" className="go-help-btn">Go to Help Center</Link>
+          </div>
+          <div className="help-image-side">
+            <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=2070&auto=format&fit=crop" alt="Help Center" />
+          </div>
         </div>
       </div>
 
-      {/* Main Footer */}
-      <div className="footer-main">
-        <div className="footer-container">
-          {/* Quick Links */}
-          <div className="footer-column">
-            <h4>Quick Links</h4>
-            <ul>
-              <li><Link to="/products">Shop All</Link></li>
-              <li><Link to="/products?category=Lip%20Tint">Lip Tints</Link></li>
-              <li><Link to="/products?category=Perfume">Perfumes</Link></li>
-              <li><Link to="/products?category=Beauty%20Soap">Beauty Soaps</Link></li>
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div className="footer-column">
-            <h4>Company</h4>
-            <ul>
-              <li><Link to="/about">About Us</Link></li>
-              <li><Link to="/contact">Contact</Link></li>
-            </ul>
-          </div>
-
-          {/* Information */}
-          <div className="footer-column">
-            <h4>Information</h4>
-            <ul>
-              <li><Link to="/info/shipping">Shipping & Delivery</Link></li>
-              <li><Link to="/info/returns">Returns & Exchanges</Link></li>
-              <li><Link to="/info/terms">Terms & Conditions</Link></li>
-              <li><Link to="/info/privacy">Privacy Policy</Link></li>
-            </ul>
-          </div>
-
-          {/* Our Store */}
-          <div className="footer-column footer-store">
-            <h4>Our Store</h4>
-            <p>Salvacion, Panabo City, Davao del Norte, 8105, Philippines</p>
-            <p>amarace.skincare@gmail.com</p>
-            <p>+63 915 266 2648</p>
-            <div className="footer-social">
-              <a href="https://www.facebook.com/AmaraCeSkinCare/" target="_blank" rel="noopener noreferrer">
-                <FiFacebook />
-              </a>
+      {/* Main Footer Sections */}
+      <div className="footer-main-skincare">
+        <div className="footer-grid-container">
+          {/* Store Location */}
+          <div className="footer-v2-column">
+            <h4>Store Location</h4>
+            <div className="store-info">
+              <p>Salvacion, Panabo City, Davao del Norte, 8105, Philippines</p>
+              <p>amarace.skincare@gmail.com</p>
+              <p>+63 915 266 2648</p>
+              <div className="social-links-v2">
+                <a href="https://facebook.com" target="_blank" rel="noreferrer"><FiFacebook /></a>
+              </div>
             </div>
           </div>
+
+          {/* Shop */}
+          <div className="footer-v2-column">
+            <h4>Shop</h4>
+            <ul>
+              <li><Link to="/products">SHOP ALL</Link></li>
+              <li><Link to="/products?category=Lip+Tints">LIP TINTS</Link></li>
+              <li><Link to="/products?category=Perfumes">PERFUMES</Link></li>
+              <li><Link to="/products?category=Beauty+Soaps">BEAUTY SOAPS</Link></li>
+              <li><Link to="/products?sale=true">SALE</Link></li>
+            </ul>
+          </div>
+
+          {/* Customer Support */}
+          <div className="footer-v2-column">
+            <h4>Customer Support</h4>
+            <ul>
+              <li><Link to="/contact">Contact Us</Link></li>
+              <li><Link to="/help">Help Center</Link></li>
+              <li><Link to="/about">About Us</Link></li>
+              <li><Link to="/careers">Careers</Link></li>
+            </ul>
+          </div>
+
+          {/* Policy */}
+          <div className="footer-v2-column">
+            <h4>Policy</h4>
+            <ul>
+              <li><Link to="/policies/shipping">Shipping & Returns</Link></li>
+              <li><Link to="/policies/terms">Terms & Conditions</Link></li>
+              <li><Link to="/policies/payment">Payment Methods</Link></li>
+              <li><Link to="/faq">FAQ</Link></li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      {/* Footer Bottom */}
-      <div className="footer-bottom">
-        <div className="footer-bottom-container">
-          <p>
-            © {startYear}
-            {currentYear > startYear && `–${currentYear}`} AmaraCé. All rights reserved.
-          </p>
+      {/* Footer Payment & Copyright */}
+      <div className="footer-bottom-skincare">
+        <div className="payment-methods-row">
+          <span>We accept the following paying methods</span>
+          <div className="gcash-logo-v2">
+            <img src="https://i.ibb.co/L5fX0gD/gcash-logo.png" alt="GCash" />
+          </div>
+        </div>
+        <div className="copyright-v2">
+          <p>© 2025-2026 AmaraCé. All rights reserved.</p>
         </div>
       </div>
     </footer>
