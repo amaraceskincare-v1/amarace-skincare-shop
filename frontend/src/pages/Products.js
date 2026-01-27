@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { FiGrid, FiList, FiChevronDown, FiX } from 'react-icons/fi';
 import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
@@ -12,6 +12,7 @@ const Products = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [gridCols, setGridCols] = useState(4);
 
@@ -77,135 +78,62 @@ const Products = () => {
 
   const hasActiveFilters = category || sort || minPrice || maxPrice;
 
+  // Group products by category
+  const groupedProducts = products.reduce((acc, product) => {
+    const cat = product.category || 'Uncategorized';
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(product);
+    return acc;
+  }, {});
+
   return (
-    <div className="products-page">
-      {/* Breadcrumb */}
-      <div className="breadcrumb">
-        <Link to="/">Home</Link>
-        <span>/</span>
-        <span>Products</span>
+    <div className="products-page cashier-theme">
+      {/* Top Navigation Bar */}
+      <div className="cashier-header">
+        <button className="back-btn" onClick={() => navigate(-1)}>
+          <FiX /> <span>Back</span>
+        </button>
+        <h1 className="cashier-title">Products</h1>
+        <div className="header-hint">Add products to cart</div>
       </div>
 
-      {/* Page Title */}
-      <div className="page-title">
-        <h1>Products</h1>
-      </div>
-
-      <div className="products-layout">
-        {/* Sidebar Filters */}
-        <aside className={`filters-sidebar ${sidebarOpen ? 'open' : ''}`}>
-          <div className="sidebar-header-mobile">
-            <h3>Filters</h3>
-            <button onClick={() => setSidebarOpen(false)}><FiX /></button>
-          </div>
-
-          {/* Category Filter */}
-          <div className="filter-section">
-            <h4>Category</h4>
-            <ul className="filter-list">
-              <li>
-                <label className={!category ? 'active' : ''}>
-                  <input
-                    type="radio"
-                    name="category"
-                    checked={!category}
-                    onChange={() => updateFilter('category', '')}
-                  />
-                  All Products
-                </label>
-              </li>
+      <div className="products-layout-new">
+        {/* Simplified Filter Row */}
+        <div className="filter-row">
+          <div className="category-select-wrapper">
+            <select
+              value={category}
+              onChange={(e) => updateFilter('category', e.target.value)}
+              className="cashier-select"
+            >
+              <option value="">All Categories</option>
               {categories.map((cat) => (
-                <li key={cat}>
-                  <label className={category === cat ? 'active' : ''}>
-                    <input
-                      type="radio"
-                      name="category"
-                      checked={category === cat}
-                      onChange={() => updateFilter('category', cat)}
-                    />
-                    {cat}
-                  </label>
-                </li>
+                <option key={cat} value={cat}>{cat}</option>
               ))}
-            </ul>
+            </select>
+            <FiChevronDown />
           </div>
 
-          {/* Price Filter */}
-          <div className="filter-section">
-            <h4>Price</h4>
-            <div className="price-inputs">
-              <input
-                type="number"
-                placeholder="Min"
-                value={minPrice}
-                onChange={(e) => updateFilter('minPrice', e.target.value)}
-              />
-              <span>-</span>
-              <input
-                type="number"
-                placeholder="Max"
-                value={maxPrice}
-                onChange={(e) => updateFilter('maxPrice', e.target.value)}
-              />
-            </div>
+          <div className="search-input-wrapper">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => updateFilter('search', e.target.value)}
+              className="cashier-search"
+            />
           </div>
 
-          {hasActiveFilters && (
-            <button className="clear-filters-btn" onClick={clearFilters}>
-              Clear All Filters
-            </button>
-          )}
-        </aside>
-
-        {sidebarOpen && (
-          <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />
-        )}
-
-        {/* Main Content */}
-        <div className="products-main">
-          {/* Toolbar */}
-          <div className="products-toolbar">
-            <button className="filter-toggle-btn" onClick={() => setSidebarOpen(true)}>
-              Filters
-            </button>
-
-            <span className="results-count">{totalProducts} products</span>
-
-            <div className="toolbar-right">
-              {/* Grid Layout Switcher */}
-              <div className="grid-switcher">
-                {[2, 3, 4, 5].map((cols) => (
-                  <button
-                    key={cols}
-                    className={gridCols === cols ? 'active' : ''}
-                    onClick={() => setGridCols(cols)}
-                  >
-                    <FiGrid />
-                  </button>
-                ))}
-              </div>
-
-              {/* Sort Dropdown */}
-              <div className="sort-dropdown">
-                <select
-                  value={sort}
-                  onChange={(e) => updateFilter('sort', e.target.value)}
-                >
-                  <option value="">Featured</option>
-                  <option value="price_asc">Price: Low to High</option>
-                  <option value="price_desc">Price: High to Low</option>
-                  <option value="newest">Newest</option>
-                  <option value="rating">Best Rated</option>
-                </select>
-                <FiChevronDown />
-              </div>
-            </div>
+          <div className="view-toggle">
+            <FiList />
+            <FiGrid className="active" />
           </div>
+        </div>
 
-          {/* Products Grid */}
+        {/* Main Products Area */}
+        <div className="products-main-new">
           {loading ? (
-            <div className={`products-grid cols-${gridCols}`}>
-              {/* Changed from 12 to 6 skeleton loaders */}
+            <div className="products-grid-new">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="product-skeleton">
                   <div className="skeleton-image"></div>
@@ -214,17 +142,22 @@ const Products = () => {
                 </div>
               ))}
             </div>
-          ) : products.length > 0 ? (
-            <div className={`products-grid cols-${gridCols}`}>
-              {products.map((product) => (
-                <ProductCard key={product._id} product={product} />
-              ))}
-            </div>
+          ) : Object.keys(groupedProducts).length > 0 ? (
+            Object.entries(groupedProducts).map(([catName, catProducts]) => (
+              <div key={catName} className="category-group">
+                <h2 className="category-heading">{catName}</h2>
+                <div className="products-grid-new">
+                  {catProducts.map((product) => (
+                    <ProductCard key={product._id} product={product} />
+                  ))}
+                </div>
+              </div>
+            ))
           ) : (
             <div className="no-products">
               <h3>No products found</h3>
-              <p>Try adjusting your filters</p>
-              <button onClick={clearFilters}>Clear Filters</button>
+              <p>Try adjusting your search or filters</p>
+              <button className="btn-primary" onClick={clearFilters}>Clear All</button>
             </div>
           )}
 

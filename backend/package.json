@@ -19,7 +19,7 @@
     "multer-storage-cloudinary": "^4.0.0",
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.12",
-    "resend": "^3.0.0",
+    "resend": "^3.5.0",
     "stripe": "^14.10.0",
     "validator": "^13.11.0"
   },

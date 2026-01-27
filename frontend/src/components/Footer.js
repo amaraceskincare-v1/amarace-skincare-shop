@@ -1,5 +1,5 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import api from '../utils/api';
 import { toast } from 'react-toastify';
 import { FiFacebook, FiArrowRight } from "react-icons/fi";
@@ -8,6 +8,10 @@ import '../styles/Footer.css';
 const Footer = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Footer year range
+  const startYear = 2025;
+  const currentYear = new Date().getFullYear();
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -99,7 +103,10 @@ const Footer = () => {
       {/* Footer Bottom */}
       <div className="footer-bottom">
         <div className="footer-bottom-container">
-          <p>&copy; {new Date().getFullYear()} AmaraCé. All rights reserved.</p>
+          <p>
+            © {startYear}
+            {currentYear > startYear && `–${currentYear}`} AmaraCé. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

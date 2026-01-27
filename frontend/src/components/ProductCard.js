@@ -48,18 +48,12 @@ const ProductCard = ({ product }) => {
           {product.stock === 0 && (
             <span className="badge badge-out">Out of Stock</span>
           )}
-          {hasDiscount && (
-            <span className="badge badge-sale">Sale</span>
-          )}
         </div>
 
         <div className="product-info">
           <h3 className="product-name">{product.name}</h3>
           <div className="product-price">
-            {hasDiscount && (
-              <span className="original-price">₱{product.originalPrice?.toFixed(2)}</span>
-            )}
-            <span className={`current-price ${hasDiscount ? 'sale' : ''}`}>
+            <span className="current-price">
               ₱{product.price?.toFixed(2)}
             </span>
           </div>
