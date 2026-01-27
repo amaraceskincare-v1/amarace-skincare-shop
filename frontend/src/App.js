@@ -34,7 +34,7 @@ import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
-const AppContent = () => {
+const App = () => {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
@@ -164,20 +164,6 @@ const AppContent = () => {
       <Footer />
       <ToastContainer position="bottom-right" />
     </div>
-  );
-};
-
-const App = () => {
-  return (
-    <Router>
-      <AuthProvider>
-        <LanguageProvider>
-          <CartProvider>
-            <AppContent />
-          </CartProvider>
-        </LanguageProvider>
-      </AuthProvider>
-    </Router>
   );
 };
 
