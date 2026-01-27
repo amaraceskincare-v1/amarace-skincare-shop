@@ -130,14 +130,20 @@
 
 .intro-link {
   display: inline-block;
-  color: #1a1a1a;
+  background-color: #1a1a1a;
+  color: #ffffff;
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #1a1a1a;
-  padding-bottom: 0.25rem;
-  transition: opacity 0.2s ease;
+  padding: 1rem 2rem;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  text-transform: uppercase;
+}
+
+.intro-link:hover {
+  background-color: #333333;
+  opacity: 0.9;
 }
 
 .intro-link:hover {
@@ -469,14 +475,14 @@
 }
 
 /* =========================================
-   INSTAGRAM SECTION
+   FACEBOOK SECTION
    ========================================= */
-.instagram-section {
+.facebook-section {
   padding: 5rem 2rem;
   background: #fafafa;
 }
 
-.instagram-grid {
+.facebook-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 0.5rem;
@@ -484,19 +490,19 @@
   margin: 0 auto;
 }
 
-.instagram-item {
+.facebook-item {
   aspect-ratio: 1;
   overflow: hidden;
 }
 
-.instagram-item img {
+.facebook-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.instagram-item:hover img {
+.facebook-item:hover img {
   transform: scale(1.05);
   opacity: 0.9;
 }

@@ -162,7 +162,7 @@ const Home = () => {
       {/* Intro Section */}
       <section className="intro-section">
         <p className="intro-text">
-          Living out every single day with confidence and beauty
+          Living out every single day with confidence and beauty.
         </p>
         <p className="intro-subtext">
           Discover our curated collection of premium beauty products designed to enhance your natural glow.
@@ -281,12 +281,12 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Instagram Feed */}
-      <section className="instagram-section">
+      {/* Facebook Feed */}
+      <section className="facebook-section">
         <h2 className="section-title">
-          Follow us <span>Instagram</span>
+          Follow us <span>Facebook</span>
         </h2>
-        <div className="instagram-grid">
+        <div className="facebook-grid">
           {[
             'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&q=80',
             'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&q=80',
@@ -297,12 +297,12 @@ const Home = () => {
           ].map((img, index) => (
             <a
               key={index}
-              href="https://instagram.com/amarace"
+              href="https://facebook.com/amarace"
               target="_blank"
               rel="noopener noreferrer"
-              className="instagram-item"
+              className="facebook-item"
             >
-              <img src={img} alt="Instagram" />
+              <img src={img} alt="facebook" />
             </a>
           ))}
         </div>
