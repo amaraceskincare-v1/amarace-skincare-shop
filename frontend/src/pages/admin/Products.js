@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
-import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash2, FiPackage, FiShoppingCart, FiCreditCard } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
+import AdminSidebar from '../../components/AdminSidebar';
 import '../../styles/Admin.css';
 
 const AdminProducts = () => {
+  // ... (rest of state logic)
   const [products, setProducts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
@@ -91,28 +94,7 @@ const AdminProducts = () => {
 
   return (
     <div className="admin-layout">
-      <aside className="admin-sidebar">
-        <div className="sidebar-logo">
-          AmaraCé <span>Admin</span>
-        </div>
-        <nav className="sidebar-nav">
-          <Link to="/admin" className="nav-item">
-            <FiShoppingCart /> Dashboard
-          </Link>
-          <Link to="/admin/products" className="nav-item active">
-            <FiPackage /> Products
-          </Link>
-          <Link to="/admin/orders" className="nav-item">
-            <FiShoppingCart /> Orders
-          </Link>
-          <Link to="/admin/payments" className="nav-item">
-            <FiCreditCard /> GCash Payments
-          </Link>
-          <Link to="/" className="nav-item return-site">
-            Return to Site
-          </Link>
-        </nav>
-      </aside>
+      <AdminSidebar />
 
       <main className="admin-main">
         <div className="admin-header">

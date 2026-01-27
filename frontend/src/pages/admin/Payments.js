@@ -1,8 +1,4 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { FiPackage, FiShoppingCart, FiCreditCard } from 'react-icons/fi';
-import api from '../../utils/api';
-import { toast } from 'react-toastify';
+import AdminSidebar from '../../components/AdminSidebar';
 import '../../styles/Admin.css';
 
 const AdminPayments = () => {
@@ -61,28 +57,7 @@ const AdminPayments = () => {
 
     return (
         <div className="admin-layout">
-            <aside className="admin-sidebar">
-                <div className="sidebar-logo">
-                    AmaraCé <span>Admin</span>
-                </div>
-                <nav className="sidebar-nav">
-                    <Link to="/admin" className="nav-item">
-                        <FiShoppingCart /> Dashboard
-                    </Link>
-                    <Link to="/admin/products" className="nav-item">
-                        <FiPackage /> Products
-                    </Link>
-                    <Link to="/admin/orders" className="nav-item">
-                        <FiShoppingCart /> Orders
-                    </Link>
-                    <Link to="/admin/payments" className="nav-item active">
-                        <FiCreditCard /> GCash Payments
-                    </Link>
-                    <Link to="/" className="nav-item return-site">
-                        Return to Site
-                    </Link>
-                </nav>
-            </aside>
+            <AdminSidebar />
 
             <main className="admin-main">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
