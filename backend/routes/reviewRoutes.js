@@ -92,6 +92,19 @@ router.get('/product/:productId', async (req, res) => {
     }
 });
 
+// Get all reviews (Admin only)
+router.get('/', protect, admin, async (req, res) => {
+    try {
+        const reviews = await Review.find()
+            .populate('user', 'name email')
+            .populate('product', 'name')
+            .sort('-createdAt');
+        res.json(reviews);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Get pending reviews (Admin only)
 router.get('/pending', protect, admin, async (req, res) => {
     try {

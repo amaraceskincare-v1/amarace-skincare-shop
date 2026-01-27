@@ -104,12 +104,18 @@ const Dashboard = () => {
       </div>
 
       {/* Admin Navigation */}
-      <div className="admin-nav">
+      <div className="admin-nav" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '2rem' }}>
         <Link to="/admin/products" className="admin-nav-link">
           Manage Products
         </Link>
         <Link to="/admin/orders" className="admin-nav-link">
           Manage Orders
+        </Link>
+        <Link to="/admin/reviews" className="admin-nav-link">
+          Manage Reviews (Star Ratings)
+        </Link>
+        <Link to="/admin/payments" className="admin-nav-link">
+          GCash Payment Management
         </Link>
       </div>
 

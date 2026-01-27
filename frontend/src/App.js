@@ -24,6 +24,8 @@ import OrderSuccess from './pages/OrderSuccess';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/Products';
 import AdminOrders from './pages/admin/Orders';
+import AdminReviews from './pages/admin/Reviews';
+import AdminPayments from './pages/admin/Payments';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import FAQs from './pages/FAQs';
@@ -124,6 +126,22 @@ function App() {
             element={
               <ProtectedRoute adminOnly>
                 <AdminOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/reviews"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminReviews />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/payments"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminPayments />
               </ProtectedRoute>
             }
           />

@@ -43,10 +43,6 @@ const Checkout = () => {
     email: user?.email || ''
   });
 
-  const [address, setAddress] = useState({
-    street: '', barangay: '', city: '', region: 'Davao Del Norte', zipCode: '', landmark: ''
-  });
-
   const shipping = cartTotal >= 500 ? 0 : 85;
   const total = cartTotal + shipping;
 
@@ -197,6 +193,9 @@ const Checkout = () => {
                   <div className="qr-container">
                     <img src="/gcash-qr.png" alt="GCash QR" className="qr-code" />
                   </div>
+
+
+
                   <p className="upload-label">Upload payment screenshot:</p>
                   <input
                     type="file"

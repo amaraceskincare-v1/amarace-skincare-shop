@@ -32,7 +32,13 @@ const ProductCard = ({ product }) => {
         </div>
 
         <div className="product-info centered">
-          {/* Quick Actions moved above name */}
+          <h3 className="product-name">{product.name}</h3>
+          <div className="product-price">
+            <span className="current-price">
+              ₱{product.price?.toFixed(2)}
+            </span>
+          </div>
+
           <div className="product-actions-inline">
             <button
               className="action-btn cart-action"
@@ -40,18 +46,8 @@ const ProductCard = ({ product }) => {
               disabled={product.stock === 0}
               aria-label="Add to cart"
             >
-              <FiShoppingCart />
+              <FiShoppingCart /> Add to Cart
             </button>
-            <button className="action-btn wishlist-action" aria-label="Add to wishlist">
-              <FiHeart />
-            </button>
-          </div>
-
-          <h3 className="product-name">{product.name}</h3>
-          <div className="product-price">
-            <span className="current-price">
-              ₱{product.price?.toFixed(2)}
-            </span>
           </div>
         </div>
       </Link>

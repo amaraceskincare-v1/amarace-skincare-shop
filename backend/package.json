@@ -21,6 +21,7 @@
     "nodemailer": "^7.0.12",
     "resend": "^3.5.0",
     "stripe": "^14.10.0",
+    "tesseract.js": "^7.0.0",
     "validator": "^13.11.0"
   },
   "devDependencies": {

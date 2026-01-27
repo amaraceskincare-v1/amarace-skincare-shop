@@ -26,6 +26,13 @@ const orderSchema = new mongoose.Schema({
     email: String
   },
   paymentProof: { type: String }, // For GCash payment screenshots
+  paymentData: {
+    name: String,
+    number: String,
+    amountSent: Number,
+    referenceNo: String,
+    dateSent: String
+  },
   subtotal: { type: Number, required: true },
   tax: { type: Number, default: 0 },
   shippingCost: { type: Number, required: true },

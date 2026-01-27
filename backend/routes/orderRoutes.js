@@ -8,9 +8,48 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
+const Tesseract = require('tesseract.js');
 const sendEmail = require('../utils/sendEmail');
 const sendTelegram = require('../utils/sendTelegram');
 const orderEmailTemplate = require('../utils/orderEmailTemplate');
+
+// Helper to extract GCash data from image
+const extractGCashData = async (imagePath) => {
+  try {
+    // Tesseract can handle URLs directly
+    const { data: { text } } = await Tesseract.recognize(imagePath, 'eng');
+    console.log('OCR Raw Text:', text);
+
+    const data = {
+      name: 'N/A',
+      number: 'N/A',
+      amountSent: '0.00',
+      referenceNo: 'N/A',
+      dateSent: new Date().toLocaleString()
+    };
+
+    // Regex for Amount
+    const amountMatch = text.match(/(?:Amount|₱|Total|PHP)\s*[:=]?\s*([\d,]+\.?\d*)/i);
+    if (amountMatch) data.amountSent = amountMatch[1].replace(/,/g, '');
+
+    // Regex for Reference Number (GCash usually has 12 or 13 digits)
+    const refMatch = text.match(/(?:Ref(?:\.?)\s*No(?:\.?)|Reference(?:\.?)\s*No(?:\.?))\s*[:=]?\s*(\d{4}\s*\d{3}\s*\d{6}|\d{12,13})/i);
+    if (refMatch) data.referenceNo = refMatch[1].replace(/\s/g, '');
+
+    // Regex for Date/Time
+    const dateMatch = text.match(/(?:Date|Time|Sent\s*at)\s*[:=]?\s*([A-Za-z]{3}\s\d{1,2},?\s\d{4},?\s\d{1,2}:\d{2}\s?[AP]M)/i);
+    if (dateMatch) data.dateSent = dateMatch[1];
+
+    // Regex for Phone
+    const phoneMatch = text.match(/(?:09|\+639)\d{9}/);
+    if (phoneMatch) data.number = phoneMatch[0];
+
+    return data;
+  } catch (error) {
+    console.error('OCR Error:', error);
+    return null;
+  }
+};
 
 const router = express.Router();
 
@@ -47,7 +86,6 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
     const { shippingAddress, contactDetails } = req.body;
     const parsedAddress = typeof shippingAddress === 'string' ? JSON.parse(shippingAddress) : shippingAddress;
     const parsedContact = typeof contactDetails === 'string' ? JSON.parse(contactDetails) : contactDetails;
-
     const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
 
     if (!cart || cart.items.length === 0) {
@@ -58,6 +96,11 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
       return res.status(400).json({ message: 'Payment proof is required' });
     }
 
+    // Extract data from GCash receipt using OCR
+    console.log('Extracting GCash data from:', req.file.path);
+    const extractedData = await extractGCashData(req.file.path);
+    console.log('Extracted Data:', extractedData);
+
     const items = cart.items.map(item => ({
       product: item.product._id,
       quantity: item.quantity,
@@ -65,8 +108,6 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
     }));
 
     const subtotal = cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-    // Shipping cost is now passed from frontend based on location
-    // Logic: Free shipping if subtotal >= 500
     let shippingCost = Number(req.body.shippingCost) || 0;
     if (subtotal >= 500) {
       shippingCost = 0;
@@ -80,10 +121,11 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
       shippingAddress: parsedAddress,
       paymentMethod: 'gcash',
       paymentProof: req.file.path,
+      paymentData: extractedData,
       subtotal,
       shippingCost,
       total,
-      tax: 0, // No tax
+      tax: 0,
       status: 'awaiting_payment_verification'
     });
 

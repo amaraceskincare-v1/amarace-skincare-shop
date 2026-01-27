@@ -51,17 +51,19 @@
 }
 
 .main-image {
-  background: #f8f8f8;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 1rem;
+  background: transparent !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  margin-bottom: 2rem !important;
+  display: flex !important;
+  justify-content: center !important;
 }
 
 .main-image img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1;
-  object-fit: contain;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
 }
 
 .image-thumbnails {
@@ -72,9 +74,9 @@
 .thumb-btn {
   width: 80px;
   height: 80px;
-  background: #f8f8f8;
-  border: 2px solid transparent;
-  border-radius: 4px;
+  background: transparent;
+  border: 1px solid #eee;
+  border-radius: 0;
   overflow: hidden;
   cursor: pointer;
   transition: border-color 0.2s ease;
@@ -213,24 +215,7 @@
   cursor: not-allowed;
 }
 
-.wishlist-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.75rem;
-  background: transparent;
-  border: none;
-  color: #666;
-  font-size: 0.875rem;
-  cursor: pointer;
-  margin-bottom: 2rem;
-}
 
-.wishlist-btn:hover {
-  color: #1a1a1a;
-}
 
 /* Shipping Info */
 .shipping-info {

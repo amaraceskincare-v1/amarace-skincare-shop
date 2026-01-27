@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
-import { FiMinus, FiPlus, FiStar, FiHeart, FiTruck, FiRefreshCw } from 'react-icons/fi';
+import { FiMinus, FiPlus, FiStar, FiTruck, FiRefreshCw } from 'react-icons/fi';
 import api from '../utils/api';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -166,9 +166,7 @@ const ProductDetail = () => {
             </button>
           </div>
 
-          <button className="wishlist-btn">
-            <FiHeart /> Add to Wishlist
-          </button>
+
 
           {/* Shipping Info */}
           <div className="shipping-info">

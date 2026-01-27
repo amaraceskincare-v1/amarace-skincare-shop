@@ -143,9 +143,28 @@
     color: #065f46;
 }
 
-.status.cancelled {
+.status.cancelled,
+.status.rejected {
     background: #fee2e2;
     color: #991b1b;
+}
+
+.status.approved {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.admin-table-container {
+    overflow-x: auto;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.admin-page h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a1a1a;
 }
 
 .recent-orders h2 {
