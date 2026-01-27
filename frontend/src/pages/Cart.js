@@ -56,7 +56,6 @@ const Cart = () => {
             <span className="col-product">Product</span>
             <span className="col-price">Price</span>
             <span className="col-quantity">Quantity</span>
-            <span className="col-total">Total</span>
           </div>
 
           <div className="table-body">
@@ -78,7 +77,10 @@ const Cart = () => {
                 <div className="col-quantity">
                   <div className="quantity-control-wrapper">
                     <div className="quantity-control">
-                      <button onClick={() => updateQuantity(item.product?._id, item.quantity - 1)}>
+                      <button
+                        onClick={() => updateQuantity(item.product?._id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                      >
                         <FiMinus />
                       </button>
                       <span>{item.quantity}</span>
@@ -93,10 +95,6 @@ const Cart = () => {
                       <FiTrash2 /> Remove
                     </button>
                   </div>
-                </div>
-
-                <div className="col-total">
-                  ₱{((item.product?.price || 0) * item.quantity).toFixed(2)}
                 </div>
               </div>
             ))}

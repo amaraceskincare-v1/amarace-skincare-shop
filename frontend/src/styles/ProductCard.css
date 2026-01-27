@@ -29,8 +29,7 @@
 .product-image {
   position: relative !important;
   width: 100% !important;
-  height: auto !important;
-  min-height: auto !important;
+  aspect-ratio: 1 / 1 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -41,9 +40,7 @@
 
 .product-image img {
   width: 100% !important;
-  height: auto !important;
-  max-width: 100% !important;
-  max-height: none !important;
+  height: 100% !important;
   object-fit: contain !important;
   display: block !important;
   transition: transform 0.5s ease-in-out !important;

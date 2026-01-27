@@ -80,16 +80,50 @@ export const CartProvider = ({ children }) => {
   };
 
   const updateQuantity = async (productId, quantity) => {
+    if (quantity < 1) return;
+
+    // Optimistic UI Update
+    const prevCart = { ...cart };
+    const updatedItems = cart.items.map(item =>
+      item.product?._id === productId ? { ...item, quantity } : item
+    );
+    setCart({ ...cart, items: updatedItems });
+
     if (user) {
-      const { data } = await api.put('/cart/update', { productId, quantity });
-      setCart(data);
+      try {
+        const { data } = await api.put('/cart/update', { productId, quantity });
+        setCart(data);
+      } catch (error) {
+        console.error('Failed to update quantity:', error);
+        setCart(prevCart); // Rollback on error
+      }
+    } else {
+      // Guest logic
+      const localCart = { ...cart, items: updatedItems };
+      setCart(localCart);
+      localStorage.setItem('cart', JSON.stringify(localCart));
     }
   };
 
   const removeFromCart = async (productId) => {
+    // Optimistic UI Update
+    const prevCart = { ...cart };
+    const updatedItems = cart.items.filter(item => item.product?._id !== productId);
+    setCart({ ...cart, items: updatedItems });
+
     if (user) {
-      const { data } = await api.delete(`/cart/remove/${productId}`);
-      setCart(data);
+      try {
+        const { data } = await api.delete(`/cart/remove/${productId}`);
+        setCart(data);
+      } catch (error) {
+        console.error('Failed to remove item:', error);
+        setCart(prevCart); // Rollback on error
+      }
+    } else {
+      // Guest logic
+      const localCart = { ...cart, items: updatedItems };
+      setCart(localCart);
+      localStorage.setItem('cart', JSON.stringify(localCart));
     }
   };
 

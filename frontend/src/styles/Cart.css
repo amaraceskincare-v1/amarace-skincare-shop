@@ -112,7 +112,8 @@
 
 .table-header {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr 1fr;
+  grid-template-columns: 3fr 1fr 1fr;
+  /* 3 columns now */
   padding: 1rem 1.5rem;
   background: #f9f9f9;
   font-size: 0.75rem;
@@ -128,7 +129,8 @@
 
 .cart-item {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr 1fr;
+  grid-template-columns: 3fr 1fr 1fr;
+  /* 3 columns now */
   align-items: center;
   padding: 1.5rem 0;
   border-bottom: 1px solid #eee;
@@ -147,8 +149,8 @@
 }
 
 .table-header .col-product {
-  padding-left: 110px !important;
-  /* Perfect alignment with product name (80px img + 30px gap) */
+  padding-left: 95px !important;
+  /* Align "PRODUCT" text with the item name */
 }
 
 .product-image {
@@ -256,35 +258,32 @@
 .remove-btn {
   display: flex !important;
   align-items: center !important;
-  gap: 0.25rem !important;
+  gap: 0.3rem !important;
   background: none !important;
   border: none !important;
-  color: #999 !important;
+  color: #aaaaaa !important;
   font-size: 0.75rem !important;
   cursor: pointer !important;
-  margin-top: 8px !important;
-  position: absolute !important;
-  bottom: -20px !important;
-  /* Push it below the quantity bar without affecting row center */
+  margin-top: 12px !important;
+  /* Good spacing below quantity control */
+  padding: 5px 10px !important;
+  /* robust hit area */
+  transition: all 0.2s ease !important;
 }
 
 .remove-btn:hover {
   color: #dc3545 !important;
+  background: rgba(220, 53, 69, 0.05) !important;
+  border-radius: 4px !important;
 }
 
-/* Total Column */
+/* Total Column - Removed but keeping for safety if needed later */
 .col-total {
-  font-size: 0.9375rem !important;
-  font-weight: 600 !important;
-  color: #1a1a1a !important;
-  text-align: right !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
+  display: none !important;
 }
 
 .table-header .col-total {
-  text-align: right !important;
+  display: none !important;
 }
 
 .shipping-note,
