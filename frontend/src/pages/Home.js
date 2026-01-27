@@ -128,7 +128,7 @@ const Home = () => {
     }
   ];
 
-  const marqueeTexts = ['Premium Quality', 'Cruelty Free', 'Fast Delivery', 'Best Sellers', 'New Arrivals'];
+  const marqueeTexts = ['Premium Quality', 'Fast Delivery', 'Best Sellers', 'New Arrivals'];
 
   return (
     <div className="home-page">
@@ -162,7 +162,7 @@ const Home = () => {
       {/* Intro Section */}
       <section className="intro-section">
         <p className="intro-text">
-          Living out every single day with confidence and beauty...
+          Living out every single day with confidence and beauty
         </p>
         <p className="intro-subtext">
           Discover our curated collection of premium beauty products designed to enhance your natural glow.
