@@ -430,6 +430,7 @@
     display: block;
     padding: 1rem 0;
     font-size: 1rem;
+    text-align: right;
   }
 
   .nav-link.active::after {
@@ -449,6 +450,7 @@
   .mobile-nav-link {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 12px;
     padding: 1rem 0;
     font-size: 1rem;
@@ -470,7 +472,7 @@
     font-size: 1rem;
     font-weight: 500;
     color: #dc3545;
-    text-align: left;
+    text-align: right;
     cursor: pointer;
   }
 

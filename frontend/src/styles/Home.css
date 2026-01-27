@@ -37,8 +37,7 @@
 .hero-content {
   position: absolute;
   left: 8%;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 80px;
   color: #fff;
   z-index: 10;
 }
@@ -156,6 +155,15 @@
 .category-section {
   padding: 3rem 2rem 5rem;
   overflow-x: auto;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+}
+
+.category-section::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
 }
 
 .category-slider {
@@ -175,10 +183,11 @@
 .category-image {
   width: 160px;
   height: 160px;
-  border-radius: 50%;
+  border-radius: 12px;
   overflow: hidden;
   margin-bottom: 1rem;
   transition: transform 0.3s ease;
+  background: #f0f0f0;
 }
 
 .category-item:hover .category-image {
@@ -601,6 +610,7 @@
   .hero-content {
     left: 5%;
     right: 5%;
+    bottom: 60px;
   }
 
   .intro-text {
