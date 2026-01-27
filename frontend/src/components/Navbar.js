@@ -148,9 +148,9 @@ const Navbar = () => {
       <nav className="main-nav-bar">
         <ul className="nav-links-centered">
           <li><Link to="/products" className={isActive('/products') ? 'active' : ''}>SHOP ALL</Link></li>
-          <li><Link to="/products?category=Lip+Tint" className={location.search.includes('Lip+Tint') ? 'active' : ''}>LIP TINTS</Link></li>
+          <li><Link to="/products?category=Lip%20Tint" className={location.search.includes('Lip%20Tint') || location.search.includes('Lip+Tint') ? 'active' : ''}>LIP TINTS</Link></li>
           <li><Link to="/products?category=Perfume" className={location.search.includes('Perfume') ? 'active' : ''}>PERFUMES</Link></li>
-          <li><Link to="/products?category=Beauty+Soap" className={location.search.includes('Beauty+Soap') ? 'active' : ''}>BEAUTY SOAPS</Link></li>
+          <li><Link to="/products?category=Beauty%20Soap" className={location.search.includes('Beauty%20Soap') || location.search.includes('Beauty+Soap') ? 'active' : ''}>BEAUTY SOAPS</Link></li>
         </ul>
       </nav>
 
@@ -162,9 +162,9 @@ const Navbar = () => {
         </div>
         <ul className="mobile-links">
           <li><Link to="/products" onClick={() => setMenuOpen(false)}>SHOP ALL</Link></li>
-          <li><Link to="/products?category=Lip+Tint" onClick={() => setMenuOpen(false)}>LIP TINTS</Link></li>
+          <li><Link to="/products?category=Lip%20Tint" onClick={() => setMenuOpen(false)}>LIP TINTS</Link></li>
           <li><Link to="/products?category=Perfume" onClick={() => setMenuOpen(false)}>PERFUMES</Link></li>
-          <li><Link to="/products?category=Beauty+Soap" onClick={() => setMenuOpen(false)}>BEAUTY SOAPS</Link></li>
+          <li><Link to="/products?category=Beauty%20Soap" onClick={() => setMenuOpen(false)}>BEAUTY SOAPS</Link></li>
           <li><Link to="/products?sale=true" onClick={() => setMenuOpen(false)}>SALE</Link></li>
           <hr />
           <li><Link to="/about" onClick={() => setMenuOpen(false)}>About Us</Link></li>
