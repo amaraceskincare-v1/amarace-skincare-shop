@@ -246,64 +246,103 @@
     margin-bottom: 2rem;
 }
 
-.summary-item {
+.summary-item-modern {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 0;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
     border-bottom: 1px solid #eee;
 }
 
-.summary-item:last-child {
+.summary-item-modern:last-child {
     border-bottom: none;
 }
 
 .item-image {
-    position: relative;
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 100px;
     background: #fff;
     border: 1px solid #eee;
-    border-radius: 8px;
+    border-radius: 4px;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .item-image img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
 }
 
-.item-qty {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    width: 20px;
-    height: 20px;
-    background: #666;
-    color: #fff;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-
-.item-info {
+.item-details {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.item-info h4 {
-    font-size: 0.875rem;
+.item-name {
+    font-size: 0.9375rem;
     font-weight: 500;
     color: #1a1a1a;
-    line-height: 1.4;
+    margin: 0;
 }
 
 .item-price {
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.item-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.qty-controls {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.qty-controls button {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #1a1a1a;
+    cursor: pointer;
+}
+
+.qty-controls span {
+    width: 32px;
+    text-align: center;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 0.75rem;
     font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: underline;
+}
+
+.remove-btn:hover {
+    color: #dc3545;
 }
 
 /* Summary Totals */

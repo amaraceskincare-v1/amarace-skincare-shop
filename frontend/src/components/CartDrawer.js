@@ -55,21 +55,23 @@ const CartDrawer = ({ isOpen, onClose }) => {
                                     <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt={item.product?.name} />
                                 </div>
                                 <div className="item-details">
-                                    <h4>{item.product?.name}</h4>
+                                    <h4 className="item-name">{item.product?.name}</h4>
                                     <p className="item-price">₱{item.product?.price?.toFixed(2)}</p>
-                                    <div className="item-quantity">
-                                        <button onClick={() => updateQuantity(item.product?._id, item.quantity - 1)}>
-                                            <FiMinus />
-                                        </button>
-                                        <span>{item.quantity}</span>
-                                        <button onClick={() => updateQuantity(item.product?._id, item.quantity + 1)}>
-                                            <FiPlus />
+                                    <div className="item-bottom">
+                                        <div className="item-quantity">
+                                            <button onClick={() => updateQuantity(item.product?._id, item.quantity - 1)}>
+                                                <FiMinus />
+                                            </button>
+                                            <span>{item.quantity}</span>
+                                            <button onClick={() => updateQuantity(item.product?._id, item.quantity + 1)}>
+                                                <FiPlus />
+                                            </button>
+                                        </div>
+                                        <button className="item-remove" onClick={() => removeFromCart(item.product?._id)}>
+                                            <FiX /> Remove
                                         </button>
                                     </div>
                                 </div>
-                                <button className="item-remove" onClick={() => removeFromCart(item.product?._id)}>
-                                    <FiTrash2 />
-                                </button>
                             </div>
                         ))
                     )}

@@ -4,6 +4,7 @@ import api from '../utils/api';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
+import { FiMinus, FiPlus, FiX } from 'react-icons/fi';
 import '../styles/Checkout.css';
 
 // Davao Del Norte data
@@ -29,7 +30,7 @@ const barangayList = {
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { cart, cartTotal, clearCart } = useCart();
+  const { cart, cartTotal, clearCart, updateQuantity, removeFromCart } = useCart();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [proofImage, setProofImage] = useState(null);
@@ -229,15 +230,42 @@ const Checkout = () => {
         <div className="checkout-summary-section">
           <div className="order-items">
             {items.map((item) => (
-              <div key={item.product?._id || item.productId} className="summary-item">
+              <div key={item.product?._id || item.productId} className="summary-item-modern">
                 <div className="item-image">
                   <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt={item.product?.name} />
-                  <span className="item-qty">{item.quantity}</span>
                 </div>
-                <div className="item-info">
-                  <h4>{item.product?.name}</h4>
+
+                <div className="item-details">
+                  <h4 className="item-name">{item.product?.name}</h4>
+                  <p className="item-price">₱{item.product?.price?.toFixed(2)}</p>
+
+                  <div className="item-controls">
+                    <div className="qty-controls">
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(item.product?._id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                      >
+                        <FiMinus />
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(item.product?._id, item.quantity + 1)}
+                      >
+                        <FiPlus />
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="remove-btn"
+                      onClick={() => removeFromCart(item.product?._id)}
+                    >
+                      <FiX /> Remove
+                    </button>
+                  </div>
                 </div>
-                <div className="item-price">₱{((item.product?.price || 0) * item.quantity).toFixed(2)}</div>
               </div>
             ))}
           </div>

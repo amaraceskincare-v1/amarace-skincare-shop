@@ -59,14 +59,12 @@ const Cart = () => {
               </div>
 
               <div className="item-details-container">
-                <div className="item-main-info">
-                  <h4 className="item-name">{item.product?.name}</h4>
-                  <p className="item-price-modern">₱{item.product?.price?.toFixed(2)}</p>
-                </div>
+                <h4 className="item-name">{item.product?.name}</h4>
+                <p className="item-price-modern">₱{item.product?.price?.toFixed(2)}</p>
 
-                <div className="item-controls-modern">
+                <div className="item-bottom-row">
                   <div className="quantity-selector-modern">
-                    <span className="control-label">Quantity:</span>
+                    <span className="control-label">QUANTITY:</span>
                     <div className="quantity-buttons">
                       <button
                         onClick={() => updateQuantity(item.product?._id, item.quantity - 1)}
@@ -85,7 +83,7 @@ const Cart = () => {
                     className="item-remove-link"
                     onClick={() => removeFromCart(item.product?._id)}
                   >
-                    Remove
+                    <FiX /> Remove
                   </button>
                 </div>
               </div>
