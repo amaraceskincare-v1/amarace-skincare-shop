@@ -29,21 +29,24 @@
 .product-image {
   position: relative !important;
   width: 100% !important;
-  aspect-ratio: 4 / 5 !important;
-  /* Vertical portrait ratio for perfume bottles */
+  min-height: 400px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   margin-bottom: 0.75rem !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
 }
 
 .product-image img {
   width: 100% !important;
-  height: 100% !important;
+  height: auto !important;
+  max-height: 450px !important;
   object-fit: contain !important;
   display: block !important;
+  background: transparent !important;
   transition: transform 0.5s ease-in-out !important;
 }
 
