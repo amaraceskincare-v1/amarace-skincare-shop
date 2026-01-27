@@ -8,11 +8,20 @@ import '../styles/Footer.css';
 const Footer = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const [settings, setSettings] = useState(null);
   const { t } = useLanguage();
 
-  // Footer year range
-  const startYear = 2025;
-  const currentYear = new Date().getFullYear();
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const { data } = await api.get('/settings');
+        setSettings(data);
+      } catch (error) {
+        console.error('Error fetching settings:', error);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -41,7 +50,7 @@ const Footer = () => {
             <Link to="/products" className="go-help-btn">{t('go_shop')}</Link>
           </div>
           <div className="help-image-side">
-            <img src="https://i.ibb.co/p6Vp9XJ/composite-skincare.jpg" alt="AmaraCé Products" />
+            <img src={settings?.footerHelpImage || "https://i.ibb.co/p6Vp9XJ/composite-skincare.jpg"} alt="AmaraCé Products" />
           </div>
         </div>
       </div>
@@ -58,7 +67,7 @@ const Footer = () => {
               <p>+63 915 266 2648</p>
               <div className="social-links-v2">
                 <a href="https://www.facebook.com/AmaraCeSkinCare/" target="_blank" rel="noreferrer">
-                  <img src="https://i.ibb.co/hK8bQfP/fb-logo.png" alt="Facebook" style={{ width: '24px', height: '24px' }} />
+                  <img src={settings?.facebookLogo || "https://i.ibb.co/hK8bQfP/fb-logo.png"} alt="Facebook" style={{ width: '24px', height: '24px', marginTop: '10px' }} />
                 </a>
               </div>
             </div>
@@ -102,7 +111,7 @@ const Footer = () => {
         <div className="payment-methods-row">
           <span>{t('we_accept')}</span>
           <div className="gcash-logo-v2">
-            <img src="https://i.ibb.co/L5fX0gD/gcash-logo.png" alt="GCash" />
+            <img src={settings?.paymentLogo || "https://i.ibb.co/L5fX0gD/gcash-logo.png"} alt="GCash" />
           </div>
         </div>
         <div className="copyright-v2">

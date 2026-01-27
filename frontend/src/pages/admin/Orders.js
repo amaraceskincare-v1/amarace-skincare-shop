@@ -1,4 +1,7 @@
+import { useState, useEffect } from 'react';
 import AdminSidebar from '../../components/AdminSidebar';
+import api from '../../utils/api';
+import { toast } from 'react-toastify';
 import '../../styles/Admin.css';
 
 const AdminOrders = () => {
@@ -7,8 +10,13 @@ const AdminOrders = () => {
   useEffect(() => { fetchOrders(); }, []);
 
   const fetchOrders = async () => {
-    const { data } = await api.get('/orders');
-    setOrders(data);
+    try {
+      const { data } = await api.get('/orders');
+      setOrders(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Fetch orders failed:', error);
+      setOrders([]);
+    }
   };
 
   const updateStatus = async (id, status) => {
@@ -49,7 +57,7 @@ const AdminOrders = () => {
 
       <main className="admin-main">
         <h1>Manage Orders</h1>
-        <table className="admin-table">
+        <table className="admin-table compact-table">
           <thead>
             <tr>
               <th>Order ID</th>
@@ -76,7 +84,7 @@ const AdminOrders = () => {
                 <td>{order.user?.name}<br /><small>{order.user?.email}</small></td>
                 <td>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                    {order.items.map((item, index) => (
+                    {(order.items || []).map((item, index) => (
                       <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                         <img
                           src={item.product?.images?.[0] || '/placeholder.jpg'}
@@ -88,7 +96,7 @@ const AdminOrders = () => {
                     ))}
                   </div>
                 </td>
-                <td>₱{order.total.toFixed(2)}</td>
+                <td>₱{(order.total || 0).toFixed(2)}</td>
                 <td>
                   <span style={{ textTransform: 'uppercase', fontWeight: 'bold' }}>{order.paymentMethod}</span>
                   {order.paymentProof && (

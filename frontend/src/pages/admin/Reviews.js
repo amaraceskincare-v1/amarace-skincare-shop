@@ -1,4 +1,8 @@
+import { useState, useEffect } from 'react';
 import AdminSidebar from '../../components/AdminSidebar';
+import api from '../../utils/api';
+import { toast } from 'react-toastify';
+import { FiStar, FiCheck, FiX, FiTrash2 } from 'react-icons/fi';
 import '../../styles/Admin.css';
 
 const AdminReviews = () => {
@@ -12,9 +16,10 @@ const AdminReviews = () => {
     const fetchReviews = async () => {
         try {
             const { data } = await api.get('/reviews');
-            setReviews(data);
+            setReviews(Array.isArray(data) ? data : []);
         } catch (error) {
-            toast.error('Failed to fetch reviews');
+            console.error('Fetch reviews failed:', error);
+            setReviews([]);
         } finally {
             setLoading(false);
         }

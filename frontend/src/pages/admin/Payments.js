@@ -1,4 +1,7 @@
+import { useState, useEffect } from 'react';
 import AdminSidebar from '../../components/AdminSidebar';
+import api from '../../utils/api';
+import { toast } from 'react-toastify';
 import '../../styles/Admin.css';
 
 const AdminPayments = () => {
@@ -12,10 +15,12 @@ const AdminPayments = () => {
     const fetchGCashOrders = async () => {
         try {
             const { data } = await api.get('/orders');
-            const gcashOrders = data.filter(order => order.paymentMethod === 'gcash');
+            const ordersArray = Array.isArray(data) ? data : [];
+            const gcashOrders = ordersArray.filter(order => order.paymentMethod === 'gcash');
             setOrders(gcashOrders);
         } catch (error) {
-            toast.error('Failed to fetch payments');
+            console.error('Fetch payments failed:', error);
+            setOrders([]);
         } finally {
             setLoading(false);
         }

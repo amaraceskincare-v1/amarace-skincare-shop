@@ -9,10 +9,12 @@ const AdminSettings = () => {
     const [settings, setSettings] = useState({
         logo: '',
         headerBackground: '',
-        heroImage: '',
+        heroImages: [], // Now an array
         fbSectionImage: '',
         footerHelpImage: '',
         gcashQRCode: '',
+        facebookLogo: '',
+        paymentLogo: '',
     });
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -22,7 +24,10 @@ const AdminSettings = () => {
         const fetchSettings = async () => {
             try {
                 const { data } = await api.get('/settings');
-                setSettings(data);
+                setSettings({
+                    ...data,
+                    heroImages: data.heroImages || []
+                });
                 setLoading(false);
             } catch (error) {
                 toast.error('Failed to load settings');
@@ -33,15 +38,22 @@ const AdminSettings = () => {
     }, []);
 
     const handleFileChange = (e, field) => {
-        const file = e.target.files[0];
-        if (file) {
-            setFiles({ ...files, [field]: file });
-            // Show preview
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSettings({ ...settings, [field]: reader.result });
-            };
-            reader.readAsDataURL(file);
+        if (field === 'heroImages') {
+            const selectedFiles = Array.from(e.target.files);
+            setFiles({ ...files, [field]: selectedFiles });
+            // For preview, we'll just show the first one or a simplified note
+            toast.info(`${selectedFiles.length} files selected for Hero`);
+        } else {
+            const file = e.target.files[0];
+            if (file) {
+                setFiles({ ...files, [field]: file });
+                // Show preview
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setSettings({ ...settings, [field]: reader.result });
+                };
+                reader.readAsDataURL(file);
+            }
         }
     };
 
@@ -49,7 +61,11 @@ const AdminSettings = () => {
         setSaving(true);
         const formData = new FormData();
         Object.keys(files).forEach((key) => {
-            formData.append(key, files[key]);
+            if (key === 'heroImages') {
+                files[key].forEach(file => formData.append('heroImages', file));
+            } else {
+                formData.append(key, files[key]);
+            }
         });
 
         try {
@@ -68,28 +84,45 @@ const AdminSettings = () => {
 
     if (loading) return <div className="admin-loading">Loading...</div>;
 
-    const SettingField = ({ label, field, hint }) => (
+    const SettingField = ({ label, field, hint, multiple = false }) => (
         <div className="settings-field">
             <div className="field-info">
                 <label>{label}</label>
                 {hint && <p className="field-hint">{hint}</p>}
             </div>
             <div className="image-manager">
-                {settings[field] && (
-                    <div className="current-image-preview">
-                        <img src={settings[field]} alt={label} />
+                {multiple ? (
+                    <div className="multi-preview">
+                        <p>{(settings[field] || []).length} Images Uploaded</p>
+                        <div className="preview-row">
+                            {(settings[field] || []).slice(0, 3).map((img, i) => (
+                                <img key={i} src={img} alt="" style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
+                            ))}
+                            {(settings[field] || []).length > 3 && <span>+ {settings[field].length - 3} more</span>}
+                        </div>
                     </div>
+                ) : (
+                    settings[field] && (
+                        <div className="current-image-preview">
+                            <img src={settings[field]} alt={label} />
+                        </div>
+                    )
                 )}
                 <div className="upload-controls">
-                    <label className="upload-btn">
-                        <FiUpload /> Choose Image
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => handleFileChange(e, field)}
-                            hidden
-                        />
-                    </label>
+                    <input
+                        type="file"
+                        id={`file-input-${field}`}
+                        accept="image/*"
+                        multiple={multiple}
+                        onChange={(e) => handleFileChange(e, field)}
+                        style={{ display: 'none' }}
+                    />
+                    <button
+                        className="upload-btn-explicit"
+                        onClick={() => document.getElementById(`file-input-${field}`).click()}
+                    >
+                        <FiUpload /> {multiple ? 'Upload New Photos' : 'Change Image'}
+                    </button>
                 </div>
             </div>
         </div>
@@ -120,6 +153,11 @@ const AdminSettings = () => {
                                 field="logo"
                                 hint="Transparent PNG recommended for the navbar."
                             />
+                            <SettingField
+                                label="Facebook Logo"
+                                field="facebookLogo"
+                                hint="Small icon used in the footer."
+                            />
                         </div>
 
                         {/* Layout Images */}
@@ -131,9 +169,10 @@ const AdminSettings = () => {
                                 hint="Background image for the top navigation area."
                             />
                             <SettingField
-                                label="Hero Image"
-                                field="heroImage"
-                                hint="The main wide image shown at the top of the Home page."
+                                label="Hero Photos"
+                                field="heroImages"
+                                hint="Upload 2 or more photos for the Home slider."
+                                multiple={true}
                             />
                         </div>
 
@@ -155,6 +194,11 @@ const AdminSettings = () => {
                         {/* Payments */}
                         <div className="settings-card">
                             <h3>Payment Methods</h3>
+                            <SettingField
+                                label="Payment Methods Icon"
+                                field="paymentLogo"
+                                hint="Logo shown below 'We accept' in the footer (e.g., GCash logo)."
+                            />
                             <SettingField
                                 label="GCash QR Code"
                                 field="gcashQRCode"

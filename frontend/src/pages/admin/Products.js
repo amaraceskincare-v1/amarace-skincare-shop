@@ -98,25 +98,56 @@ const AdminProducts = () => {
 
       <main className="admin-main">
         <div className="admin-header">
-          <h1>Manage Products</h1>
+          <h1>Manage Products <small style={{ fontSize: '0.8rem', opacity: 0.6 }}>(v2.0 - Standardized List)</small></h1>
           <button className="add-btn" onClick={() => setShowModal(true)}><FiPlus /> Add Product</button>
         </div>
 
-        <table className="admin-table">
+        <table className="admin-table compact-table">
           <thead>
-            <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr>
+            <tr>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Status</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
+            </tr>
           </thead>
           <tbody>
             {products.map(product => (
               <tr key={product._id}>
-                <td><img src={product.images?.[0] || '/placeholder.jpg'} alt="" className="product-thumb" /></td>
-                <td>{product.name}</td>
-                <td>{product.category}</td>
-                <td>₱{product.price}</td>
-                <td>{product.stock}</td>
+                <td className="product-info-cell">
+                  <img
+                    src={product.images?.[0] || '/placeholder.jpg'}
+                    alt=""
+                    className="product-thumb-small"
+                    style={{ width: '50px', height: '50px', objectFit: 'cover', minWidth: '50px' }}
+                  />
+                  <div className="product-meta">
+                    <span className="product-name">{product.name}</span>
+                    <span className="product-brand-sub">{product.brand || 'No Brand'}</span>
+                  </div>
+                </td>
+                <td><span className="category-pill">{product.category}</span></td>
+                <td className="price-cell">₱{product.price.toLocaleString()}</td>
+                <td className={`stock-cell ${product.stock < 10 ? 'low-stock' : ''}`}>
+                  {product.stock}
+                </td>
                 <td>
-                  <button className="edit-btn" onClick={() => openEdit(product)}><FiEdit /></button>
-                  <button className="delete-btn" onClick={() => handleDelete(product._id)}><FiTrash2 /></button>
+                  <div className="status-badges-row">
+                    {product.featured && <span className="admin-badge featured">Featured</span>}
+                    {product.bestSeller && <span className="admin-badge bestseller">Best Seller</span>}
+                  </div>
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  <div className="action-btns-heavy">
+                    <button className="edit-btn-v2" onClick={() => openEdit(product)}>
+                      <FiEdit /> <span>Edit</span>
+                    </button>
+                    <button className="delete-btn-v2" onClick={() => handleDelete(product._id)}>
+                      <FiTrash2 /> <span>Delete</span>
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

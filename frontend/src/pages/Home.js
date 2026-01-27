@@ -24,7 +24,10 @@ const Home = () => {
     const fetchSettings = async () => {
       try {
         const { data } = await api.get('/settings');
-        setSettings(data);
+        setSettings({
+          ...data,
+          heroImages: data.heroImages || []
+        });
       } catch (error) {
         console.error('Error fetching settings:', error);
       }
@@ -32,55 +35,35 @@ const Home = () => {
     fetchSettings();
   }, []);
 
-  const heroSlides = [
-    {
-      title: 'THE FUTURE OF SKINCARE',
-      subtitle: 'Experience the Ultimate Glow',
-      image: 'https://images.unsplash.com/photo-1598440447192-383794a08832?w=1920&q=80',
-      cta: 'Shop Now'
-    },
-    {
-      title: 'BEST SELLERS 2026',
-      subtitle: 'Discover Your New Routine',
-      image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1920&q=80',
-      cta: 'Explore All'
-    }
-  ];
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const bestSellersRes = await api.get('/products?bestSeller=true&limit=5');
-        setBestSellers(bestSellersRes.data.products || []);
-
-        const featuredRes = await api.get('/products?featured=true&limit=5');
-        setFeaturedProducts(featuredRes.data.products || []);
-
-        const allProductsRes = await api.get('/products?limit=1000');
-        const allProducts = allProductsRes.data.products || [];
-
-        const counts = {
-          'Lip Tint': allProducts.filter(p => p.category === 'Lip Tint').length,
-          'Perfume': allProducts.filter(p => p.category === 'Perfume').length,
-          'Beauty Soap': allProducts.filter(p => p.category === 'Beauty Soap').length,
-          'All': allProducts.length
-        };
-        setCategoryCounts(counts);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        setLoading(false);
+  // Use dynamic hero images if available, otherwise fallback to defaults
+  const displaySlides = settings?.heroImages?.length > 0
+    ? settings.heroImages.map((img, i) => ({
+      title: i === 0 ? 'THE FUTURE OF SKINCARE' : 'BEST SELLERS 2026',
+      subtitle: i === 0 ? 'Experience the Ultimate Glow' : 'Discover Your New Routine',
+      image: img,
+      cta: i === 0 ? 'Shop Now' : 'Explore All'
+    }))
+    : [
+      {
+        title: 'THE FUTURE OF SKINCARE',
+        subtitle: 'Experience the Ultimate Glow',
+        image: 'https://images.unsplash.com/photo-1598440447192-383794a08832?w=1920&q=80',
+        cta: 'Shop Now'
+      },
+      {
+        title: 'BEST SELLERS 2026',
+        subtitle: 'Discover Your New Routine',
+        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1920&q=80',
+        cta: 'Explore All'
       }
-    };
-    fetchData();
-  }, []);
+    ];
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+      setCurrentSlide((prev) => (prev + 1) % displaySlides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [displaySlides.length]);
 
   const features = [
     { icon: FiTruck, title: 'Free Shipping', desc: 'On orders over ₱500' },
@@ -143,11 +126,11 @@ const Home = () => {
     <div className="home-page">
       {/* Hero Slider */}
       <section className="hero-section">
-        {heroSlides.map((slide, index) => (
+        {displaySlides.map((slide, index) => (
           <div
             key={index}
             className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
-            style={{ backgroundImage: `url(${index === 0 && settings?.heroImage ? settings.heroImage : slide.image})` }}
+            style={{ backgroundImage: `url(${slide.image})` }}
           >
             <div className="hero-overlay"></div>
             <div className="hero-content">
@@ -161,7 +144,7 @@ const Home = () => {
           </div>
         ))}
         <div className="hero-dots">
-          {heroSlides.map((_, index) => (
+          {displaySlides.map((_, index) => (
             <button
               key={index}
               className={`hero-dot ${index === currentSlide ? 'active' : ''}`}

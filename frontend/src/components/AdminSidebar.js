@@ -10,7 +10,6 @@ const AdminSidebar = () => {
         { path: '/admin/orders', name: 'Orders', icon: <FiShoppingCart /> },
         { path: '/admin/payments', name: 'GCash Payments', icon: <FiCreditCard /> },
         { path: '/admin/reviews', name: 'Reviews', icon: <FiStar /> },
-        { path: '/admin/settings', name: 'Site Settings', icon: <FiSettings /> },
     ];
 
     return (

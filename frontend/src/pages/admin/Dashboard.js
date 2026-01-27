@@ -59,7 +59,13 @@ const Dashboard = () => {
     if (!file) return;
     setUploading(true);
     const formData = new FormData();
-    formData.append(field, file);
+    if (field === 'heroImages') {
+      for (let i = 0; i < file.length; i++) {
+        formData.append('heroImages', file[i]);
+      }
+    } else {
+      formData.append(field, file);
+    }
 
     try {
       const { data } = await api.put('/settings', formData, {
@@ -69,6 +75,20 @@ const Dashboard = () => {
       toast.success('Image updated successfully!');
     } catch (error) {
       toast.error('Failed to update image');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveImage = async (field) => {
+    if (!window.confirm(`Are you sure you want to remove this ${field}?`)) return;
+    setUploading(true);
+    try {
+      const { data } = await api.put('/settings', { [field]: 'remove' });
+      setSettings(data);
+      toast.success('Image removed successfully!');
+    } catch (error) {
+      toast.error('Failed to remove image');
     } finally {
       setUploading(false);
     }
@@ -91,26 +111,42 @@ const Dashboard = () => {
             <p>Update your site's main visuals instantly</p>
           </div>
           <div className="settings-grid-v2">
+            {/* Hero Photos Card */}
             <div className="settings-card">
-              <h4>Hero Section Image</h4>
+              <h4>Hero Photos Slider</h4>
               <div className="media-preview-mini">
-                <img src={settings.heroImage || '/placeholder.jpg'} alt="Hero" />
+                <div style={{ display: 'flex', gap: '5px', overflowX: 'auto', padding: '5px' }}>
+                  {settings.heroImages && settings.heroImages.length > 0 ? (
+                    settings.heroImages.map((img, i) => (
+                      <img key={i} src={img} alt="" style={{ height: '60px', width: '60px', objectFit: 'cover', borderRadius: '4px' }} />
+                    ))
+                  ) : (
+                    <img src="/placeholder.jpg" alt="No Hero Images" />
+                  )}
+                </div>
               </div>
               <input
                 type="file"
                 id="hero-upload"
-                onChange={(e) => handleUpdateImage('heroImage', e.target.files[0])}
+                multiple
+                onChange={(e) => handleUpdateImage('heroImages', e.target.files)}
                 style={{ display: 'none' }}
               />
-              <label htmlFor="hero-upload" className="upload-label-mini">
-                Change Image
-              </label>
+              <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                <button onClick={() => document.getElementById('hero-upload').click()} className="upload-label-mini">
+                  Upload Photos
+                </button>
+                <button onClick={() => handleRemoveImage('heroImages')} className="upload-label-mini" style={{ background: '#ef4444' }}>
+                  Clear All
+                </button>
+              </div>
             </div>
 
+            {/* Facebook Section Image */}
             <div className="settings-card">
               <h4>Facebook Section Image</h4>
               <div className="media-preview-mini">
-                <img src={settings.fbSectionImage || '/placeholder.jpg'} alt="Facebook" />
+                <img src={settings.fbSectionImage || '/placeholder.jpg'} alt="Facebook" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
               </div>
               <input
                 type="file"
@@ -118,15 +154,21 @@ const Dashboard = () => {
                 onChange={(e) => handleUpdateImage('fbSectionImage', e.target.files[0])}
                 style={{ display: 'none' }}
               />
-              <label htmlFor="fb-upload" className="upload-label-mini">
-                Change Image
-              </label>
+              <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                <button onClick={() => document.getElementById('fb-upload').click()} className="upload-label-mini">
+                  Change Image
+                </button>
+                <button onClick={() => handleRemoveImage('fbSectionImage')} className="upload-label-mini" style={{ background: '#ef4444' }}>
+                  Remove
+                </button>
+              </div>
             </div>
 
+            {/* Footer Help Image */}
             <div className="settings-card">
               <h4>Footer Help Image</h4>
               <div className="media-preview-mini">
-                <img src={settings.footerHelpImage || '/placeholder.jpg'} alt="Footer Help" />
+                <img src={settings.footerHelpImage || '/placeholder.jpg'} alt="Footer Help" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
               </div>
               <input
                 type="file"
@@ -134,15 +176,65 @@ const Dashboard = () => {
                 onChange={(e) => handleUpdateImage('footerHelpImage', e.target.files[0])}
                 style={{ display: 'none' }}
               />
-              <label htmlFor="footer-upload" className="upload-label-mini">
-                Change Image
-              </label>
+              <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                <button onClick={() => document.getElementById('footer-upload').click()} className="upload-label-mini">
+                  Change Image
+                </button>
+                <button onClick={() => handleRemoveImage('footerHelpImage')} className="upload-label-mini" style={{ background: '#ef4444' }}>
+                  Remove
+                </button>
+              </div>
             </div>
 
+            {/* Facebook Logo (Icon) */}
+            <div className="settings-card">
+              <h4>Facebook Icon (Footer)</h4>
+              <div className="media-preview-mini" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <img src={settings.facebookLogo || '/placeholder.jpg'} alt="FB Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
+              </div>
+              <input
+                type="file"
+                id="fb-logo-upload"
+                onChange={(e) => handleUpdateImage('facebookLogo', e.target.files[0])}
+                style={{ display: 'none' }}
+              />
+              <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                <button onClick={() => document.getElementById('fb-logo-upload').click()} className="upload-label-mini">
+                  Change Icon
+                </button>
+                <button onClick={() => handleRemoveImage('facebookLogo')} className="upload-label-mini" style={{ background: '#ef4444' }}>
+                  Remove
+                </button>
+              </div>
+            </div>
+
+            {/* Payment Methods Logo */}
+            <div className="settings-card">
+              <h4>Payment Methods Logo</h4>
+              <div className="media-preview-mini">
+                <img src={settings.paymentLogo || '/placeholder.jpg'} alt="Payment Logo" style={{ height: '100%', width: '100%', objectFit: 'contain' }} />
+              </div>
+              <input
+                type="file"
+                id="payment-logo-upload"
+                onChange={(e) => handleUpdateImage('paymentLogo', e.target.files[0])}
+                style={{ display: 'none' }}
+              />
+              <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                <button onClick={() => document.getElementById('payment-logo-upload').click()} className="upload-label-mini">
+                  Change Logo
+                </button>
+                <button onClick={() => handleRemoveImage('paymentLogo')} className="upload-label-mini" style={{ background: '#ef4444' }}>
+                  Remove
+                </button>
+              </div>
+            </div>
+
+            {/* GCash QR Code */}
             <div className="settings-card">
               <h4>GCash QR Code</h4>
               <div className="media-preview-mini">
-                <img src={settings.gcashQRCode || '/placeholder.jpg'} alt="GCash QR" />
+                <img src={settings.gcashQRCode || '/placeholder.jpg'} alt="GCash QR" style={{ height: '100%', width: '100%', objectFit: 'contain' }} />
               </div>
               <input
                 type="file"
@@ -150,9 +242,14 @@ const Dashboard = () => {
                 onChange={(e) => handleUpdateImage('gcashQRCode', e.target.files[0])}
                 style={{ display: 'none' }}
               />
-              <label htmlFor="gcash-upload" className="upload-label-mini">
-                Change Image
-              </label>
+              <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                <button onClick={() => document.getElementById('gcash-upload').click()} className="upload-label-mini">
+                  Change QR
+                </button>
+                <button onClick={() => handleRemoveImage('gcashQRCode')} className="upload-label-mini" style={{ background: '#ef4444' }}>
+                  Remove
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -232,8 +329,8 @@ const Dashboard = () => {
             </table>
           </div>
         </div>
-      </main>
-    </div>
+      </main >
+    </div >
   );
 };
 

@@ -35,22 +35,33 @@ router.put('/', protect, admin, upload.fields([
     { name: 'logo', maxCount: 1 },
     { name: 'sideAd', maxCount: 1 },
     { name: 'headerBackground', maxCount: 1 },
-    { name: 'heroImage', maxCount: 1 },
+    { name: 'heroImages', maxCount: 10 }, // Allow multiple
     { name: 'fbSectionImage', maxCount: 1 },
     { name: 'footerHelpImage', maxCount: 1 },
-    { name: 'gcashQRCode', maxCount: 1 }
+    { name: 'gcashQRCode', maxCount: 1 },
+    { name: 'facebookLogo', maxCount: 1 },
+    { name: 'paymentLogo', maxCount: 1 }
 ]), async (req, res) => {
     try {
         let settings = await SiteSettings.findOne();
         if (!settings) settings = await SiteSettings.create({});
 
-        const fields = ['logo', 'sideAd', 'headerBackground', 'heroImage', 'fbSectionImage', 'footerHelpImage', 'gcashQRCode'];
+        const singleFields = ['logo', 'sideAd', 'headerBackground', 'fbSectionImage', 'footerHelpImage', 'gcashQRCode', 'facebookLogo', 'paymentLogo'];
 
-        fields.forEach(field => {
+        singleFields.forEach(field => {
             if (req.files[field]) {
                 settings[field] = req.files[field][0].path;
+            } else if (req.body[field] === 'remove') {
+                settings[field] = '';
             }
         });
+
+        // Special handling for multiple hero images
+        if (req.files['heroImages']) {
+            settings.heroImages = req.files['heroImages'].map(f => f.path);
+        } else if (req.body['heroImages'] === 'remove') {
+            settings.heroImages = [];
+        }
 
         await settings.save();
         res.json(settings);
