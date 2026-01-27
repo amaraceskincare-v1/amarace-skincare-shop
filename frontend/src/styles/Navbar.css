@@ -355,11 +355,54 @@
   }
 
   .nav-actions {
-    gap: 15px;
+    gap: 12px;
   }
 
   .search-btn,
   .wishlist-icon {
+    display: none !important;
+  }
+
+  .navbar-logo span {
+    font-size: 0.9rem !important;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-actions {
+    gap: 8px;
+  }
+
+  .user-nav-wrapper {
     display: none;
   }
+}
+
+.cart-shake {
+  animation: cartShake 0.5s ease-in-out;
+}
+
+@keyframes cartShake {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.2) rotate(-10deg);
+  }
+
+  50% {
+    transform: scale(1.2) rotate(10deg);
+  }
+
+  75% {
+    transform: scale(1.2) rotate(-5deg);
+  }
+}
+
+.fly-to-cart-item {
+  box-shadow: 0 0 10px rgba(124, 77, 255, 0.5);
 }

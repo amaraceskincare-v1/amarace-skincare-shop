@@ -3,6 +3,7 @@ import { FiShoppingCart, FiHeart } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
 import { toast } from 'react-toastify';
 import '../styles/ProductCard.css';
+import { flyToCart } from '../utils/animations';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
@@ -10,9 +11,14 @@ const ProductCard = ({ product }) => {
   const handleAddToCart = async (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    // Find the button element for animation starting point
+    const btn = e.currentTarget;
+    flyToCart(btn);
+
     try {
       await addToCart(product._id, 1, product);
-      toast.success('Added to cart!');
+      // Removed toast as per user request
     } catch (error) {
       toast.error('Failed to add to cart');
     }

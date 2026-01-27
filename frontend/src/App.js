@@ -42,7 +42,7 @@ function App() {
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 500);
+    }, 1200);
     return () => clearTimeout(timer);
   }, [location.pathname]);
 

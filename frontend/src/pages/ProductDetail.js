@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
-import { FiMinus, FiPlus, FiStar, FiTruck, FiRefreshCw } from 'react-icons/fi';
+import { FiMinus, FiPlus, FiStar, FiTruck, FiRefreshCw, FiHeart } from 'react-icons/fi';
 import api from '../utils/api';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import '../styles/ProductDetail.css';
+
+import { flyToCart } from '../utils/animations';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -57,13 +59,16 @@ const ProductDetail = () => {
     }
   }, [location.state, loading]);
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e) => {
+    const btn = e.currentTarget;
+    flyToCart(btn);
+
     try {
       await addToCart(product._id, quantity, product);
-      toast.success('Added to cart!');
+      // Removed toast as per user request
       // Open cart drawer
       if (window.openCartDrawer) {
-        window.openCartDrawer();
+        setTimeout(() => window.openCartDrawer(), 800); // Small delay to allow fly animation
       }
     } catch (error) {
       toast.error('Failed to add to cart');

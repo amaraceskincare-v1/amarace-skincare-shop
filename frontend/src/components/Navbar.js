@@ -130,7 +130,7 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-            <Link to="/wishlist" className="nav-action-btn">
+            <Link to="/wishlist" className="nav-action-btn wishlist-icon">
               <FiHeart />
             </Link>
             <Link to="/cart" className="nav-action-btn cart-icon">
@@ -147,7 +147,7 @@ const Navbar = () => {
       {/* Level 3: Main Navigation Bar */}
       <nav className="main-nav-bar">
         <ul className="nav-links-centered">
-          <li><Link to="/products" className={isActive('/products') ? 'active' : ''}>SHOP ALL</Link></li>
+          <li><Link to="/" className={isActive('/') ? 'active' : ''}>HOME</Link></li>
           <li><Link to="/products?category=Lip%20Tint" className={location.search.includes('Lip%20Tint') || location.search.includes('Lip+Tint') ? 'active' : ''}>LIP TINTS</Link></li>
           <li><Link to="/products?category=Perfume" className={location.search.includes('Perfume') ? 'active' : ''}>PERFUMES</Link></li>
           <li><Link to="/products?category=Beauty%20Soap" className={location.search.includes('Beauty%20Soap') || location.search.includes('Beauty+Soap') ? 'active' : ''}>BEAUTY SOAPS</Link></li>
@@ -161,11 +161,11 @@ const Navbar = () => {
           <button className="close-menu" onClick={() => setMenuOpen(false)}><FiX /></button>
         </div>
         <ul className="mobile-links">
+          <li><Link to="/" onClick={() => setMenuOpen(false)}>HOME</Link></li>
           <li><Link to="/products" onClick={() => setMenuOpen(false)}>SHOP ALL</Link></li>
           <li><Link to="/products?category=Lip%20Tint" onClick={() => setMenuOpen(false)}>LIP TINTS</Link></li>
           <li><Link to="/products?category=Perfume" onClick={() => setMenuOpen(false)}>PERFUMES</Link></li>
           <li><Link to="/products?category=Beauty%20Soap" onClick={() => setMenuOpen(false)}>BEAUTY SOAPS</Link></li>
-          <li><Link to="/products?sale=true" onClick={() => setMenuOpen(false)}>SALE</Link></li>
           <hr />
           <li><Link to="/about" onClick={() => setMenuOpen(false)}>About Us</Link></li>
           <li><Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link></li>

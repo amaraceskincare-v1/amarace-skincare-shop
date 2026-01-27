@@ -37,6 +37,10 @@ const Checkout = () => {
   // Get items array safely
   const items = cart?.items || [];
 
+  const [address, setAddress] = useState({
+    street: '', city: '', barangay: '', zipCode: '', landmark: ''
+  });
+
   const [contact, setContact] = useState({
     fullName: user?.name || '',
     phone: '',

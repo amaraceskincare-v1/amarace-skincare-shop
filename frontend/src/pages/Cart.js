@@ -50,55 +50,47 @@ const Cart = () => {
       </div>
 
       <div className="cart-content">
-        {/* Cart Table */}
-        <div className="cart-table">
-          <div className="table-header">
-            <span className="col-product">Product</span>
-            <span className="col-price">Price</span>
-            <span className="col-quantity">Quantity</span>
-          </div>
+        {/* Cart Items List */}
+        <div className="cart-items-list">
+          {items.map((item) => (
+            <div key={item.product?._id || item.productId} className="cart-item-modern">
+              <div className="item-image-container">
+                <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt={item.product?.name} />
+              </div>
 
-          <div className="table-body">
-            {items.map((item) => (
-              <div key={item.product?._id || item.productId} className="cart-item">
-                <div className="col-product">
-                  <div className="product-image">
-                    <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt={item.product?.name} />
-                  </div>
-                  <div className="product-details">
-                    <h4>{item.product?.name}</h4>
-                  </div>
+              <div className="item-details-container">
+                <div className="item-main-info">
+                  <h4 className="item-name">{item.product?.name}</h4>
+                  <p className="item-price-modern">₱{item.product?.price?.toFixed(2)}</p>
                 </div>
 
-                <div className="col-price">
-                  ₱{item.product?.price?.toFixed(2)}
-                </div>
-
-                <div className="col-quantity">
-                  <div className="quantity-control-wrapper">
-                    <div className="quantity-control">
+                <div className="item-controls-modern">
+                  <div className="quantity-selector-modern">
+                    <span className="control-label">Quantity:</span>
+                    <div className="quantity-buttons">
                       <button
                         onClick={() => updateQuantity(item.product?._id, item.quantity - 1)}
                         disabled={item.quantity <= 1}
                       >
                         <FiMinus />
                       </button>
-                      <span>{item.quantity}</span>
+                      <span className="quantity-value">{item.quantity}</span>
                       <button onClick={() => updateQuantity(item.product?._id, item.quantity + 1)}>
                         <FiPlus />
                       </button>
                     </div>
-                    <button
-                      className="remove-btn"
-                      onClick={() => removeFromCart(item.product?._id)}
-                    >
-                      <FiTrash2 /> Remove
-                    </button>
                   </div>
+
+                  <button
+                    className="item-remove-link"
+                    onClick={() => removeFromCart(item.product?._id)}
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
 
         {/* Cart Summary */}
