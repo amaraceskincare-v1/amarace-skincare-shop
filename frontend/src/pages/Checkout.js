@@ -235,11 +235,10 @@ const Checkout = () => {
             </button>
           </form>
 
-          {/* Policy Links */}
           <div className="checkout-policies">
-            <Link to="/info/refund-policy">Refund Policy</Link>
-            <Link to="/info/privacy-policy">Privacy Policy</Link>
-            <Link to="/info/terms">Terms of Service</Link>
+            <Link to="/policies/shipping-returns">Refund Policy</Link>
+            <Link to="/policies/privacy">Privacy Policy</Link>
+            <Link to="/policies/terms">Terms of Service</Link>
           </div>
         </div>
 

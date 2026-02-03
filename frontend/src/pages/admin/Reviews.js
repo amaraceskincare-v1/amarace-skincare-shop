@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import AdminSidebar from '../../components/AdminSidebar';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
-import { FiStar, FiCheck, FiX, FiTrash2 } from 'react-icons/fi';
+import { FiStar, FiTrash2 } from 'react-icons/fi';
 import '../../styles/Admin.css';
 
 const AdminReviews = () => {
@@ -25,23 +25,13 @@ const AdminReviews = () => {
         }
     };
 
-    const approveReview = async (id) => {
+    const updateStatus = async (id, status) => {
         try {
-            await api.patch(`/reviews/${id}/approve`);
-            toast.success('Review approved');
+            await api.patch(`/reviews/${id}/status`, { status });
+            toast.success(`Review marked as ${status}`);
             fetchReviews();
         } catch (error) {
-            toast.error('Failed to approve');
-        }
-    };
-
-    const rejectReview = async (id) => {
-        try {
-            await api.patch(`/reviews/${id}/reject`);
-            toast.success('Review rejected');
-            fetchReviews();
-        } catch (error) {
-            toast.error('Failed to reject');
+            toast.error('Failed to update status');
         }
     };
 
@@ -70,6 +60,7 @@ const AdminReviews = () => {
                             <tr>
                                 <th>Date</th>
                                 <th>Customer</th>
+                                <th>ITEM</th>
                                 <th>Product</th>
                                 <th>Rating</th>
                                 <th>Comment</th>
@@ -79,14 +70,23 @@ const AdminReviews = () => {
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan="7" style={{ textAlign: 'center' }}>Loading...</td></tr>
+                                <tr><td colSpan="8" style={{ textAlign: 'center' }}>Loading...</td></tr>
                             ) : reviews.length === 0 ? (
-                                <tr><td colSpan="7" style={{ textAlign: 'center' }}>No reviews found.</td></tr>
+                                <tr><td colSpan="8" style={{ textAlign: 'center' }}>No reviews found.</td></tr>
                             ) : (
                                 reviews.map(review => (
                                     <tr key={review._id}>
                                         <td>{new Date(review.createdAt).toLocaleDateString()}</td>
                                         <td>{review.user?.name || 'Anonymous'}</td>
+                                        <td>
+                                            <div className="product-thumbnail-mini">
+                                                <img
+                                                    src={review.product?.image || 'https://via.placeholder.com/50'}
+                                                    alt={review.product?.name}
+                                                    style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
+                                                />
+                                            </div>
+                                        </td>
                                         <td>{review.product?.name || 'Deleted Product'}</td>
                                         <td>
                                             <div style={{ display: 'flex', color: '#ffc107' }}>
@@ -97,20 +97,27 @@ const AdminReviews = () => {
                                         </td>
                                         <td style={{ maxWidth: '300px' }}>{review.comment}</td>
                                         <td>
-                                            <span className={`status-badge ${review.status.toLowerCase()}`}>{review.status}</span>
+                                            <select
+                                                value={review.status}
+                                                onChange={(e) => updateStatus(review._id, e.target.value)}
+                                                className={`status-select ${review.status.toLowerCase()}`}
+                                                style={{
+                                                    padding: '4px 8px',
+                                                    borderRadius: '4px',
+                                                    border: '1px solid #ddd',
+                                                    fontWeight: '600',
+                                                    textTransform: 'uppercase',
+                                                    fontSize: '0.75rem',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                <option value="pending">Pending</option>
+                                                <option value="approved">Approved</option>
+                                                <option value="rejected">Rejected</option>
+                                            </select>
                                         </td>
                                         <td>
                                             <div style={{ display: 'flex', gap: '8px' }}>
-                                                {review.status === 'pending' && (
-                                                    <>
-                                                        <button onClick={() => approveReview(review._id)} title="Approve" style={{ background: '#28a745', color: 'white', border: 'none', padding: '5px', borderRadius: '4px' }}>
-                                                            <FiCheck />
-                                                        </button>
-                                                        <button onClick={() => rejectReview(review._id)} title="Reject" style={{ background: '#dc3545', color: 'white', border: 'none', padding: '5px', borderRadius: '4px' }}>
-                                                            <FiX />
-                                                        </button>
-                                                    </>
-                                                )}
                                                 <button onClick={() => deleteReview(review._id)} title="Delete" style={{ background: '#6c757d', color: 'white', border: 'none', padding: '5px', borderRadius: '4px' }}>
                                                     <FiTrash2 />
                                                 </button>

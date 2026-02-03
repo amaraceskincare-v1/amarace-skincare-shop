@@ -1,17 +1,28 @@
+import { useState, useEffect } from 'react';
 import { FiAward, FiHeart, FiShield, FiUsers } from 'react-icons/fi';
+import api from '../utils/api';
 import '../styles/About.css';
 
 const About = () => {
+    const [settings, setSettings] = useState(null);
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const { data } = await api.get('/settings');
+                setSettings(data);
+            } catch (error) {
+                console.error('Error fetching settings:', error);
+            }
+        };
+        fetchSettings();
+    }, []);
+
     const values = [
         {
             icon: FiAward,
             title: 'Premium Quality',
             description: 'We source only the finest ingredients and partner with trusted manufacturers.'
-        },
-        {
-            icon: FiHeart,
-            title: 'Cruelty Free',
-            description: 'All our products are never tested on animals. Beauty without harm.'
         },
         {
             icon: FiShield,
@@ -38,7 +49,7 @@ const About = () => {
                 <div className="story-content">
                     <div className="story-image">
                         <img
-                            src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80"
+                            src={settings?.ourStoryImage || "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80"}
                             alt="AmaraCé Story"
                         />
                     </div>
@@ -104,36 +115,48 @@ const About = () => {
                     bringing you the best products and shopping experience.
                 </p>
                 <div className="team-grid">
-                    <div className="team-member">
-                        <div className="member-image">
-                            <img
-                                src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=80"
-                                alt="Team Member"
-                            />
-                        </div>
-                        <h3>Founder & CEO</h3>
-                        <p>Leading our vision for accessible beauty</p>
-                    </div>
-                    <div className="team-member">
-                        <div className="member-image">
-                            <img
-                                src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80"
-                                alt="Team Member"
-                            />
-                        </div>
-                        <h3>Beauty Director</h3>
-                        <p>Curating our product collection</p>
-                    </div>
-                    <div className="team-member">
-                        <div className="member-image">
-                            <img
-                                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80"
-                                alt="Team Member"
-                            />
-                        </div>
-                        <h3>Customer Experience</h3>
-                        <p>Ensuring your satisfaction</p>
-                    </div>
+                    {settings?.teamImages && settings.teamImages.length > 0 ? (
+                        settings.teamImages.map((img, i) => (
+                            <div key={i} className="team-member">
+                                <div className="member-image">
+                                    <img src={img} alt={`Team Member ${i + 1}`} />
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <>
+                            <div className="team-member">
+                                <div className="member-image">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=80"
+                                        alt="Team Member"
+                                    />
+                                </div>
+                                <h3>Founder & CEO</h3>
+                                <p>Leading our vision for accessible beauty</p>
+                            </div>
+                            <div className="team-member">
+                                <div className="member-image">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80"
+                                        alt="Team Member"
+                                    />
+                                </div>
+                                <h3>Beauty Director</h3>
+                                <p>Curating our product collection</p>
+                            </div>
+                            <div className="team-member">
+                                <div className="member-image">
+                                    <img
+                                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80"
+                                        alt="Team Member"
+                                    />
+                                </div>
+                                <h3>Customer Experience</h3>
+                                <p>Ensuring your satisfaction</p>
+                            </div>
+                        </>
+                    )}
                 </div>
             </section>
         </div>

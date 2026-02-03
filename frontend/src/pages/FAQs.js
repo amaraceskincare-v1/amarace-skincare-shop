@@ -65,10 +65,6 @@ const FAQs = () => {
                     a: 'Yes, all AmaraCé products are 100% authentic. We source directly from verified manufacturers and suppliers.'
                 },
                 {
-                    q: 'Are your products cruelty-free?',
-                    a: 'We are committed to cruelty-free beauty. None of our products are tested on animals.'
-                },
-                {
                     q: 'What if I receive a damaged product?',
                     a: 'Please contact us within 24 hours of delivery with photos of the damaged item. We\'ll send a replacement at no extra cost.'
                 }

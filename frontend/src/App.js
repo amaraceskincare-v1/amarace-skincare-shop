@@ -75,11 +75,11 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faqs" element={<FAQs />} />
-          <Route path="/info/refund-policy" element={<PolicyPage type="refund" />} />
-          <Route path="/info/privacy-policy" element={<PolicyPage type="privacy" />} />
-          <Route path="/info/terms" element={<PolicyPage type="terms" />} />
-          <Route path="/info/shipping" element={<PolicyPage type="shipping" />} />
-          <Route path="/info/returns" element={<PolicyPage type="returns" />} />
+          <Route path="/policies/shipping-returns" element={<PolicyPage type="shipping-returns" />} />
+          <Route path="/policies/terms" element={<PolicyPage type="terms" />} />
+          <Route path="/policies/payment" element={<PolicyPage type="payment" />} />
+          <Route path="/policies/privacy" element={<PolicyPage type="privacy" />} />
+          <Route path="/policies/refund" element={<PolicyPage type="refund" />} />
 
           {/* Protected Routes */}
           <Route

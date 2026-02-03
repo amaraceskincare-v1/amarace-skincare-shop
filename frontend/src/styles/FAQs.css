@@ -108,8 +108,10 @@
 .faqs-cta {
     text-align: center;
     padding: 4rem 2rem;
-    background: #1a1a1a;
-    color: #fff;
+    background: #fdf2f8;
+    /* Soft Pink */
+    color: #1a1a1a;
+    border-top: 1px solid #fce7f3;
 }
 
 .faqs-cta h3 {

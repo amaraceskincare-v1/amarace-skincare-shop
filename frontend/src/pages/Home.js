@@ -15,6 +15,12 @@ const Home = () => {
     'Beauty Soap': 0,
     'All': 0
   });
+
+  const isVideo = (url) => {
+    if (!url) return false;
+    const videoExtensions = ['.mp4', '.mov', '.webm', '.m4v'];
+    return videoExtensions.some(ext => url.toLowerCase().includes(ext));
+  };
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [settings, setSettings] = useState(null);
@@ -24,19 +30,66 @@ const Home = () => {
     const fetchSettings = async () => {
       try {
         const { data } = await api.get('/settings');
-        setSettings({
-          ...data,
-          heroImages: data.heroImages || []
-        });
+        if (data) {
+          setSettings({
+            ...data,
+            heroImages: data.heroImages || []
+          });
+        }
       } catch (error) {
         console.error('Error fetching settings:', error);
       }
     };
+
+    const fetchFeaturedProducts = async () => {
+      try {
+        const { data } = await api.get('/products?featured=true');
+        setFeaturedProducts(data?.products || []);
+      } catch (error) {
+        console.error('Error fetching featured products:', error);
+      }
+    };
+
+    const fetchBestSellers = async () => {
+      try {
+        const { data } = await api.get('/products?bestSeller=true');
+        setBestSellers(data?.products || []);
+      } catch (error) {
+        console.error('Error fetching best sellers:', error);
+      }
+    };
+
+    const fetchAllProductsAndCountCategories = async () => {
+      try {
+        const { data } = await api.get('/products?limit=1000');
+        const products = data?.products || [];
+        const counts = {
+          'Lip Tint': 0,
+          'Perfume': 0,
+          'Beauty Soap': 0,
+          'All': products.length
+        };
+        products.forEach(p => {
+          if (p && p.category && counts[p.category] !== undefined) {
+            counts[p.category]++;
+          }
+        });
+        setCategoryCounts(counts);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setLoading(false);
+      }
+    };
+
     fetchSettings();
+    fetchFeaturedProducts();
+    fetchBestSellers();
+    fetchAllProductsAndCountCategories();
   }, []);
 
   // Use dynamic hero images if available, otherwise fallback to defaults
-  const displaySlides = settings?.heroImages?.length > 0
+  const displaySlides = (settings?.heroImages && Array.isArray(settings.heroImages) && settings.heroImages.length > 0)
     ? settings.heroImages.map((img, i) => ({
       title: i === 0 ? 'THE FUTURE OF SKINCARE' : 'BEST SELLERS 2026',
       subtitle: i === 0 ? 'Experience the Ultimate Glow' : 'Discover Your New Routine',
@@ -99,25 +152,25 @@ const Home = () => {
     {
       name: 'Lip Tints',
       count: `${categoryCounts['Lip Tint']} items`,
-      image: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&q=80',
+      image: settings?.lipTintImage || 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&q=80',
       path: '/products?category=Lip%20Tint'
     },
     {
       name: 'Perfumes',
       count: `${categoryCounts['Perfume']} items`,
-      image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80',
+      image: settings?.perfumeImage || 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80',
       path: '/products?category=Perfume'
     },
     {
       name: 'Beauty Soaps',
       count: `${categoryCounts['Beauty Soap']} items`,
-      image: 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&q=80',
+      image: settings?.beautySoapImage || 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&q=80',
       path: '/products?category=Beauty%20Soap'
     },
     {
       name: 'All Best Sellers',
       count: `${categoryCounts['All']} items`,
-      image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&q=80',
+      image: settings?.allBestSellersImage || 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&q=80',
       path: '/products'
     }
   ];
@@ -130,8 +183,28 @@ const Home = () => {
           <div
             key={index}
             className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
-            style={{ backgroundImage: `url(${slide.image})` }}
+            style={{
+              backgroundImage: !isVideo(slide.image) ? `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${slide.image})` : 'none',
+              backgroundColor: isVideo(slide.image) ? 'transparent' : '#000'
+            }}
           >
+            {isVideo(slide.image) && (
+              <video
+                src={slide.image}
+                autoPlay
+                loop
+                muted
+                playsInline
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover'
+                }}
+              />
+            )}
             <div className="hero-overlay"></div>
             <div className="hero-content">
               <span className="hero-label">{slide.subtitle}</span>
@@ -266,20 +339,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Facebook Feed */}
-      <section className="facebook-section">
-        <h2 className="section-title">
-          {t('follow_fb')}
-        </h2>
-        <div className="facebook-single-image">
-          <a href="https://www.facebook.com/AmaraCeSkinCare/" target="_blank" rel="noopener noreferrer">
-            <img
-              src={settings?.fbSectionImage || "https://i.ibb.co/VvzK99F/fb-feed-single.jpg"}
-              alt="Follow us on Facebook"
-            />
-          </a>
-        </div>
-      </section>
+
 
       {/* Features Section */}
       <section className="features-section">

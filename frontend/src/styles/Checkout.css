@@ -155,27 +155,39 @@
 
 .qr-container {
     margin: 1.5rem auto;
-    width: 280px;
-    height: 280px;
+    width: 320px;
+    /* Enlarged */
+    height: 320px;
+    /* Enlarged */
     background: #fff;
-    padding: 10px;
+    padding: 15px;
+    /* More padding for better framing */
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    /* Stronger shadow for focus */
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 2px solid #007dfe;
+    /* Added brand-colored border */
+    overflow: hidden;
+    /* Enable zoom cropping */
 }
 
 .qr-code {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    /* Zoom strategy */
+    object-position: center;
+    transform: scale(1.2);
+    /* Zoom in further */
     border-radius: 8px;
     transition: transform 0.3s ease;
 }
 
 .qr-code:hover {
-    transform: scale(1.05);
+    transform: scale(1.3);
 }
 
 

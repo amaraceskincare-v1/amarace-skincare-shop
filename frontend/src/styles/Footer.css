@@ -128,14 +128,42 @@
     gap: 1.5rem;
 }
 
-.payment-methods-row span {
-    font-size: 0.8rem;
-    color: var(--secondary);
+.payment-logos-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
 }
 
-.gcash-logo-v2 img {
-    height: 35px;
-    filter: grayscale(0);
+.payment-logo-item img {
+    height: 80px;
+    /* Highly enlarged as requested */
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+    transition: transform 0.3s ease;
+}
+
+.payment-logo-item img:hover {
+    transform: scale(1.1);
+}
+
+.social-icon-large {
+    font-size: 80px;
+    /* Match payment logo height */
+    color: #1877F2;
+    /* Facebook official color */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* Corrected to left-aligned */
+    transition: transform 0.3s ease;
+}
+
+.social-icon-large:hover {
+    transform: scale(1.1);
 }
 
 .copyright-v2 p {

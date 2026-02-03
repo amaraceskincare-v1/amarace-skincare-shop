@@ -97,7 +97,7 @@ router.get('/', protect, admin, async (req, res) => {
     try {
         const reviews = await Review.find()
             .populate('user', 'name email')
-            .populate('product', 'name')
+            .populate('product', 'name image')
             .sort('-createdAt');
         res.json(reviews);
     } catch (error) {
@@ -110,7 +110,7 @@ router.get('/pending', protect, admin, async (req, res) => {
     try {
         const pendingReviews = await Review.find({ status: 'pending' })
             .populate('user', 'name email')
-            .populate('product', 'name')
+            .populate('product', 'name image')
             .sort('-createdAt');
         res.json(pendingReviews);
     } catch (error) {
@@ -170,6 +170,34 @@ router.patch('/:id/reject', protect, admin, async (req, res) => {
             message: 'Review rejected',
             review
         });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Update review status generic (Admin only)
+router.patch('/:id/status', protect, admin, async (req, res) => {
+    try {
+        const { status } = req.body;
+        if (!['pending', 'approved', 'rejected'].includes(status)) {
+            return res.status(400).json({ message: 'Invalid status' });
+        }
+
+        const review = await Review.findById(req.params.id);
+        if (!review) return res.status(404).json({ message: 'Review not found' });
+
+        review.status = status;
+        await review.save();
+
+        if (status === 'approved') {
+            await updateProductRatings(review.product);
+        }
+
+        const updatedReview = await Review.findById(review._id)
+            .populate('user', 'name')
+            .populate('product', 'name image');
+
+        res.json({ message: `Review marked as ${status}`, review: updatedReview });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

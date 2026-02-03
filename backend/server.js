@@ -70,7 +70,6 @@ app.use('/api/cart', require('./routes/cartRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 
 app.use('/api/settings', require('./routes/settingRoutes'));
-app.use('/api/settings', require('./routes/settingRoutes'));
 app.use('/api/reviews', require('./routes/reviewRoutes'));
 app.use('/api/newsletter', require('./routes/newsletterRoutes'));
 

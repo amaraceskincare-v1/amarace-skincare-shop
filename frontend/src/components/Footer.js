@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from '../utils/api';
 import { toast } from 'react-toastify';
 import { useLanguage } from '../context/LanguageContext';
+import { FaFacebook } from 'react-icons/fa';
 import '../styles/Footer.css';
 
 const Footer = () => {
@@ -41,33 +42,19 @@ const Footer = () => {
 
   return (
     <footer className="footer-v2">
-      {/* Help Center Banner */}
-      <div className="wix-help-banner">
-        <div className="help-banner-content">
-          <div className="help-text-side">
-            <h2>{t('need_help')} {t('check_help')}</h2>
-            <p>{t('footer_text')}</p>
-            <Link to="/products" className="go-help-btn">{t('go_shop')}</Link>
-          </div>
-          <div className="help-image-side">
-            <img src={settings?.footerHelpImage || "https://i.ibb.co/p6Vp9XJ/composite-skincare.jpg"} alt="AmaraCé Products" />
-          </div>
-        </div>
-      </div>
-
       {/* Main Footer Sections */}
       <div className="footer-main-skincare">
         <div className="footer-grid-container">
           {/* Store Location */}
           <div className="footer-v2-column">
             <h4>Store Location</h4>
-            <div className="store-info">
-              <p>Salvacion, Panabo City, Davao del Norte, 8105, Philippines</p>
-              <p>amarace.skincare@gmail.com</p>
-              <p>+63 915 266 2648</p>
-              <div className="social-links-v2">
-                <a href="https://www.facebook.com/AmaraCeSkinCare/" target="_blank" rel="noreferrer">
-                  <img src={settings?.facebookLogo || "https://i.ibb.co/hK8bQfP/fb-logo.png"} alt="Facebook" style={{ width: '24px', height: '24px', marginTop: '10px' }} />
+            <div className="store-info" style={{ paddingLeft: '1.5rem', marginTop: '1rem' }}>
+              <p style={{ marginBottom: '0.5rem' }}>Salvacion, Panabo City, Davao del Norte, 8105, Philippines</p>
+              <p style={{ marginBottom: '0.5rem' }}>amarace.skincare@gmail.com</p>
+              <p style={{ marginBottom: '1rem' }}>+63 915 266 2648</p>
+              <div className="footer-small-icon social-links-v2">
+                <a href="https://www.facebook.com/AmaraCeSkinCare/" target="_blank" rel="noreferrer" className="social-icon-large">
+                  <FaFacebook />
                 </a>
               </div>
             </div>
@@ -88,8 +75,8 @@ const Footer = () => {
           <div className="footer-v2-column">
             <h4>Customer Support</h4>
             <ul>
-              <li><Link to="/contact">{t('contact')}</Link></li>
-              <li><Link to="/about">{t('about')}</Link></li>
+              <li><Link to="/contact">Contact Us</Link></li>
+              <li><Link to="/about">About Us</Link></li>
             </ul>
           </div>
 
@@ -97,10 +84,10 @@ const Footer = () => {
           <div className="footer-v2-column">
             <h4>Policy</h4>
             <ul>
-              <li><Link to="/policies/shipping">{t('shipping_returns')}</Link></li>
+              <li><Link to="/policies/shipping-returns">{t('shipping_returns')}</Link></li>
               <li><Link to="/policies/terms">{t('terms_conditions')}</Link></li>
               <li><Link to="/policies/payment">{t('payment_methods')}</Link></li>
-              <li><Link to="/faq">{t('faq')}</Link></li>
+              <li><Link to="/faqs">{t('faq')}</Link></li>
             </ul>
           </div>
         </div>
@@ -110,8 +97,18 @@ const Footer = () => {
       <div className="footer-bottom-skincare">
         <div className="payment-methods-row">
           <span>{t('we_accept')}</span>
-          <div className="gcash-logo-v2">
-            <img src={settings?.paymentLogo || "https://i.ibb.co/L5fX0gD/gcash-logo.png"} alt="GCash" />
+          <div className="payment-logos-container">
+            {settings?.paymentLogos && settings.paymentLogos.length > 0 ? (
+              settings.paymentLogos.map((logo, i) => (
+                <div key={i} className="payment-logo-item">
+                  <img src={logo} alt={`Payment Method ${i + 1}`} />
+                </div>
+              ))
+            ) : (
+              <div className="payment-logo-item">
+                <img src="https://i.ibb.co/L5fX0gD/gcash-logo.png" alt="GCash" />
+              </div>
+            )}
           </div>
         </div>
         <div className="copyright-v2">

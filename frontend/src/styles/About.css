@@ -68,16 +68,6 @@
     padding-bottom: 1rem;
 }
 
-.story-text h2::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 60px;
-    height: 4px;
-    background: var(--primary);
-}
-
 .story-text p {
     font-size: 1.1rem;
     line-height: 1.8;
@@ -87,10 +77,12 @@
 
 /* Mission Section */
 .mission-section {
-    background: var(--dark);
-    color: #fff;
+    background: #fdf2f8;
+    /* Soft Rose Pink */
+    color: var(--dark);
     padding: 8rem 2rem;
     text-align: center;
+    border-top: 1px solid #fce7f3;
 }
 
 .mission-content {
@@ -109,7 +101,7 @@
 .mission-content p {
     font-size: 1.4rem;
     line-height: 1.6;
-    opacity: 0.9;
+    color: #444;
     font-weight: 300;
 }
 
@@ -131,8 +123,9 @@
 
 .values-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 3rem;
+    justify-content: center;
 }
 
 .value-card {
