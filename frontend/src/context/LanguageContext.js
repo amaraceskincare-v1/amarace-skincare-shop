@@ -50,10 +50,21 @@ const translations = {
 };
 
 export const LanguageProvider = ({ children }) => {
-    const [lang, setLang] = useState(localStorage.getItem('lang') || 'US');
+    const getInitialLang = () => {
+        try {
+            return localStorage.getItem('lang') || 'US';
+        } catch (e) {
+            return 'US';
+        }
+    };
+    const [lang, setLang] = useState(getInitialLang());
 
     useEffect(() => {
-        localStorage.setItem('lang', lang);
+        try {
+            localStorage.setItem('lang', lang);
+        } catch (e) {
+            console.warn('LocalStorage not available');
+        }
     }, [lang]);
 
     const t = (key) => {

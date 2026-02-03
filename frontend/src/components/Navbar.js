@@ -120,18 +120,20 @@ const Navbar = () => {
             <div className="philippines-clock">
               <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>
                 {(() => {
-                  const now = new Date();
-                  const options = {
-                    timeZone: 'Asia/Manila',
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: true
-                  };
-                  return now.toLocaleString('en-PH', options);
+                  try {
+                    return time.toLocaleString('en-PH', {
+                      timeZone: 'Asia/Manila',
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                      hour12: true
+                    });
+                  } catch (e) {
+                    return time.toLocaleString(); // Safe fallback
+                  }
                 })()}
               </span>
             </div>
