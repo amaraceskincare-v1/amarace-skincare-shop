@@ -48,7 +48,7 @@ const Footer = () => {
           {/* Store Location */}
           <div className="footer-v2-column">
             <h4>Store Location</h4>
-            <div className="store-info" style={{ paddingLeft: '1.5rem', marginTop: '1rem' }}>
+            <div className="store-info" style={{ marginTop: '1rem' }}>
               <p style={{ marginBottom: '0.5rem' }}>Salvacion, Panabo City, Davao del Norte, 8105, Philippines</p>
               <p style={{ marginBottom: '0.5rem' }}>amarace.skincare@gmail.com</p>
               <p style={{ marginBottom: '1rem' }}>+63 915 266 2648</p>

@@ -143,26 +143,38 @@ const Navbar = () => {
                 <FiUser />
                 <FiChevronDown className={`user-arrow ${userDropdown ? 'open' : ''}`} />
               </button>
-              {userDropdown && (
-                <div className="user-dropdown-menu">
-                  {user ? (
-                    <>
-                      <div className="user-info-header">Hi, {user.name}</div>
-                      <Link to="/profile" onClick={() => setUserDropdown(false)}>My Profile</Link>
-                      <Link to="/orders" onClick={() => setUserDropdown(false)}>My Orders</Link>
-                      {user.role === 'admin' && (
-                        <Link to="/admin" className="admin-special-link" onClick={() => setUserDropdown(false)}>Admin Dashboard</Link>
-                      )}
-                      <button onClick={handleLogout} className="nav-logout-btn">Logout</button>
-                    </>
-                  ) : (
-                    <>
-                      <Link to="/login" onClick={() => setUserDropdown(false)}>Login</Link>
-                      <Link to="/register" onClick={() => setUserDropdown(false)}>Register</Link>
-                    </>
-                  )}
-                </div>
-              )}
+              <div className={`user-dropdown-menu-v2 ${userDropdown ? 'active' : ''}`}>
+                {user ? (
+                  <>
+                    <div className="user-greeting-v2" style={{ '--item-index': 1 }}>
+                      Hi, {user.name}
+                    </div>
+                    <Link to="/profile" className="dropdown-item-v2" style={{ '--item-index': 2 }} onClick={() => setUserDropdown(false)}>
+                      MY PROFILE
+                    </Link>
+                    <Link to="/orders" className="dropdown-item-v2" style={{ '--item-index': 3 }} onClick={() => setUserDropdown(false)}>
+                      MY ORDERS
+                    </Link>
+                    {user.role === 'admin' && (
+                      <Link to="/admin" className="dropdown-item-v2 admin-link-v2" style={{ '--item-index': 4 }} onClick={() => setUserDropdown(false)}>
+                        ADMIN DASHBOARD
+                      </Link>
+                    )}
+                    <button className="dropdown-item-v2 logout-btn-v2" style={{ '--item-index': 5 }} onClick={handleLogout}>
+                      LOGOUT
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login" className="dropdown-item-v2" style={{ '--item-index': 1 }} onClick={() => setUserDropdown(false)}>
+                      LOGIN
+                    </Link>
+                    <Link to="/register" className="dropdown-item-v2" style={{ '--item-index': 2 }} onClick={() => setUserDropdown(false)}>
+                      REGISTER
+                    </Link>
+                  </>
+                )}
+              </div>
             </div>
             <Link to="/cart" className="nav-action-btn cart-icon">
               <FiShoppingBag />
