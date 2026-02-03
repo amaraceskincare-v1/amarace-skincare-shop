@@ -98,11 +98,30 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-.navbar-logo span {
-  font-size: 1.6rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: capitalize;
+.navbar-brand-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 2px solid #000;
+  padding-left: 15px;
+  line-height: 1;
+}
+
+.brand-main-text {
+  font-size: 1.8rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: #000;
+}
+
+.brand-sub-text {
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3em !important;
+  text-transform: uppercase !important;
+  color: #666;
+  margin-top: 4px;
 }
 
 .nav-actions {

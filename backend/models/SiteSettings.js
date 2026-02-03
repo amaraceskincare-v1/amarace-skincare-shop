@@ -14,6 +14,7 @@ const siteSettingsSchema = new mongoose.Schema({
     beautySoapImage: { type: String, default: '' },
     allBestSellersImage: { type: String, default: '' },
     ourStoryImage: { type: String, default: '' },
+    brandName: { type: String, default: '' },
     teamImages: { type: [String], default: [] },
 }, { timestamps: true });
 

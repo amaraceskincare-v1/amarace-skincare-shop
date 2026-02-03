@@ -106,13 +106,23 @@ const Navbar = () => {
           <Link to="/" className="navbar-logo" style={{ alignItems: 'flex-start' }}>
             {!settings ? (
               <div style={{ height: '70px', width: '200px' }}></div> // Blank space while loading
-            ) : settings.navbarLogo ? (
-              <img src={settings.navbarLogo} alt="AmaraCé" style={{ height: '70px' }} />
             ) : (
-              <>
-                <div className="logo-emblem">AC</div>
-                <span>AmaraCé Skin Care</span>
-              </>
+              <div className="brand-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                {settings.navbarLogo ? (
+                  <img src={settings.navbarLogo} alt="AmaraCé" style={{ height: '70px' }} />
+                ) : (
+                  <div className="logo-emblem">AC</div>
+                )}
+                {settings.brandName && (
+                  <div className="navbar-brand-name">
+                    <span className="brand-main-text">{settings.brandName}</span>
+                    <span className="brand-sub-text">SKIN CARE</span>
+                  </div>
+                )}
+                {!settings.navbarLogo && !settings.brandName && (
+                  <span>AmaraCé Skin Care</span>
+                )}
+              </div>
             )}
           </Link>
 

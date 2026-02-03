@@ -154,7 +154,7 @@ const Dashboard = () => {
           </div>
           <div className="settings-grid-v2">
             {/* Navbar Logo */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
+            <div className="settings-card" style={{ minHeight: '380px' }}>
               <h4>Logo (Header)</h4>
               <div className="media-preview-mini" style={{ height: '140px' }}>
                 <img src={getPreview(settings.navbarLogo)} alt="Navbar Logo" style={{ height: '100%', width: '100%', objectFit: 'contain' }} />
@@ -165,13 +165,48 @@ const Dashboard = () => {
                 onChange={(e) => handleUpdateImage('navbarLogo', e.target.files[0])}
                 style={{ display: 'none' }}
               />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem' }}>
                 <button onClick={() => document.getElementById('navbar-logo-upload').click()} className="upload-label-mini">
-                  Change
+                  Change Logo
                 </button>
                 <button onClick={() => handleRemoveImage('navbarLogo')} className="upload-label-mini" style={{ background: '#ef4444' }}>
                   Remove
                 </button>
+              </div>
+
+              {/* Brand Name Input */}
+              <div style={{ marginTop: '1rem', borderTop: '1px solid #eee', paddingTop: '1rem' }}>
+                <h4 style={{ fontSize: '0.8rem', marginBottom: '0.5rem' }}>Brand Name</h4>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    placeholder="Enter Brand Name"
+                    defaultValue={settings.brandName || ''}
+                    onBlur={async (e) => {
+                      const val = e.target.value;
+                      if (val === settings.brandName) return;
+                      setUploading(true);
+                      try {
+                        const { data } = await api.put('/settings', { brandName: val });
+                        setSettings(data);
+                        setUploading(false);
+                        setStatusOverlay({ show: true, message: 'BRAND UPDATED' });
+                        setTimeout(() => setStatusOverlay({ show: false, message: '' }), 3000);
+                      } catch (err) {
+                        setUploading(false);
+                        toast.error('Failed to update brand');
+                      }
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '8px',
+                      borderRadius: '4px',
+                      border: '1px solid #ddd',
+                      fontSize: '0.9rem'
+                    }}
+                  />
+                </div>
+                <p style={{ fontSize: '0.65rem', color: '#888', marginTop: '5px' }}>This text appears next to your header logo.</p>
               </div>
             </div>
 
