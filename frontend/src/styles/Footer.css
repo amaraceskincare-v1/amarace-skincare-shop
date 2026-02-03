@@ -99,6 +99,16 @@
     text-decoration: none;
     font-size: 0.85rem;
     line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+.store-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
 }
 
 .footer-v2-column a:hover {
@@ -152,13 +162,12 @@
 
 .social-icon-large {
     font-size: 80px;
-    /* Match payment logo height */
     color: #1877F2;
-    /* Facebook official color */
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    /* Corrected to left-aligned */
+    margin-left: -5px;
+    /* Pull slightly left to visually align with text edge */
     transition: transform 0.3s ease;
 }
 
@@ -173,22 +182,41 @@
 
 /* Responsive */
 @media (max-width: 992px) {
-    .help-banner-content {
-        flex-direction: column;
-    }
-
-    .help-text-side {
-        padding: 3rem 2rem;
+    .footer-main-skincare {
+        padding: 3rem 5%;
     }
 
     .footer-grid-container {
         grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
     }
 }
 
 @media (max-width: 600px) {
+    .footer-main-skincare {
+        padding: 3rem 1.5rem;
+        text-align: left;
+    }
+
     .footer-grid-container {
         grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .footer-v2-column h4 {
+        margin-bottom: 1rem;
+    }
+
+    .payment-logos-container {
+        gap: 1.5rem;
+    }
+
+    .payment-logo-item img {
+        height: 60px;
+    }
+
+    .social-icon-large {
+        font-size: 60px;
     }
 }
 
