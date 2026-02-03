@@ -56,7 +56,8 @@ router.put('/', protect, admin, upload.fields([
             'logo', 'navbarLogo', 'sideAd', 'headerBackground',
             'gcashQRCode',
             'footerSmallIcon', 'lipTintImage', 'perfumeImage',
-            'beautySoapImage', 'allBestSellersImage', 'ourStoryImage'
+            'beautySoapImage', 'allBestSellersImage', 'ourStoryImage',
+            'brandName'
         ];
 
         singleFields.forEach(field => {

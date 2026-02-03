@@ -180,11 +180,20 @@ const Dashboard = () => {
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <input
                     type="text"
+                    id="brand-name-input"
                     placeholder="Enter Brand Name"
                     defaultValue={settings.brandName || ''}
-                    onBlur={async (e) => {
-                      const val = e.target.value;
-                      if (val === settings.brandName) return;
+                    style={{
+                      flex: 1,
+                      padding: '8px',
+                      borderRadius: '4px',
+                      border: '1px solid #ddd',
+                      fontSize: '0.9rem'
+                    }}
+                  />
+                  <button
+                    onClick={async () => {
+                      const val = document.getElementById('brand-name-input').value;
                       setUploading(true);
                       try {
                         const { data } = await api.put('/settings', { brandName: val });
@@ -198,13 +207,18 @@ const Dashboard = () => {
                       }
                     }}
                     style={{
-                      flex: 1,
-                      padding: '8px',
+                      padding: '8px 15px',
+                      background: '#7c4dff',
+                      color: 'white',
+                      border: 'none',
                       borderRadius: '4px',
-                      border: '1px solid #ddd',
-                      fontSize: '0.9rem'
+                      cursor: 'pointer',
+                      fontSize: '0.8rem',
+                      fontWeight: '600'
                     }}
-                  />
+                  >
+                    Update
+                  </button>
                 </div>
                 <p style={{ fontSize: '0.65rem', color: '#888', marginTop: '5px' }}>This text appears next to your header logo.</p>
               </div>
