@@ -369,4 +369,56 @@ router.put('/:id/verify-payment', protect, admin, async (req, res) => {
   }
 });
 
+// Update tracking number (Admin)
+router.put('/:id/tracking', protect, admin, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      order.trackingNumber = req.body.trackingNumber;
+      if (req.body.status) order.status = req.body.status;
+      const updatedOrder = await order.save();
+      res.json(updatedOrder);
+    } else {
+      res.status(404).json({ message: 'Order not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Upload delivery proof (Admin)
+router.put('/:id/delivery-proof', protect, admin, upload.single('deliveryProof'), async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      if (req.file) {
+        order.deliveryProof = req.file.path;
+      }
+      if (req.body.status) order.status = req.body.status;
+      const updatedOrder = await order.save();
+      res.json(updatedOrder);
+    } else {
+      res.status(404).json({ message: 'Order not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Remove delivery proof (Admin)
+router.put('/:id/remove-delivery-proof', protect, admin, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      order.deliveryProof = undefined;
+      const updatedOrder = await order.save();
+      res.json(updatedOrder);
+    } else {
+      res.status(404).json({ message: 'Order not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;

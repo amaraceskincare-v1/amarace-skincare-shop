@@ -162,6 +162,36 @@
     transition: all 0.2s;
 }
 
+.tracking-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.tracking-info .label {
+    font-size: 0.7rem;
+    color: var(--secondary);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.tracking-info .value {
+    font-weight: 800;
+    color: var(--primary);
+    font-size: 0.95rem;
+}
+
+.proof-info .proof-link {
+    font-size: 0.8rem;
+    color: var(--primary);
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.proof-info .proof-link:hover {
+    color: var(--dark);
+}
+
 .start-shopping-link:hover {
     background: var(--primary);
 }

@@ -519,6 +519,17 @@
     }
 }
 
+.admin-fulfillment-box {
+    margin-top: 10px;
+    padding: 8px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 @media (max-width: 1024px) {
     .upload-btn-explicit {
         padding: 8px 12px;

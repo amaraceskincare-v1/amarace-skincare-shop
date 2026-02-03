@@ -58,6 +58,17 @@ const Orders = () => {
                   <div className="order-date">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </div>
+                  {order.trackingNumber && (
+                    <div className="tracking-info">
+                      <span className="label">J&T Tracking:</span>
+                      <span className="value">{order.trackingNumber}</span>
+                    </div>
+                  )}
+                  {order.deliveryProof && (
+                    <div className="proof-info">
+                      <a href={order.deliveryProof} target="_blank" rel="noreferrer" className="proof-link">View Delivery Proof</a>
+                    </div>
+                  )}
                   <div className="order-total">
                     ₱{order.total?.toFixed(2)}
                   </div>

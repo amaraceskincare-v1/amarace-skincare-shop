@@ -42,7 +42,9 @@ const orderSchema = new mongoose.Schema({
     enum: ['pending', 'awaiting_payment_verification', 'processing', 'shipped', 'delivered', 'cancelled'],
     default: 'pending'
   },
-  deliveredAt: Date
+  deliveredAt: Date,
+  trackingNumber: { type: String },
+  deliveryProof: { type: String } // URL for proof of delivery image
 }, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema);

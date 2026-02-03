@@ -114,7 +114,7 @@ const AdminOrders = () => {
                 </td>
                 <td><span className={`status ${order.status}`}>{order.status}</span></td>
                 <td>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '150px' }}>
                     <select
                       value={order.status}
                       onChange={(e) => updateStatus(order._id, e.target.value)}
@@ -127,6 +127,66 @@ const AdminOrders = () => {
                       <option value="cancelled">Cancelled</option>
                     </select>
 
+                    {/* J&T Tracking Section */}
+                    {order.status === 'shipped' && (
+                      <div className="admin-fulfillment-box">
+                        <small style={{ fontWeight: '600' }}>J&T Tracking:</small>
+                        <div style={{ display: 'flex', gap: '5px' }}>
+                          <input
+                            placeholder="Enter Tracking #"
+                            defaultValue={order.trackingNumber || ''}
+                            onBlur={async (e) => {
+                              try {
+                                await api.put(`/orders/${order._id}/tracking`, { trackingNumber: e.target.value });
+                                toast.success('Tracking updated');
+                              } catch (err) { toast.error('Update failed'); }
+                            }}
+                            style={{ fontSize: '0.8rem', padding: '3px', width: '100%' }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Delivery Proof Section */}
+                    {order.status === 'delivered' && (
+                      <div className="admin-fulfillment-box">
+                        <small style={{ fontWeight: '600' }}>Delivery Proof:</small>
+                        {order.deliveryProof ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                            <a href={order.deliveryProof} target="_blank" rel="noreferrer" style={{ fontSize: '0.75rem', color: '#007bff' }}>View Proof</a>
+                            <button
+                              onClick={async () => {
+                                if (window.confirm('Remove proof?')) {
+                                  await api.put(`/orders/${order._id}/remove-delivery-proof`);
+                                  fetchOrders();
+                                }
+                              }}
+                              style={{ fontSize: '0.7rem', color: '#ff4d4d', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer', padding: 0 }}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ) : (
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                              const file = e.target.files[0];
+                              if (!file) return;
+                              const formData = new FormData();
+                              formData.append('deliveryProof', file);
+                              try {
+                                await api.put(`/orders/${order._id}/delivery-proof`, formData);
+                                toast.success('Proof uploaded');
+                                fetchOrders();
+                              } catch (err) { toast.error('Upload failed'); }
+                            }}
+                            style={{ fontSize: '0.7rem', width: '100%' }}
+                          />
+                        )}
+                      </div>
+                    )}
+
                     <button
                       onClick={() => deleteOrder(order._id)}
                       style={{
@@ -136,7 +196,8 @@ const AdminOrders = () => {
                         padding: '5px 10px',
                         borderRadius: '4px',
                         cursor: 'pointer',
-                        fontSize: '0.85rem'
+                        fontSize: '0.85rem',
+                        marginTop: '5px'
                       }}
                     >
                       Delete
