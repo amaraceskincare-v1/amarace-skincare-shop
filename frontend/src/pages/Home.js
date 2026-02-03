@@ -88,28 +88,30 @@ const Home = () => {
     fetchAllProductsAndCountCategories();
   }, []);
 
-  // Use dynamic hero images if available, otherwise fallback to defaults
-  const displaySlides = (settings?.heroImages && Array.isArray(settings.heroImages) && settings.heroImages.length > 0)
-    ? settings.heroImages.map((img, i) => ({
-      title: i === 0 ? 'THE FUTURE OF SKINCARE' : 'BEST SELLERS 2026',
-      subtitle: i === 0 ? 'Experience the Ultimate Glow' : 'Discover Your New Routine',
-      image: img,
-      cta: i === 0 ? 'Shop Now' : 'Explore All'
-    }))
-    : [
-      {
-        title: 'THE FUTURE OF SKINCARE',
-        subtitle: 'Experience the Ultimate Glow',
-        image: 'https://images.unsplash.com/photo-1598440447192-383794a08832?w=1920&q=80',
-        cta: 'Shop Now'
-      },
-      {
-        title: 'BEST SELLERS 2026',
-        subtitle: 'Discover Your New Routine',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1920&q=80',
-        cta: 'Explore All'
-      }
-    ];
+  // Use dynamic hero images if available, otherwise fallback to defaults (only after settings load)
+  const displaySlides = !settings
+    ? [] // Empty while loading
+    : (settings.heroImages && Array.isArray(settings.heroImages) && settings.heroImages.length > 0)
+      ? settings.heroImages.map((img, i) => ({
+        title: i === 0 ? 'THE FUTURE OF SKINCARE' : 'BEST SELLERS 2026',
+        subtitle: i === 0 ? 'Experience the Ultimate Glow' : 'Discover Your New Routine',
+        image: img,
+        cta: i === 0 ? 'Shop Now' : 'Explore All'
+      }))
+      : [
+        {
+          title: 'THE FUTURE OF SKINCARE',
+          subtitle: 'Experience the Ultimate Glow',
+          image: 'https://images.unsplash.com/photo-1598440447192-383794a08832?w=1920&q=80',
+          cta: 'Shop Now'
+        },
+        {
+          title: 'BEST SELLERS 2026',
+          subtitle: 'Discover Your New Routine',
+          image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1920&q=80',
+          cta: 'Explore All'
+        }
+      ];
 
   useEffect(() => {
     const timer = setInterval(() => {

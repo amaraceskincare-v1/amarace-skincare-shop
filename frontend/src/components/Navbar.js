@@ -104,7 +104,9 @@ const Navbar = () => {
       <div className="logo-bar" style={settings?.headerBackground ? { background: 'transparent', borderBottom: 'none' } : {}}>
         <div className="logo-bar-container">
           <Link to="/" className="navbar-logo" style={{ alignItems: 'flex-start' }}>
-            {settings?.navbarLogo ? (
+            {!settings ? (
+              <div style={{ height: '70px', width: '200px' }}></div> // Blank space while loading
+            ) : settings.navbarLogo ? (
               <img src={settings.navbarLogo} alt="AmaraCé" style={{ height: '70px' }} />
             ) : (
               <>

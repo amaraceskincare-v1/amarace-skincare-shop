@@ -19,7 +19,7 @@ const orderSchema = new mongoose.Schema({
     landmark: String,
     zipCode: String
   },
-  paymentMethod: { type: String, required: true, enum: ['gcash'] },
+  paymentMethod: { type: String, required: true, enum: ['gcash', 'cod'] },
   paymentResult: {
     id: String,
     status: String,

@@ -80,6 +80,75 @@ const upload = multer({ storage });
 //     res.status(400).json({ message: 'Card payments are no longer supported' });
 // });
 
+// Create order with COD payment
+router.post('/cod', protect, async (req, res) => {
+  try {
+    const { shippingAddress, contactDetails, shippingCost } = req.body;
+    const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
+
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({ message: 'Cart is empty' });
+    }
+
+    const items = cart.items.map(item => ({
+      product: item.product._id,
+      quantity: item.quantity,
+      price: item.product.price
+    }));
+
+    const subtotal = cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    let finalShippingCost = Number(shippingCost) || 0;
+    if (subtotal >= 500) {
+      finalShippingCost = 0;
+    }
+    const total = subtotal + finalShippingCost;
+
+    const order = await Order.create({
+      user: req.user._id,
+      items,
+      contactDetails,
+      shippingAddress,
+      paymentMethod: 'cod',
+      subtotal,
+      shippingCost: finalShippingCost,
+      total,
+      tax: 0,
+      status: 'processing' // COD starts at processing since no verification needed
+    });
+
+    // ✅ SEND EMAIL — COD order received
+    Order.findById(order._id).populate('items.product').then(populatedOrder => {
+      sendEmail({
+        to: contactDetails.email,
+        subject: 'AmaraCé Order Received (COD)',
+        html: orderEmailTemplate(populatedOrder, 'COD Order Received'),
+      }).catch(err => console.error('Email sending failed:', err));
+    });
+
+    // List items for Telegram
+    const itemList = cart.items.map(item => `• ${item.product.name} (x${item.quantity})`).join('\n');
+
+    // ✅ SEND TELEGRAM
+    const telegramMsg = `<b>New COD Order!</b> 🚚\n\nOrder ID: <code>${formatOrderId(order.createdAt)}</code>\nTotal: <b>₱${total.toFixed(2)}</b>\nCustomer: ${contactDetails.fullName}\n\n<b>Items:</b>\n${itemList}\n\nPayment will be collected on delivery.`;
+    sendTelegram(telegramMsg);
+
+    // Update product stock
+    for (const item of cart.items) {
+      await Product.findByIdAndUpdate(item.product._id, {
+        $inc: { stock: -item.quantity }
+      });
+    }
+
+    // Clear cart
+    cart.items = [];
+    await cart.save();
+
+    res.status(201).json(order);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Create order with GCash payment
 router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) => {
   try {

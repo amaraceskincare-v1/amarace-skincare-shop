@@ -61,6 +61,10 @@ const Checkout = () => {
     email: user?.email || ''
   });
 
+  const [paymentMethod, setPaymentMethod] = useState('gcash');
+  const [requestChange, setRequestChange] = useState(false);
+  const [changeAmount, setChangeAmount] = useState('');
+
   const shipping = cartTotal >= 500 ? 0 : 85;
   const total = cartTotal + shipping;
 
@@ -70,27 +74,46 @@ const Checkout = () => {
       toast.error('Please fill in all contact details');
       return;
     }
-    if (!proofImage) {
+
+    if (paymentMethod === 'gcash' && !proofImage) {
       toast.error('Please upload your GCash payment proof');
       return;
     }
 
     setLoading(true);
     try {
-      const formData = new FormData();
-      formData.append('shippingAddress', JSON.stringify(address));
-      formData.append('contactDetails', JSON.stringify(contact));
-      formData.append('paymentMethod', 'gcash');
-      formData.append('paymentProof', proofImage);
-      formData.append('totalAmount', total);
-      formData.append('shippingCost', shipping);
+      let response;
 
-      const response = await api.post('/orders/gcash', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      if (paymentMethod === 'gcash') {
+        const formData = new FormData();
+        formData.append('shippingAddress', JSON.stringify(address));
+        formData.append('contactDetails', JSON.stringify(contact));
+        formData.append('paymentMethod', 'gcash');
+        formData.append('paymentProof', proofImage);
+        formData.append('totalAmount', total);
+        formData.append('shippingCost', shipping);
+
+        response = await api.post('/orders/gcash', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+      } else {
+        // COD logic
+        const codData = {
+          shippingAddress: address,
+          contactDetails: {
+            ...contact,
+            note: requestChange ? `Request for change from ₱${changeAmount}` : ''
+          },
+          paymentMethod: 'cod',
+          shippingCost: shipping,
+          totalAmount: total
+        };
+
+        response = await api.post('/orders/cod', codData);
+      }
 
       await clearCart();
-      toast.success('Order placed! We will confirm once payment is verified.');
+      toast.success(paymentMethod === 'cod' ? 'Order placed! Please prepare exact payment upon delivery.' : 'Order placed! We will confirm once payment is verified.');
       navigate(`/order-success/${response.data._id}`);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Checkout failed');
@@ -198,40 +221,109 @@ const Checkout = () => {
               </div>
             </section>
 
-            {/* Payment - GCash Only */}
+            {/* Payment Selection */}
             <section className="form-section">
-              <h2>Payment</h2>
-              <div className="payment-method gcash">
-                <div className="gcash-header">
-                  <span className="gcash-badge">GCash</span>
-                  <span>Pay via GCash QR Code</span>
-                </div>
-                <div className="gcash-body">
-                  <p>Scan the QR code below and pay <strong>₱{total.toFixed(2)}</strong></p>
-                  <div className="qr-container">
-                    <img
-                      src={settings?.gcashQRCode || "/gcash-qr.png"}
-                      alt="GCash QR"
-                      className="qr-code"
-                    />
+              <h2>Payment Method</h2>
+              <div className="payment-options-v2">
+                <div
+                  className={`payment-card-v2 ${paymentMethod === 'gcash' ? 'selected' : ''}`}
+                  onClick={() => setPaymentMethod('gcash')}
+                >
+                  <div className="payment-card-v2-header">
+                    <div className="payment-radio">
+                      <div className="radio-circle"></div>
+                    </div>
+                    <span>GCash</span>
+                    <img src="https://static.wikia.nocookie.net/logos/images/e/e4/GCash_logo.png" alt="GCash" className="payment-icon-mini" />
                   </div>
-
-
-
-                  <p className="upload-label">Upload payment screenshot:</p>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setProofImage(e.target.files[0])}
-                    required
-                  />
-                  {proofImage && <p className="file-name">✓ {proofImage.name}</p>}
                 </div>
+
+                <div
+                  className={`payment-card-v2 ${paymentMethod === 'cod' ? 'selected' : ''}`}
+                  onClick={() => setPaymentMethod('cod')}
+                >
+                  <div className="payment-card-v2-header">
+                    <div className="payment-radio">
+                      <div className="radio-circle"></div>
+                    </div>
+                    <span>Cash On Delivery (COD)</span>
+                    <div className="payment-icon-mini cod-icon">🚚</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Conditional Payment Details */}
+              <div className="payment-details-v2">
+                {paymentMethod === 'gcash' ? (
+                  <div className="payment-instruction-box gcash-box">
+                    <p>Scan the QR code below and pay <strong>₱{total.toFixed(2)}</strong></p>
+                    <div className="qr-container">
+                      <img
+                        src={settings?.gcashQRCode || "/gcash-qr.png"}
+                        alt="GCash QR"
+                        className="qr-code"
+                      />
+                    </div>
+                    <p className="upload-label">Upload payment screenshot:</p>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setProofImage(e.target.files[0])}
+                      required={paymentMethod === 'gcash'}
+                    />
+                    {proofImage && <p className="file-name">✓ {proofImage.name}</p>}
+                  </div>
+                ) : (
+                  <div className="payment-instruction-box cod-box">
+                    <div className="cod-info-header">
+                      <span className="info-icon">ℹ️</span>
+                      <h3>Pay with cash upon delivery</h3>
+                    </div>
+                    <p className="cod-total-highlight">Order Total: ₱{total.toFixed(2)}</p>
+
+                    <div className="cod-instructions">
+                      <ul>
+                        <li>Please prepare the exact amount</li>
+                        <li>Payment will be collected by our delivery rider</li>
+                        <li>Make sure someone is available to receive the order</li>
+                      </ul>
+                    </div>
+
+                    <div className="cod-change-request">
+                      <label className="checkbox-container">
+                        <input
+                          type="checkbox"
+                          checked={requestChange}
+                          onChange={(e) => setRequestChange(e.target.checked)}
+                        />
+                        <span className="checkmark"></span>
+                        Request for change?
+                      </label>
+
+                      {requestChange && (
+                        <div className="change-amount-input">
+                          <span>Amount tendered:</span>
+                          <input
+                            type="number"
+                            placeholder="e.g. 500"
+                            value={changeAmount}
+                            onChange={(e) => setChangeAmount(e.target.value)}
+                            required={requestChange}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </section>
 
             <button type="submit" className="pay-btn" disabled={loading}>
-              {loading ? 'Processing...' : `Pay ₱${total.toFixed(2)}`}
+              {loading ? 'Processing...' : (
+                paymentMethod === 'gcash'
+                  ? `Pay ₱${total.toFixed(2)}`
+                  : `Place Order - COD ₱${total.toFixed(2)}`
+              )}
             </button>
           </form>
 
