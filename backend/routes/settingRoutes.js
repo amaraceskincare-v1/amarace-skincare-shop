@@ -57,14 +57,17 @@ router.put('/', protect, admin, upload.fields([
             'gcashQRCode',
             'footerSmallIcon', 'lipTintImage', 'perfumeImage',
             'beautySoapImage', 'allBestSellersImage', 'ourStoryImage',
-            'brandName'
+            'brandName', 'showBrandName', 'brandNamePosition',
+            'brandNameColor', 'brandNameFontSize', 'brandNameFontWeight',
+            'headerLogoSize'
         ];
 
         singleFields.forEach(field => {
             if (req.files && req.files[field]) {
                 settings[field] = req.files[field][0].path;
-            } else if (req.body[field] === 'remove') {
-                settings[field] = '';
+            } else if (req.body[field] !== undefined) {
+                // Handle text fields or 'remove' command
+                settings[field] = req.body[field] === 'remove' ? '' : req.body[field];
             }
         });
 

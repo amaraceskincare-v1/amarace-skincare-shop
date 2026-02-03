@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -5,28 +7,45 @@
 }
 
 :root {
-  --primary: #7c4dff;
-  --primary-dark: #651fff;
+  /* Redesign Palette */
+  --brand-primary: #E8B4BC;
+  /* Soft Pink/Rose */
+  --brand-secondary: #D4A5AE;
+  /* Warm Mauve */
+  --brand-accent: #C41E3A;
+  /* Deep Red */
+  --brand-bg: #FAFAFA;
+  /* Off-white */
+  --brand-text: #2D2D2D;
+  /* Charcoal Charcoal */
+
+  --primary: var(--brand-primary);
+  --primary-dark: var(--brand-secondary);
   --secondary: #666666;
-  --success: #10b981;
+  --success: #6BCF7F;
+  /* Sage Green */
   --warning: #f59e0b;
   --danger: #ef4444;
-  --dark: #000000;
+  --dark: var(--brand-text);
   --light: #ffffff;
   --gray: #f2f2f2;
   --header-bg: #ffffff;
-  --footer-bg: #ffffff;
-  --announcement-bg: #000000;
-  --accent: #7c4dff;
-  --radius: 0px;
-  /* Wix skincare template uses sharp corners */
-  --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  --footer-bg: #FAFAFA;
+  --announcement-bg: #1a1a1a;
+  --accent: var(--brand-accent);
+
+  /* Modern Aesthetic Defaults */
+  --radius: 16px;
+  --radius-sm: 8px;
+  --radius-lg: 24px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
 
   /* Animation variables */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.25s ease;
-  --transition-slow: 0.4s ease;
-  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Smooth scrolling */

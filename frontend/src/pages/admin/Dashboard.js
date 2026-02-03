@@ -4,6 +4,7 @@ import AdminSidebar from '../../components/AdminSidebar';
 import { FiPackage, FiShoppingCart, FiCreditCard } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
+import { useSettings } from '../../context/SettingsContext';
 import api from '../../utils/api';
 import '../../styles/Admin.css';
 
@@ -16,30 +17,16 @@ const pesoFormatter = new Intl.NumberFormat('en-PH', {
 const Dashboard = () => {
   const [stats, setStats] = useState({ products: 0, orders: 0, revenue: 0 });
   const [recentOrders, setRecentOrders] = useState([]);
-  const [settings, setSettings] = useState({
-    headerBackground: '',
-    navbarLogo: '',
-    heroImages: [],
-    gcashQRCode: '',
-    paymentLogos: [],
-    footerSmallIcon: '',
-    lipTintImage: '',
-    perfumeImage: '',
-    beautySoapImage: '',
-    allBestSellersImage: '',
-    ourStoryImage: '',
-    teamImages: []
-  });
+  const { settings, updateSettings } = useSettings();
   const [uploading, setUploading] = useState(false);
   const [statusOverlay, setStatusOverlay] = useState({ show: false, message: '' });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [productsRes, ordersRes, settingsRes] = await Promise.all([
+        const [productsRes, ordersRes] = await Promise.all([
           api.get('/products?limit=1'),
-          api.get('/orders'),
-          api.get('/settings')
+          api.get('/orders')
         ]);
 
         const revenue = ordersRes.data.reduce(
@@ -54,7 +41,6 @@ const Dashboard = () => {
         });
 
         setRecentOrders(ordersRes.data.slice(0, 5));
-        if (settingsRes.data) setSettings(settingsRes.data);
       } catch (error) {
         console.error('Error fetching admin dashboard data:', error);
       }
@@ -79,7 +65,7 @@ const Dashboard = () => {
       const { data } = await api.put('/settings', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      setSettings(data);
+      updateSettings(data);
       setUploading(false);
       setStatusOverlay({ show: true, message: 'UPLOADED SUCCESSFUL' });
       setTimeout(() => setStatusOverlay({ show: false, message: '' }), 3000);
@@ -94,7 +80,7 @@ const Dashboard = () => {
     setUploading(true);
     try {
       const { data } = await api.put('/settings', { [field]: 'remove' });
-      setSettings(data);
+      updateSettings(data);
       setUploading(false);
       setStatusOverlay({ show: true, message: 'REMOVED SUCCESSFUL' });
       setTimeout(() => setStatusOverlay({ show: false, message: '' }), 3000);
@@ -174,53 +160,149 @@ const Dashboard = () => {
                 </button>
               </div>
 
-              {/* Brand Name Input */}
-              <div style={{ marginTop: '1rem', borderTop: '1px solid #eee', paddingTop: '1rem' }}>
-                <h4 style={{ fontSize: '0.8rem', marginBottom: '0.5rem' }}>Brand Name</h4>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <input
-                    type="text"
-                    id="brand-name-input"
-                    placeholder="Enter Brand Name"
-                    defaultValue={settings.brandName || ''}
-                    style={{
-                      flex: 1,
-                      padding: '8px',
-                      borderRadius: '4px',
-                      border: '1px solid #ddd',
-                      fontSize: '0.9rem'
-                    }}
-                  />
-                  <button
-                    onClick={async () => {
-                      const val = document.getElementById('brand-name-input').value;
-                      setUploading(true);
-                      try {
-                        const { data } = await api.put('/settings', { brandName: val });
-                        setSettings(data);
-                        setUploading(false);
-                        setStatusOverlay({ show: true, message: 'BRAND UPDATED' });
-                        setTimeout(() => setStatusOverlay({ show: false, message: '' }), 3000);
-                      } catch (err) {
-                        setUploading(false);
-                        toast.error('Failed to update brand');
-                      }
-                    }}
-                    style={{
-                      padding: '8px 15px',
-                      background: '#7c4dff',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '0.8rem',
-                      fontWeight: '600'
-                    }}
-                  >
-                    Update
-                  </button>
+              {/* Branding Overhaul Section */}
+              <div style={{ marginTop: '1.5rem', borderTop: '2px solid #f0f0f0', paddingTop: '1.5rem' }}>
+                <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', color: '#333' }}>Advanced Branding Controls</h4>
+
+                {/* Real-time Preview Box */}
+                <div className="branding-preview-container">
+                  <p className="preview-label">LIVE HEADER PREVIEW</p>
+                  <div className="branding-preview-box">
+                    <div className={`navbar-brand-flex position-${settings.brandNamePosition || 'right'}`} style={{ gap: `${settings.brandNamePosition === 'below' ? '5px' : '16px'}` }}>
+                      <div className="navbar-logo-container" style={{ height: `${settings.headerLogoSize || 60}px`, width: `${settings.headerLogoSize || 60}px` }}>
+                        {settings.navbarLogo ? (
+                          <img src={settings.navbarLogo} alt="Logo" className="navbar-logo-img" />
+                        ) : (
+                          <div className="logo-emblem-v2" style={{ fontSize: `${(settings.headerLogoSize || 60) * 0.4}px` }}>AC</div>
+                        )}
+                      </div>
+                      {settings.showBrandName !== false && (
+                        <div className="navbar-brand-info">
+                          <h1 className="brand-name-main" style={{
+                            color: settings.brandNameColor || 'var(--dark)',
+                            fontSize: settings.brandNameFontSize === 'small' ? '1.2rem' :
+                              settings.brandNameFontSize === 'large' ? '2.2rem' : '1.75rem',
+                            fontWeight: settings.brandNameFontWeight === 'regular' ? '500' : '700'
+                          }}>
+                            {settings.brandName || 'Your Brand Name'}
+                          </h1>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <p style={{ fontSize: '0.65rem', color: '#888', marginTop: '5px' }}>This text appears next to your header logo.</p>
+
+                <div className="branding-controls-grid">
+                  {/* Brand Name Input */}
+                  <div className="control-group">
+                    <label>Brand Name</label>
+                    <div className="input-with-button">
+                      <input
+                        type="text"
+                        id="brand-name-input"
+                        defaultValue={settings.brandName || ''}
+                        placeholder="Enter brand name"
+                      />
+                      <button onClick={async () => {
+                        const val = document.getElementById('brand-name-input').value;
+                        setUploading(true);
+                        try {
+                          const { data } = await api.put('/settings', { brandName: val });
+                          updateSettings(data);
+                          setUploading(false);
+                          setStatusOverlay({ show: true, message: 'NAME UPDATED' });
+                          setTimeout(() => setStatusOverlay({ show: false, message: '' }), 2000);
+                        } catch (err) {
+                          setUploading(false);
+                          toast.error('Update failed');
+                        }
+                      }}>Update</button>
+                    </div>
+                  </div>
+
+                  {/* Visibility & Alignment */}
+                  <div className="branding-options-row">
+                    <div className="option-item">
+                      <label className="switch-label">
+                        <input
+                          type="checkbox"
+                          checked={settings.showBrandName !== false}
+                          onChange={async (e) => {
+                            const { data } = await api.put('/settings', { showBrandName: e.target.checked });
+                            updateSettings(data);
+                          }}
+                        />
+                        <span>Show Name in Header</span>
+                      </label>
+                    </div>
+
+                    <div className="option-item">
+                      <label>Position</label>
+                      <select
+                        value={settings.brandNamePosition || 'right'}
+                        onChange={async (e) => {
+                          const { data } = await api.put('/settings', { brandNamePosition: e.target.value });
+                          updateSettings(data);
+                        }}
+                      >
+                        <option value="right">Right of Logo</option>
+                        <option value="left">Left of Logo</option>
+                        <option value="below">Below Logo</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Sizing & Color */}
+                  <div className="branding-options-row">
+                    <div className="option-item">
+                      <label>Text Size</label>
+                      <select
+                        value={settings.brandNameFontSize || 'medium'}
+                        onChange={async (e) => {
+                          const { data } = await api.put('/settings', { brandNameFontSize: e.target.value });
+                          updateSettings(data);
+                        }}
+                      >
+                        <option value="small">Small</option>
+                        <option value="medium">Medium</option>
+                        <option value="large">Large</option>
+                      </select>
+                    </div>
+
+                    <div className="option-item">
+                      <label>Brand Color</label>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <input
+                          type="color"
+                          value={settings.brandNameColor || '#2D2D2D'}
+                          onChange={async (e) => {
+                            const { data } = await api.put('/settings', { brandNameColor: e.target.value });
+                            updateSettings(data);
+                          }}
+                          style={{ width: '40px', height: '30px', padding: '0', border: 'none', background: 'none' }}
+                        />
+                        <span style={{ fontSize: '0.7rem' }}>{settings.brandNameColor || '#2D2D2D'}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="branding-options-row">
+                    <div className="option-item">
+                      <label>Logo Size (px)</label>
+                      <input
+                        type="range"
+                        min="40"
+                        max="100"
+                        value={settings.headerLogoSize || 60}
+                        onChange={async (e) => {
+                          const { data } = await api.put('/settings', { headerLogoSize: parseInt(e.target.value) });
+                          updateSettings(data);
+                        }}
+                      />
+                      <span style={{ fontSize: '0.7rem' }}>{settings.headerLogoSize || 60}px</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 

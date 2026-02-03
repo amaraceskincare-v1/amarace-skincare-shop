@@ -41,78 +41,98 @@ const Footer = () => {
   };
 
   return (
-    <footer className="footer-v2">
-      {/* Main Footer Sections */}
-      <div className="footer-main-skincare">
-        <div className="footer-grid-container">
-          {/* Store Location */}
-          <div className="footer-v2-column">
-            <h4>Store Location</h4>
-            <div className="store-info" style={{ marginTop: '1rem' }}>
-              <p style={{ marginBottom: '0.5rem' }}>Salvacion, Panabo City, Davao del Norte, 8105, Philippines</p>
-              <p style={{ marginBottom: '0.5rem' }}>amarace.skincare@gmail.com</p>
-              <p style={{ marginBottom: '1rem' }}>+63 915 266 2648</p>
-              <div className="footer-small-icon social-links-v2">
-                <a href="https://www.facebook.com/AmaraCeSkinCare/" target="_blank" rel="noreferrer" className="social-icon-large">
-                  <FaFacebook />
-                </a>
-              </div>
+    <footer className="footer-premium-v2">
+      {/* 1. Newsletter Section */}
+      <div className="footer-newsletter-v2">
+        <div className="newsletter-content-v2">
+          <span className="newsletter-tag-v2">Newsletter</span>
+          <h2>Join the AmaraCé Inner Circle</h2>
+          <p>Subscribe for exclusive access to new launches, skincare secrets, and 10% off your first order.</p>
+          <form className="newsletter-form-v2" onSubmit={handleSubscribe}>
+            <input
+              type="email"
+              placeholder="Your email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <button type="submit" disabled={loading}>
+              {loading ? 'Subscribing...' : 'Join Now'}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* 2. Social Media Grid */}
+      <div className="footer-social-grid-v2">
+        <div className="social-header-v2">
+          <h3>Follow Our Journey</h3>
+          <a href="https://instagram.com" className="instagram-handle">@amarace.skincare</a>
+        </div>
+        <div className="instagram-grid-v2">
+          <div className="ig-item-v2"><img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=400" alt="Skincare 1" /></div>
+          <div className="ig-item-v2"><img src="https://images.unsplash.com/photo-1596462502278-27bfdc4033c8?q=80&w=400" alt="Skincare 2" /></div>
+          <div className="ig-item-v2"><img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?q=80&w=400" alt="Skincare 3" /></div>
+          <div className="ig-item-v2"><img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=400" alt="Skincare 4" /></div>
+          <div className="ig-item-v2"><img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=400" alt="Skincare 5" /></div>
+          <div className="ig-item-v2"><img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=400" alt="Skincare 6" /></div>
+        </div>
+      </div>
+
+      {/* 3. Main Navigation */}
+      <div className="footer-nav-container-v2">
+        <div className="footer-nav-grid-v2">
+          <div className="nav-col-v2 branding">
+            <h4 className="footer-logo-v2">AmaraCé</h4>
+            <p className="footer-motto-v2">Celebrating your natural radiance with dermatologist-tested, luxury skincare solutions.</p>
+            <div className="footer-social-links-v2">
+              <a href="https://facebook.com"><FaFacebook /></a>
             </div>
           </div>
 
-          {/* Shop */}
-          <div className="footer-v2-column">
-            <h4>Shop</h4>
+          <div className="nav-col-v2">
+            <h4>Boutique</h4>
             <ul>
-              <li><Link to="/products">{t('shop_all')}</Link></li>
-              <li><Link to="/products?category=Lip%20Tint">{t('lip_tints')}</Link></li>
-              <li><Link to="/products?category=Perfume">{t('perfumes')}</Link></li>
-              <li><Link to="/products?category=Beauty%20Soap">{t('beauty_soaps')}</Link></li>
+              <li><Link to="/products">Shop All</Link></li>
+              <li><Link to="/products?category=Lip%20Tint">Lip Rituals</Link></li>
+              <li><Link to="/products?category=Perfume">Fragrance</Link></li>
+              <li><Link to="/products?category=Beauty%20Soap">Artisan Soaps</Link></li>
             </ul>
           </div>
 
-          {/* Customer Support */}
-          <div className="footer-v2-column">
-            <h4>Customer Support</h4>
+          <div className="nav-col-v2">
+            <h4>Experience</h4>
             <ul>
-              <li><Link to="/contact">Contact Us</Link></li>
-              <li><Link to="/about">About Us</Link></li>
+              <li><Link to="/about">Our Story</Link></li>
+              <li><Link to="/contact">Concierge</Link></li>
+              <li><Link to="/faqs">FAQ</Link></li>
+              <li><Link to="/blog">Beauty Blog</Link></li>
             </ul>
           </div>
 
-          {/* Policy */}
-          <div className="footer-v2-column">
-            <h4>Policy</h4>
-            <ul>
-              <li><Link to="/policies/shipping-returns">{t('shipping_returns')}</Link></li>
-              <li><Link to="/policies/terms">{t('terms_conditions')}</Link></li>
-              <li><Link to="/policies/payment">{t('payment_methods')}</Link></li>
-              <li><Link to="/faqs">{t('faq')}</Link></li>
-            </ul>
+          <div className="nav-col-v2">
+            <h4>Bespoke Care</h4>
+            <p>Salvacion, Panabo City</p>
+            <p>Davao del Norte, 8105</p>
+            <p>+63 915 266 2648</p>
+            <p>amarace.skincare@gmail.com</p>
           </div>
         </div>
       </div>
 
-      {/* Footer Payment & Copyright */}
-      <div className="footer-bottom-skincare">
-        <div className="payment-methods-row">
-          <span>{t('we_accept')}</span>
-          <div className="payment-logos-container">
-            {settings?.paymentLogos && settings.paymentLogos.length > 0 ? (
-              settings.paymentLogos.map((logo, i) => (
-                <div key={i} className="payment-logo-item">
-                  <img src={logo} alt={`Payment Method ${i + 1}`} />
-                </div>
-              ))
-            ) : (
-              <div className="payment-logo-item">
-                <img src="https://i.ibb.co/L5fX0gD/gcash-logo.png" alt="GCash" />
-              </div>
-            )}
+      {/* 4. Bottom Bar */}
+      <div className="footer-bottom-v2">
+        <div className="bottom-content-v2">
+          <div className="payment-stack-v2">
+            <img src="https://i.ibb.co/L5fX0gD/gcash-logo.png" alt="GCash" className="payment-logo-premium" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa" className="payment-logo-premium" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard" className="payment-logo-premium" />
           </div>
-        </div>
-        <div className="copyright-v2">
-          <p>© 2025-2026 AmaraCé. All rights reserved.</p>
+          <p className="copyright-text-v2">© 2025 AmaraCé. Crafted for Radiance. All Rights Reserved.</p>
+          <div className="legal-links-v2">
+            <Link to="/policies/terms">Terms</Link>
+            <Link to="/policies/privacy">Privacy</Link>
+          </div>
         </div>
       </div>
     </footer>

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useSettings } from '../context/SettingsContext';
 import api from '../utils/api';
 import '../styles/Navbar.css';
 
@@ -18,25 +19,13 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
   const { t } = useLanguage();
-  const [settings, setSettings] = useState(null);
+  const { settings } = useSettings();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const { data } = await api.get('/settings');
-        setSettings(data);
-      } catch (error) {
-        console.error('Error fetching settings:', error);
-      }
-    };
-    fetchSettings();
   }, []);
 
 
@@ -103,24 +92,44 @@ const Navbar = () => {
       {/* Level 2: Logo & Actions Bar */}
       <div className="logo-bar" style={settings?.headerBackground ? { background: 'transparent', borderBottom: 'none' } : {}}>
         <div className="logo-bar-container">
-          <Link to="/" className="navbar-logo" style={{ alignItems: 'flex-start' }}>
+          <Link to="/" className="navbar-brand-link">
             {!settings ? (
-              <div style={{ height: '70px', width: '200px' }}></div> // Blank space while loading
+              <div className="logo-placeholder-v2"></div>
             ) : (
-              <div className="brand-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                {settings.navbarLogo ? (
-                  <img src={settings.navbarLogo} alt="AmaraCé" style={{ height: '70px' }} />
-                ) : (
-                  <div className="logo-emblem">AC</div>
-                )}
-                {settings.brandName && (
-                  <div className="navbar-brand-name">
-                    <span className="brand-main-text">{settings.brandName}</span>
-                    <span className="brand-sub-text">SKIN CARE</span>
+              <div
+                className={`navbar-brand-flex position-${settings.brandNamePosition || 'right'}`}
+                style={{ gap: `${settings.brandNamePosition === 'below' ? '5px' : '16px'}` }}
+              >
+                <div className="navbar-logo-container" style={{
+                  height: `${settings.headerLogoSize || 60}px`,
+                  width: `${settings.headerLogoSize || 60}px`
+                }}>
+                  {settings.navbarLogo ? (
+                    <img
+                      src={settings.navbarLogo}
+                      alt={`${settings.brandName || 'AmaraCé'} Logo`}
+                      className="navbar-logo-img"
+                    />
+                  ) : (
+                    <div className="logo-emblem-v2" style={{
+                      fontSize: `${(settings.headerLogoSize || 60) * 0.4}px`
+                    }}>
+                      AC
+                    </div>
+                  )}
+                </div>
+
+                {settings.showBrandName !== false && settings.brandName && (
+                  <div className="navbar-brand-info">
+                    <h1 className="brand-name-main" style={{
+                      color: settings.brandNameColor || 'var(--dark)',
+                      fontSize: settings.brandNameFontSize === 'small' ? '1.2rem' :
+                        settings.brandNameFontSize === 'large' ? '2.2rem' : '1.75rem',
+                      fontWeight: settings.brandNameFontWeight === 'regular' ? '500' : '700'
+                    }}>
+                      {settings.brandName}
+                    </h1>
                   </div>
-                )}
-                {!settings.navbarLogo && !settings.brandName && (
-                  <span>AmaraCé Skin Care</span>
                 )}
               </div>
             )}

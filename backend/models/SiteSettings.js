@@ -15,6 +15,12 @@ const siteSettingsSchema = new mongoose.Schema({
     allBestSellersImage: { type: String, default: '' },
     ourStoryImage: { type: String, default: '' },
     brandName: { type: String, default: '' },
+    showBrandName: { type: Boolean, default: true },
+    brandNamePosition: { type: String, default: 'right' },
+    brandNameColor: { type: String, default: '#2D2D2D' },
+    brandNameFontSize: { type: String, default: 'medium' },
+    brandNameFontWeight: { type: String, default: 'bold' },
+    headerLogoSize: { type: Number, default: 60 },
     teamImages: { type: [String], default: [] },
 }, { timestamps: true });
 

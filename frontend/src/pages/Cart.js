@@ -28,90 +28,129 @@ const Cart = () => {
   }
 
   return (
-    <div className="cart-page">
-      {/* Header */}
-      <div className="cart-header">
-        <h1>Shopping Cart</h1>
-        <Link to="/products" className="continue-link">
-          <FiArrowLeft /> Continue Shopping
-        </Link>
+    <div className="cart-page-v2">
+      {/* Redesigned Header */}
+      <div className="cart-hero-v2">
+        <h1>Your Shopping Bag</h1>
+        <p>Review your essentials before checkout</p>
       </div>
 
-      {/* Free Shipping Progress */}
-      <div className="shipping-progress-bar">
-        {amountNeeded > 0 ? (
-          <p>Buy <strong>₱{amountNeeded.toFixed(2)}</strong> more to enjoy <strong>FREE Shipping</strong></p>
-        ) : (
-          <p>🎉 You've unlocked <strong>FREE Shipping!</strong></p>
-        )}
-        <div className="progress-bar">
-          <div className="progress-fill" style={{ width: `${progressPercent}%` }}></div>
-        </div>
-      </div>
+      <div className="cart-container-v2">
+        <div className="cart-main-v2">
+          {/* Elegant Free Shipping Progress */}
+          <div className="shipping-banner-v2">
+            <div className="shipping-status-v2">
+              {amountNeeded > 0 ? (
+                <>
+                  <span className="icon">🚚</span>
+                  <p>You're only <strong>₱{amountNeeded.toFixed(2)}</strong> away from <strong>FREE SHIPPING</strong></p>
+                </>
+              ) : (
+                <>
+                  <span className="icon">🎉</span>
+                  <p>Congratulations! You've unlocked <strong>FREE SHIPPING</strong></p>
+                </>
+              )}
+            </div>
+            <div className="progress-track-v2">
+              <div className="progress-fill-v2" style={{ width: `${progressPercent}%` }}></div>
+            </div>
+          </div>
 
-      <div className="cart-content">
-        {/* Cart Items List */}
-        <div className="cart-items-list">
-          {items.map((item) => (
-            <div key={item.product?._id || item.productId} className="cart-item-modern">
-              <div className="item-image-container">
-                <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt={item.product?.name} />
-              </div>
+          {/* Cart Items */}
+          <div className="cart-items-v2">
+            {items.map((item) => (
+              <div key={item.product?._id || item.productId} className="cart-item-v2">
+                <div className="item-img-v2">
+                  <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt={item.product?.name} />
+                </div>
 
-              <div className="item-details-container">
-                <h4 className="item-name">{item.product?.name}</h4>
-                <p className="item-price-modern">₱{item.product?.price?.toFixed(2)}</p>
+                <div className="item-info-v2">
+                  <div className="item-header-v2">
+                    <span className="item-cat-v2">{item.product?.category}</span>
+                    <h4 className="item-title-v2">{item.product?.name}</h4>
+                  </div>
 
-                <div className="item-bottom-row">
-                  <div className="quantity-selector-modern">
-                    <span className="control-label">QUANTITY:</span>
-                    <div className="quantity-buttons">
+                  <div className="item-price-v2">
+                    ₱{item.product?.price?.toFixed(2)}
+                  </div>
+
+                  <div className="item-actions-v2">
+                    <div className="qty-selector-v2">
                       <button
                         onClick={() => updateQuantity(item.product?._id, item.quantity - 1)}
                         disabled={item.quantity <= 1}
                       >
                         <FiMinus />
                       </button>
-                      <span className="quantity-value">{item.quantity}</span>
+                      <input type="number" value={item.quantity} readOnly />
                       <button onClick={() => updateQuantity(item.product?._id, item.quantity + 1)}>
                         <FiPlus />
                       </button>
                     </div>
-                  </div>
 
-                  <button
-                    className="item-remove-link"
-                    onClick={() => removeFromCart(item.product?._id)}
-                  >
-                    <FiX /> Remove
-                  </button>
+                    <button
+                      className="remove-btn-v2"
+                      onClick={() => removeFromCart(item.product?._id)}
+                    >
+                      <FiX /> <span>Remove</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="item-total-v2">
+                  ₱{(item.product?.price * item.quantity).toFixed(2)}
                 </div>
               </div>
+            ))}
+          </div>
+
+          <div className="cart-footer-v2">
+            <Link to="/products" className="back-to-shop-v2">
+              <FiArrowLeft /> Back to Collections
+            </Link>
+          </div>
+        </div>
+
+        {/* Premium Sidebar Summary */}
+        <aside className="cart-summary-v2">
+          <div className="summary-card-v2">
+            <h3>Order Summary</h3>
+
+            <div className="summary-details-v2">
+              <div className="summary-row-v2">
+                <span>Subtotal ({items.length} items)</span>
+                <span>₱{cartTotal.toFixed(2)}</span>
+              </div>
+              <div className="summary-row-v2">
+                <span>Estimated Shipping</span>
+                <span className={amountNeeded <= 0 ? 'free' : ''}>
+                  {amountNeeded <= 0 ? 'FREE' : 'Calculated at next step'}
+                </span>
+              </div>
+              <div className="summary-row-v2">
+                <span>Tax</span>
+                <span>₱0.00</span>
+              </div>
             </div>
-          ))}
-        </div>
 
-        {/* Cart Summary */}
-        <div className="cart-summary">
-          <div className="summary-row">
-            <span>Subtotal</span>
-            <span>₱{cartTotal.toFixed(2)}</span>
-          </div>
-          <div className="summary-row">
-            <span>Shipping</span>
-            <span>{amountNeeded > 0 ? 'Calculated at checkout' : 'FREE'}</span>
-          </div>
-          <div className="summary-row total">
-            <span>Total</span>
-            <span>₱{cartTotal.toFixed(2)}</span>
-          </div>
+            <div className="summary-total-v2">
+              <span>Estimated Total</span>
+              <span>₱{cartTotal.toFixed(2)}</span>
+            </div>
 
-          <Link to="/checkout" className="checkout-btn">
-            CHECK OUT
-          </Link>
+            <Link to="/checkout" className="checkout-cta-v2">
+              Proceed to Checkout
+            </Link>
 
-          <p className="shipping-note">Shipping cost calculated at checkout</p>
-        </div>
+            <div className="payment-icons-v2">
+              <span>💳</span>
+              <span>🏦</span>
+              <span>📱</span>
+              <p>Secure payment methods available</p>
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
   );

@@ -1,264 +1,297 @@
 /* =========================================
-   FOOTER V2 - WIX SKINCARE STYLE
+   FOOTER PREMIUM V2 - THE AMARACÉ AESTHETIC
    ========================================= */
 
-.footer-v2 {
-    background: #fff;
+.footer-premium-v2 {
+    background: var(--brand-bg);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-/* Help Banner */
-.wix-help-banner {
-    background: #fff;
-    padding: 4rem 10%;
-}
-
-.help-banner-content {
-    display: flex;
-    background: #000;
+/* 1. NEWSLETTER SECTION */
+.footer-newsletter-v2 {
+    background: var(--brand-text);
     color: #fff;
-    min-height: 400px;
+    padding: 80px 20px;
+    text-align: center;
 }
 
-.help-text-side {
-    flex: 1;
-    padding: 4rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 1.5rem;
+.newsletter-content-v2 {
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-.help-text-side h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1.2;
+.newsletter-tag-v2 {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--brand-primary);
+    display: block;
+    margin-bottom: 20px;
 }
 
-.help-text-side p {
-    font-size: 0.95rem;
+.newsletter-content-v2 h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    margin-bottom: 20px;
+    line-height: 1.1;
+}
+
+.newsletter-content-v2 p {
+    font-size: 1.1rem;
+    opacity: 0.8;
+    margin-bottom: 40px;
     line-height: 1.6;
-    opacity: 0.9;
 }
 
-.go-help-btn {
-    background: #fff;
-    color: #000;
-    padding: 12px 30px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
+.newsletter-form-v2 {
+    display: flex;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px;
     border-radius: 50px;
-    margin-top: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.help-image-side {
+.newsletter-form-v2 input {
     flex: 1;
+    background: none;
+    border: none;
+    padding: 0 25px;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
 }
 
-.help-image-side img {
+.newsletter-form-v2 input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.newsletter-form-v2 button {
+    background: var(--brand-primary);
+    color: #fff;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 50px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.newsletter-form-v2 button:hover {
+    background: var(--brand-secondary);
+    transform: scale(1.05);
+}
+
+/* 2. SOCIAL GRID */
+.footer-social-grid-v2 {
+    padding: 80px 0;
+    background: #fff;
+}
+
+.social-header-v2 {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.social-header-v2 h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.instagram-handle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--brand-primary);
+    text-decoration: none;
+}
+
+.instagram-grid-v2 {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+    padding: 0 15px;
+}
+
+.ig-item-v2 {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.ig-item-v2 img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Footer Main Skincare */
-.footer-main-skincare {
-    padding: 5rem 0;
-    background: #fff;
+.ig-item-v2:hover img {
+    transform: scale(1.15);
+}
+
+/* 3. MAIN NAVIGATION */
+.footer-nav-container-v2 {
+    padding: 100px 0;
+    background: var(--brand-bg);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.footer-nav-grid-v2 {
     max-width: 1400px;
     margin: 0 auto;
-}
-
-.footer-grid-container {
+    padding: 0 2rem;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 40px;
-    padding: 0 4%;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    gap: 80px;
 }
 
-.footer-v2-column h4 {
+.nav-col-v2.branding .footer-logo-v2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 25px;
+}
+
+.footer-motto-v2 {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--brand-secondary);
+    margin-bottom: 30px;
+}
+
+.footer-social-links-v2 {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-social-links-v2 a {
+    font-size: 1.5rem;
+    color: var(--brand-text);
+    transition: color 0.3s;
+}
+
+.footer-social-links-v2 a:hover {
+    color: var(--brand-primary);
+}
+
+.nav-col-v2 h4 {
     font-size: 0.85rem;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 2rem;
-    color: var(--dark);
+    letter-spacing: 0.15em;
+    margin-bottom: 30px;
+    color: var(--brand-text);
 }
 
-.footer-v2-column ul {
+.nav-col-v2 ul {
     list-style: none;
     padding: 0;
-    margin: 0;
 }
 
-.footer-v2-column li {
+.nav-col-v2 ul li {
     margin-bottom: 15px;
 }
 
-.footer-v2-column a,
-.footer-v2-column p {
-    color: var(--dark);
+.nav-col-v2 a,
+.nav-col-v2 p {
+    font-size: 0.95rem;
+    color: var(--brand-secondary);
     text-decoration: none;
-    font-size: 0.85rem;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    text-align: left;
+    transition: color 0.3s;
 }
 
-.store-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: flex-start;
+.nav-col-v2 a:hover {
+    color: var(--brand-primary);
 }
 
-.footer-v2-column a:hover {
-    opacity: 0.7;
+/* 4. BOTTOM BAR */
+.footer-bottom-v2 {
+    padding: 40px 0;
+    background: #fff;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.social-links-v2 {
-    margin-top: 2rem;
-}
-
-.social-links-v2 a {
-    font-size: 1.5rem;
-}
-
-/* Footer Bottom Skincare */
-.footer-bottom-skincare {
-    border-top: 1px solid var(--gray);
-    padding: 3rem 4%;
-    text-align: center;
+.bottom-content-v2 {
     max-width: 1400px;
     margin: 0 auto;
-}
-
-.payment-methods-row {
-    margin-bottom: 2rem;
+    padding: 0 2rem;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    gap: 1.5rem;
 }
 
-.payment-logos-container {
+.payment-stack-v2 {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 3rem;
-    flex-wrap: wrap;
-    margin-top: 1rem;
+    gap: 25px;
 }
 
-.payment-logo-item img {
-    height: 80px;
-    /* Highly enlarged as requested */
-    width: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
-    transition: transform 0.3s ease;
+.payment-logo-premium {
+    height: 25px;
+    opacity: 0.6;
+    filter: grayscale(1);
+    transition: all 0.3s;
 }
 
-.payment-logo-item img:hover {
-    transform: scale(1.1);
+.payment-logo-premium:hover {
+    opacity: 1;
+    filter: none;
 }
 
-.social-icon-large {
-    font-size: 80px;
-    color: #1877F2;
+.copyright-text-v2 {
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.legal-links-v2 {
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    margin-left: -5px;
-    /* Pull slightly left to visually align with text edge */
-    transition: transform 0.3s ease;
+    gap: 30px;
 }
 
-.social-icon-large:hover {
-    transform: scale(1.1);
+.legal-links-v2 a {
+    font-size: 0.85rem;
+    color: #999;
+    text-decoration: none;
 }
 
-.copyright-v2 p {
-    font-size: 0.75rem;
-    color: var(--secondary);
-}
-
-/* Responsive */
-@media (max-width: 992px) {
-    .footer-main-skincare {
-        padding: 3rem 5%;
-    }
-
-    .footer-grid-container {
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .footer-nav-grid-v2 {
         grid-template-columns: repeat(2, 1fr);
-        gap: 30px;
+        gap: 60px;
+    }
+
+    .instagram-grid-v2 {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
-@media (max-width: 600px) {
-    .footer-main-skincare {
-        padding: 3rem 1.5rem;
-        text-align: left;
+@media (max-width: 768px) {
+    .newsletter-content-v2 h2 {
+        font-size: 2.2rem;
     }
 
-    .footer-grid-container {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-    }
-
-    .footer-v2-column h4 {
-        margin-bottom: 1rem;
-    }
-
-    .payment-logos-container {
-        gap: 1.5rem;
-    }
-
-    .payment-logo-item img {
-        height: 60px;
-    }
-
-    .social-icon-large {
-        font-size: 60px;
-    }
-}
-
-/* =========================================
-   RESPONSIVE
-   ========================================= */
-@media (max-width: 992px) {
-    .footer-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-    }
-}
-
-@media (max-width: 640px) {
-    .footer-newsletter {
-        padding: 3rem 1.5rem;
-    }
-
-    .newsletter-form {
+    .newsletter-form-v2 {
         flex-direction: column;
+        border-radius: 20px;
     }
 
-    .newsletter-form button {
+    .footer-nav-grid-v2 {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+
+    .footer-social-links-v2 {
         justify-content: center;
     }
 
-    .footer-main {
-        padding: 3rem 1.5rem;
-    }
-
-    .footer-container {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .footer-bottom-container {
+    .bottom-content-v2 {
         flex-direction: column;
+        gap: 30px;
         text-align: center;
     }
 }

@@ -103,142 +103,149 @@ const ProductDetail = () => {
   const hasReviewed = user && reviews.some(r => r.user?._id === user._id);
 
   return (
-    <div className="product-detail-page">
-      {/* Breadcrumb */}
-      <div className="breadcrumb">
-        <Link to="/">Home</Link>
-        <span>/</span>
-        <Link to="/products">Products</Link>
-        <span>/</span>
-        <span>{product.name}</span>
+    <div className="product-detail-page-v2">
+      <div className="shop-hero-small-v2">
+        <div className="breadcrumbs-v3">
+          <Link to="/">Home</Link> <span>/</span> <Link to="/products">Shop</Link> <span>/</span> <span className="active">{product.name}</span>
+        </div>
       </div>
 
-      <div className="product-detail">
-        {/* Image Gallery */}
-        <div className="product-gallery">
-          <div className="main-image">
-            <img src={product.images?.[selectedImage] || '/placeholder.jpg'} alt={product.name} />
+      <div className="product-layout-v2">
+        {/* Left: Sticky Image Gallery */}
+        <div className="product-gallery-v2">
+          <div className="main-image-container-v2">
+            <img
+              src={product.images?.[selectedImage] || '/placeholder.jpg'}
+              alt={product.name}
+              className="main-view-v2"
+            />
+            <div className="zoom-indicator">Hover to zoom</div>
           </div>
           {product.images?.length > 1 && (
-            <div className="image-thumbnails">
+            <div className="thumbnails-grid-v2">
               {product.images.map((img, idx) => (
                 <button
                   key={idx}
-                  className={`thumb-btn ${selectedImage === idx ? 'active' : ''}`}
+                  className={`thumb-item-v2 ${selectedImage === idx ? 'active' : ''}`}
                   onClick={() => setSelectedImage(idx)}
                 >
-                  <img src={img} alt={`${product.name} ${idx + 1}`} />
+                  <img src={img} alt={`${product.name} shadow ${idx + 1}`} />
                 </button>
               ))}
             </div>
           )}
         </div>
 
-        {/* Product Info */}
-        <div className="product-info">
-          <span className="product-category">{product.category}</span>
-          <h1 className="product-title">{product.name}</h1>
-
-          <div className="product-rating">
-            {[...Array(5)].map((_, i) => (
-              <FiStar key={i} fill={i < Math.round(product.ratings || 0) ? '#1a1a1a' : 'none'} />
-            ))}
-            <span>({product.numReviews} reviews)</span>
+        {/* Right: Sophisticated Info Section */}
+        <div className="product-main-info-v2">
+          <div className="info-header-v2">
+            <span className="info-category-v2">{product.category}</span>
+            <h1 className="info-title-v2">{product.name}</h1>
+            <div className="info-meta-v2">
+              <div className="info-rating-v2">
+                {[...Array(5)].map((_, i) => (
+                  <FiStar key={i} fill={i < Math.round(product.ratings || 0) ? 'var(--brand-primary)' : 'none'} stroke={i < Math.round(product.ratings || 0) ? 'var(--brand-primary)' : '#ccc'} />
+                ))}
+                <span>({product.numReviews} Reviews)</span>
+              </div>
+              <div className="info-sku-v2">SKU: AM-{product._id?.slice(-6).toUpperCase()}</div>
+            </div>
           </div>
 
-          <div className="product-price">
-            <span className="current-price">₱{product.price?.toFixed(2)}</span>
+          <div className="info-price-v2">
+            <span className="price-current-v2">₱{product.price?.toFixed(2)}</span>
             {product.originalPrice && (
-              <span className="original-price">₱{product.originalPrice?.toFixed(2)}</span>
+              <span className="price-old-v2">₱{product.originalPrice?.toFixed(2)}</span>
+            )}
+            {product.originalPrice > product.price && (
+              <span className="price-save-v2">SAVE {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%</span>
             )}
           </div>
 
-          {/* Quantity & Add to Cart */}
-          <div className="wix-purchase-section">
-            <div className="q-label">Quantity *</div>
-            <div className="wix-controls-row">
-              <div className="wix-quantity-selector">
-                <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="q-btn"><FiMinus /></button>
+          <div className="info-description-v2">
+            <p>{product.description}</p>
+          </div>
+
+          <div className="purchase-controls-v2">
+            <div className="control-group-v2">
+              <label>Quantity</label>
+              <div className="quantity-box-v2">
+                <button
+                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                  disabled={quantity <= 1}
+                >
+                  <FiMinus />
+                </button>
                 <input type="number" value={quantity} readOnly />
-                <button onClick={() => setQuantity(q => Math.min(product.stock, q + 1))} className="q-btn"><FiPlus /></button>
+                <button
+                  onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
+                  disabled={quantity >= product.stock}
+                >
+                  <FiPlus />
+                </button>
               </div>
             </div>
 
-            <div className="cta-row">
+            <div className="actions-stack-v2">
               <button
-                className="wix-add-to-cart-btn"
+                className="btn-add-to-cart-v2"
                 onClick={handleAddToCart}
                 disabled={product.stock === 0}
               >
-                {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                {product.stock === 0 ? 'Out of Stock' : 'Add to Bag'}
               </button>
-              <button className="wishlist-btn-round">
-                <FiHeart />
+              <button
+                className="btn-buy-now-v2"
+                onClick={async () => {
+                  try {
+                    await addToCart(product._id, quantity, product);
+                    navigate('/checkout');
+                  } catch (error) {
+                    toast.error('Failed to process Buy Now');
+                  }
+                }}
+                disabled={product.stock === 0}
+              >
+                Buy it Now
               </button>
-            </div>
-
-            <button
-              className="wix-buy-now-btn"
-              onClick={async () => {
-                try {
-                  await addToCart(product._id, quantity, product);
-                  navigate('/checkout');
-                } catch (error) {
-                  toast.error('Failed to process Buy Now');
-                }
-              }}
-              disabled={product.stock === 0}
-            >
-              Buy Now
-            </button>
-          </div>
-
-          <div className="product-highlights">
-            <p className="mood-text">Bold. Elegant. Unforgettable.</p>
-            <p className="main-desc">{product.description}</p>
-
-            <div className="love-it-section">
-              <h3>Why you'll love it:</h3>
-              <ul className="love-list">
-                <li>❤️ <strong>Deep crimson shade</strong> for a bold, elegant look</li>
-                <li>💄 <strong>Lip & cheek 2-in-1 tint</strong></li>
-                <li>⏳ <strong>Long-lasting, vibrant color</strong></li>
-                <li>🧚 <strong>Lightweight & non-sticky feel</strong></li>
-                <li>🌿 <strong>Hydrating, skin-friendly formula</strong></li>
-                <li>👜 <strong>Easy to carry</strong> for touchups</li>
-              </ul>
             </div>
           </div>
 
-          {/* Shipping Info */}
-          <div className="shipping-info">
-            <div className="info-item">
+          <div className="product-perks-v2">
+            <div className="perk-item-v2">
               <FiTruck />
-              <div>
-                <strong>Estimated Delivery:</strong>
-                <span>3-7 Business Days</span>
+              <div className="perk-text-v2">
+                <strong>Fast & Safe Shipping</strong>
+                <span>3-5 working days within Metro Manila</span>
               </div>
             </div>
-            <div className="info-item">
+            <div className="perk-item-v2">
               <FiRefreshCw />
-              <div>
-                <strong>Free Shipping & Returns:</strong>
-                <span>On all orders over ₱500</span>
+              <div className="perk-text-v2">
+                <strong>Easy Returns</strong>
+                <span>Hassle-free 7-day return policy</span>
+              </div>
+            </div>
+            <div className="perk-item-v2">
+              <FiHeart />
+              <div className="perk-text-v2">
+                <strong>AmaraCé Promise</strong>
+                <span>100% Authentic & Dermatologist Tested</span>
               </div>
             </div>
           </div>
 
-          {/* Trust Badges */}
-          <div className="trust-badges">
-            <span>💳</span>
-            <span>🏦</span>
-            <span>📱</span>
-            <span>✓ Secure Checkout</span>
+          {/* Collapsible Tabs Placeholder */}
+          <div className="info-tabs-v2">
+            <div className="tab-v2">
+              <div className="tab-header-v2">Ingredients</div>
+              <div className="tab-body-v2">Aloe Vera, Vitamin E, Hyaluronic Acid, Rosehip Oil.</div>
+            </div>
+            <div className="tab-v2">
+              <div className="tab-header-v2">How to Use</div>
+              <div className="tab-body-v2">Apply twice daily on clean, dry skin. Massage gently until absorbed.</div>
+            </div>
           </div>
-
-          {product.brand && (
-            <p className="product-brand"><strong>Brand:</strong> {product.brand}</p>
-          )}
         </div>
       </div>
 

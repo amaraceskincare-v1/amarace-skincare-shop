@@ -180,68 +180,91 @@ const Home = () => {
   return (
     <div className="home-page">
       {/* Hero Slider */}
-      <section className="hero-section">
+      <section className="hero-section premium-hero">
         {displaySlides.map((slide, index) => (
           <div
             key={index}
             className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
             style={{
-              backgroundImage: !isVideo(slide.image) ? `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${slide.image})` : 'none',
-              backgroundColor: isVideo(slide.image) ? 'transparent' : '#000'
+              backgroundImage: !isVideo(slide.image) ? `linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.2)), url(${slide.image})` : 'none',
+              backgroundColor: isVideo(slide.image) ? 'transparent' : '#f0f0f0'
             }}
           >
             {isVideo(slide.image) && (
-              <video
-                src={slide.image}
-                autoPlay
-                loop
-                muted
-                playsInline
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover'
-                }}
-              />
+              <div className="hero-video-wrapper">
+                <video
+                  src={slide.image}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+                <div className="hero-video-overlay"></div>
+              </div>
             )}
-            <div className="hero-overlay"></div>
-            <div className="hero-content">
-              <span className="hero-label">{slide.subtitle}</span>
-              <h1 className="hero-title">{slide.title}</h1>
-              <div className="hero-actions">
-                <Link to="/products" className="hero-btn primary">{slide.cta}</Link>
-                <Link to="/about" className="hero-btn secondary">{t('about')}</Link>
+
+            <div className="hero-content-v2">
+              <div className="hero-badge animate-fadeInUp delay-1">Free Shipping on Orders ₱500+</div>
+              <h1 className="hero-title-v2 animate-fadeInUp delay-2">
+                {slide.title.includes('|') ? (
+                  <>
+                    {slide.title.split('|')[0]}
+                    <span className="hero-title-accent">{slide.title.split('|')[1]}</span>
+                  </>
+                ) : slide.title}
+              </h1>
+              <p className="hero-subtitle-v2 animate-fadeInUp delay-3">{slide.subtitle}</p>
+
+              <div className="hero-actions-v2 animate-fadeInUp delay-4">
+                <Link to="/products" className="hero-btn-v2 primary">
+                  {slide.cta} <span className="btn-arrow">→</span>
+                </Link>
+                <Link to="/about" className="hero-btn-v2 secondary">
+                  {t('about')}
+                </Link>
+              </div>
+
+              <div className="hero-social-proof animate-fadeInUp delay-5">
+                <div className="customer-avatars">
+                  <div className="avatar">JS</div>
+                  <div className="avatar">MC</div>
+                  <div className="avatar">AR</div>
+                </div>
+                <span>Join 10,000+ Happy Customers</span>
+              </div>
+            </div>
+
+            <div className="hero-scroll-indicator">
+              <div className="mouse">
+                <div className="wheel"></div>
               </div>
             </div>
           </div>
         ))}
-        <div className="hero-dots">
-          {displaySlides.map((_, index) => (
-            <button
-              key={index}
-              className={`hero-dot ${index === currentSlide ? 'active' : ''}`}
-              onClick={() => setCurrentSlide(index)}
-            />
-          ))}
-        </div>
       </section>
 
-      {/* Category Circles (Wix Signature) */}
-      <section className="category-circles-section">
-        <div className="section-header">
-          <h2>Shop by Category</h2>
+      {/* Category Grid Redesign */}
+      <section className="shop-by-category">
+        <div className="section-header-modern">
+          <span className="section-tagline">Browse Collections</span>
+          <h2 className="section-title-v2">Shop by Category</h2>
+          <div className="section-divider-v2"></div>
         </div>
-        <div className="category-circles-grid">
+
+        <div className="categories-grid-v2">
           {categories.map((cat, index) => (
-            <Link to={cat.path} key={index} className="category-circle-item">
-              <div className="circle-image">
-                <img src={cat.image} alt={cat.name} />
+            <Link to={cat.path} key={index} className={`category-card-v2 cat-${index}`}>
+              <div className="category-visual">
+                <div className="category-bg-gradient"></div>
+                <img src={cat.image} alt={cat.name} className="category-img-v2" />
+                <div className="category-overlay-v2">
+                  <span className="view-btn">Discover →</span>
+                </div>
               </div>
-              <h3>{cat.name}</h3>
-              <p>{cat.count}</p>
+              <div className="category-info-v2">
+                <h3 className="category-name-v2">{cat.name}</h3>
+                <span className="category-count-v2">{cat.count}</span>
+              </div>
             </Link>
           ))}
         </div>
@@ -250,29 +273,36 @@ const Home = () => {
       {/* Featured Products Section */}
       {featuredProducts.length > 0 && (
         <section className="featured-section">
-          <div className="section-header">
-            <h2>{t('featured')} <span>Products</span></h2>
+          <div className="section-header-modern">
+            <span className="section-tagline">Handpicked favorites for you</span>
+            <h2 className="section-title-v2">{t('featured')} <span className="title-accent">Products</span></h2>
+            <div className="section-divider-v2"></div>
           </div>
-          <div className="products-grid">
+          <div className="products-grid-v2">
             {featuredProducts.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
           </div>
-          <div className="section-cta">
-            <Link to="/products?featured=true" className="view-all-btn">View All Featured</Link>
+          <div className="section-cta-v2">
+            <Link to="/products?featured=true" className="btn-modern-outline">
+              Shop All Featured <span className="btn-arrow">→</span>
+            </Link>
           </div>
         </section>
       )}
 
       {/* Best Sellers Section */}
-      <section className="bestsellers-section">
-        <div className="section-header">
-          <h2>You are in <span>{t('best_sellers')}</span></h2>
+      <section className="bestsellers-section-v2">
+        <div className="section-header-modern">
+          <span className="section-tagline">Trending Now</span>
+          <h2 className="section-title-v2">Best Selling <span className="title-accent">{t('best_sellers')}</span></h2>
+          <div className="section-divider-v2"></div>
         </div>
-        <div className="products-grid">
+
+        <div className="products-grid-v2">
           {loading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="product-skeleton">
+            Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="product-skeleton-v2">
                 <div className="skeleton-image"></div>
                 <div className="skeleton-text"></div>
                 <div className="skeleton-text short"></div>
@@ -283,74 +313,77 @@ const Home = () => {
               <ProductCard key={product._id} product={product} />
             ))
           ) : (
-            <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#666' }}>
-              No best sellers yet. Mark products as "Best Seller" in admin.
-            </p>
+            <p className="no-data-msg">No trending products found.</p>
           )}
         </div>
-        <div className="section-cta">
-          <Link to="/products?bestSeller=true" className="view-all-btn">View All</Link>
-        </div>
       </section>
 
-      {/* Promotional Banner */}
-      <section className="promo-banner">
-        <div className="promo-content">
-          <span className="promo-label">Featured Collection</span>
-          <h2>Premium Beauty<br />Essentials</h2>
-          <p>Discover our bestselling products that customers love</p>
-          <Link to="/products" className="promo-btn">Shop Now</Link>
+      {/* Two-Panel Premium Banner */}
+      <section className="premium-banner-v2">
+        <div className="banner-panel dark-panel">
+          <div className="panel-content">
+            <span className="panel-tagline">Premium Collection</span>
+            <h2 className="panel-title">Beauty<br />Essentials</h2>
+            <p className="panel-desc">Discover our bestselling formulas that customers can't get enough of.</p>
+            <Link to="/products" className="panel-btn">Shop Collection</Link>
+          </div>
+          <div className="panel-decoration">
+            <div className="sparkle s1">✦</div>
+            <div className="sparkle s2">✦</div>
+          </div>
         </div>
-        <div className="promo-image">
+        <div className="banner-panel light-panel">
           <img
-            src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=800&q=80"
-            alt="Featured Collection"
+            src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=1000&q=80"
+            alt="Product Showcase"
+            className="full-panel-img"
           />
+          <div className="floating-badge">New Arrival</div>
         </div>
       </section>
 
-      {/* Text Marquee */}
-      <section className="marquee-section">
-        <div className="marquee-track">
-          {[...marqueeTexts, ...marqueeTexts].map((text, index) => (
-            <span key={index} className="marquee-item">
-              {text} <span className="marquee-dot">★</span>
-            </span>
-          ))}
+      {/* Testimonials Redesign */}
+      <section className="testimonials-section-v2">
+        <div className="section-header-modern">
+          <span className="section-tagline">Real reviews from real people</span>
+          <h2 className="section-title-v2">What Our <span className="title-accent">Customers Say</span></h2>
+          <div className="section-divider-v2"></div>
+          <p className="testimonial-summary">4.9/5 stars from 1,200+ global reviews</p>
         </div>
-      </section>
 
-      {/* Testimonials */}
-      <section className="testimonials-section">
-        <h2 className="section-title">Happy Customers</h2>
-        <div className="testimonials-grid">
-          {testimonials.map((testimonial, index) => (
-            <div key={index} className="testimonial-card">
-              <div className="testimonial-rating">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <FiStar key={i} fill="#1a1a1a" />
-                ))}
+        <div className="testimonials-grid-v2">
+          {testimonials.map((t, index) => (
+            <div key={index} className="testimonial-card-v2">
+              <div className="t-card-header">
+                <div className="t-stars">
+                  {[...Array(t.rating)].map((_, i) => (
+                    <FiStar key={i} fill="var(--brand-primary)" color="var(--brand-primary)" />
+                  ))}
+                  <span className="t-rating-val">5.0</span>
+                </div>
+                <div className="t-badge"><FiStar /> Verified Buyer</div>
               </div>
-              <p className="testimonial-text">"{testimonial.text}"</p>
-              <div className="testimonial-author">
-                <strong>{testimonial.name}</strong>
-                <span>Purchased: {testimonial.product}</span>
+              <p className="t-text">"{t.text}"</p>
+              <div className="t-footer">
+                <div className="t-avatar">{t.name.charAt(0)}</div>
+                <div className="t-info">
+                  <span className="t-name">{t.name}</span>
+                  <span className="t-product">Purchased: {t.product}</span>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-
-
-      {/* Features Section */}
-      <section className="features-section">
-        <div className="features-grid">
+      {/* Trust Features Redesign */}
+      <section className="trust-features-v2">
+        <div className="features-grid-v2">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="feature-card">
-                <div className="feature-icon">
+              <div key={index} className="feature-card-v2">
+                <div className="feature-icon-v2">
                   <Icon />
                 </div>
                 <h3>{feature.title}</h3>

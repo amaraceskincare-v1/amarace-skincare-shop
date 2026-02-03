@@ -87,129 +87,210 @@ const Products = () => {
   }, {});
 
   return (
-    <div className="products-page">
-      <div className="shop-header">
-        <div className="shop-header-content">
-          <h1>Shop All</h1>
-          <div className="breadcrumbs">
-            <Link to="/">Home</Link> / <span>Shop</span>
+    <div className="products-page-v2">
+      {/* Premium Shop Hero */}
+      <div className="shop-hero-v2">
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <span className="hero-tagline">Premium Collection</span>
+          <h1>Our Essentials</h1>
+          <div className="breadcrumbs-v2">
+            <Link to="/">Home</Link> <span>/</span> <Link to="/products">Shop</Link>
+            {category && (
+              <>
+                <span>/</span> <span className="active-breadcrumb">{category}</span>
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      <div className="shop-container">
-        {/* Sidebar Filters */}
-        <aside className="shop-sidebar">
-          <div className="sidebar-section">
-            <h3>Categories</h3>
-            <ul className="category-list">
-              <li className={!category ? 'active' : ''} onClick={() => updateFilter('category', '')}>
-                All Products
-              </li>
-              {categories.map((cat) => (
-                <li
-                  key={cat}
-                  className={category === cat ? 'active' : ''}
-                  onClick={() => updateFilter('category', cat)}
-                >
-                  {cat}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="sidebar-section">
-            <h3>Filter by Price</h3>
-            <div className="price-inputs">
-              <input
-                type="number"
-                placeholder="Min"
-                value={minPrice}
-                onChange={(e) => updateFilter('minPrice', e.target.value)}
-              />
-              <span>-</span>
-              <input
-                type="number"
-                placeholder="Max"
-                value={maxPrice}
-                onChange={(e) => updateFilter('maxPrice', e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="sidebar-section">
-            <h3>Sort By</h3>
-            <select
-              value={sort}
-              onChange={(e) => updateFilter('sort', e.target.value)}
-              className="sort-select"
-            >
-              <option value="">Default</option>
-              <option value="price_asc">Price: Low to High</option>
-              <option value="price_desc">Price: High to Low</option>
-              <option value="newest">Newest First</option>
-            </select>
-          </div>
-
-          {hasActiveFilters && (
-            <button className="clear-all-btn" onClick={clearFilters}>
-              Clear All Filters <FiX />
+      <div className="shop-container-v2">
+        {/* Modern Sidebar Filters */}
+        <aside className={`shop-sidebar-v2 ${sidebarOpen ? 'open' : ''}`}>
+          <div className="sidebar-header-v2">
+            <h3>Filters</h3>
+            <button className="close-sidebar" onClick={() => setSidebarOpen(false)}>
+              <FiX />
             </button>
-          )}
+          </div>
+
+          <div className="sidebar-content-v2">
+            <div className="sidebar-section-v2">
+              <h4>Categories</h4>
+              <ul className="category-list-v2">
+                <li
+                  className={!category ? 'active' : ''}
+                  onClick={() => updateFilter('category', '')}
+                >
+                  All Collections
+                </li>
+                {categories.map((cat) => (
+                  <li
+                    key={cat}
+                    className={category === cat ? 'active' : ''}
+                    onClick={() => updateFilter('category', cat)}
+                  >
+                    {cat}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="sidebar-section-v2">
+              <h4>Price Range</h4>
+              <div className="price-inputs-v2">
+                <div className="input-with-currency">
+                  <span>₱</span>
+                  <input
+                    type="number"
+                    placeholder="Min"
+                    value={minPrice}
+                    onChange={(e) => updateFilter('minPrice', e.target.value)}
+                  />
+                </div>
+                <div className="price-divider"></div>
+                <div className="input-with-currency">
+                  <span>₱</span>
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    value={maxPrice}
+                    onChange={(e) => updateFilter('maxPrice', e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="sidebar-section-v2">
+              <h4>Sort By</h4>
+              <div className="sort-buttons-v2">
+                {[
+                  { id: '', label: 'Default' },
+                  { id: 'price_asc', label: 'Price: Low' },
+                  { id: 'price_desc', label: 'Price: High' },
+                  { id: 'newest', label: 'Newest' }
+                ].map(opt => (
+                  <button
+                    key={opt.id}
+                    className={sort === opt.id ? 'active' : ''}
+                    onClick={() => updateFilter('sort', opt.id)}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {hasActiveFilters && (
+              <button className="clear-all-btn-v2" onClick={clearFilters}>
+                Reset All Filters
+              </button>
+            )}
+          </div>
         </aside>
 
         {/* Products Grid Area */}
-        <main className="shop-main">
-          <div className="shop-toolbar">
-            <div className="search-bar">
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={search}
-                onChange={(e) => updateFilter('search', e.target.value)}
-              />
+        <main className="shop-main-v2">
+          <div className="shop-toolbar-v2">
+            <div className="toolbar-left">
+              <button className="mobile-filter-btn" onClick={() => setSidebarOpen(true)}>
+                Filters {hasActiveFilters && <span className="filter-count"></span>}
+              </button>
+              <div className="product-count-v2">
+                <span>{totalProducts}</span> Products Found
+              </div>
             </div>
-            <div className="product-count">
-              Showing {products.length} of {totalProducts} items
+
+            <div className="toolbar-right">
+              <div className="search-bar-v2">
+                <input
+                  type="text"
+                  placeholder="Search our essentials..."
+                  value={search}
+                  onChange={(e) => updateFilter('search', e.target.value)}
+                />
+              </div>
             </div>
           </div>
 
+          {/* Active Filter Tags */}
+          {hasActiveFilters && (
+            <div className="active-filters-row">
+              {category && (
+                <span className="filter-tag">
+                  {category} <FiX onClick={() => updateFilter('category', '')} />
+                </span>
+              )}
+              {minPrice && (
+                <span className="filter-tag">
+                  Min: ₱{minPrice} <FiX onClick={() => updateFilter('minPrice', '')} />
+                </span>
+              )}
+              {maxPrice && (
+                <span className="filter-tag">
+                  Max: ₱{maxPrice} <FiX onClick={() => updateFilter('maxPrice', '')} />
+                </span>
+              )}
+              <button className="clear-inline" onClick={clearFilters}>Clear All</button>
+            </div>
+          )}
+
           {loading ? (
-            <div className="shop-grid">
+            <div className="products-grid-v2">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="product-skeleton">
-                  <div className="skeleton-image"></div>
-                  <div className="skeleton-text"></div>
-                  <div className="skeleton-text short"></div>
+                <div key={i} className="product-card-skeleton-v2">
+                  <div className="skeleton-image-v2"></div>
+                  <div className="skeleton-info-v2">
+                    <div className="skeleton-line-v2"></div>
+                    <div className="skeleton-line-v2 short"></div>
+                  </div>
                 </div>
               ))}
             </div>
           ) : products.length > 0 ? (
-            <div className="shop-grid">
+            <div className="products-grid-v2">
               {products.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
             </div>
           ) : (
-            <div className="no-products">
-              <h3>No products found</h3>
-              <p>Try adjusting your search or filters</p>
-              <button className="btn-primary" onClick={clearFilters}>Clear All</button>
+            <div className="no-products-v2">
+              <div className="no-products-icon">✨</div>
+              <h3>No match found</h3>
+              <p>Try adjusting your search or filters to find what you're looking for.</p>
+              <button className="btn-modern-outline" onClick={clearFilters}>Reset Everything</button>
             </div>
           )}
 
           {/* Pagination */}
           {!loading && totalPages > 1 && (
-            <div className="pagination">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  className={`page-btn ${currentPage === page ? 'active' : ''}`}
-                  onClick={() => updateFilter('page', page)}
-                >
-                  {page}
-                </button>
-              ))}
+            <div className="pagination-v2">
+              <button
+                className="page-nav-btn"
+                disabled={currentPage === 1}
+                onClick={() => updateFilter('page', currentPage - 1)}
+              >
+                Previous
+              </button>
+              <div className="page-numbers-v2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    className={`page-btn-v2 ${currentPage === page ? 'active' : ''}`}
+                    onClick={() => updateFilter('page', page)}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+              <button
+                className="page-nav-btn"
+                disabled={currentPage === totalPages}
+                onClick={() => updateFilter('page', currentPage + 1)}
+              >
+                Next
+              </button>
             </div>
           )}
         </main>

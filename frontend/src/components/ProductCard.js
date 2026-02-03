@@ -25,35 +25,47 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="product-card">
-      <Link to={`/products/${product._id}`} className="product-link">
-        <div className="product-image">
+    <div className="product-card-v2">
+      <Link to={`/products/${product._id}`} className="product-link-v2">
+        <div className="product-image-v2">
           <img
             src={product.images?.[0] || '/placeholder.jpg'}
             alt={product.name}
+            className="primary-img"
           />
-          {product.stock === 0 && (
-            <span className="badge badge-out">Out of Stock</span>
+          {product.images?.length > 1 && (
+            <img
+              src={product.images[1]}
+              alt={`${product.name} alternate`}
+              className="secondary-img"
+            />
           )}
-        </div>
 
-        <div className="product-info centered">
-          <h3 className="product-name">{product.name}</h3>
-          <div className="product-price">
-            <span className="current-price">
-              ₱{product.price?.toFixed(2)}
-            </span>
+          <div className="product-badges-v2">
+            {product.stock === 0 ? (
+              <span className="badge-v2 out-of-stock">Sold Out</span>
+            ) : product.isNewProduct ? (
+              <span className="badge-v2 new">New</span>
+            ) : null}
           </div>
 
-          <div className="product-actions-inline">
+          <div className="product-actions-v2">
             <button
-              className="action-btn cart-action"
+              className="quick-add-btn"
               onClick={handleAddToCart}
               disabled={product.stock === 0}
-              aria-label="Add to cart"
             >
-              <FiShoppingCart /> Add to Cart
+              <FiShoppingCart /> {product.stock === 0 ? 'Out of Stock' : 'Quick Add'}
             </button>
+          </div>
+        </div>
+
+        <div className="product-info-v2">
+          <span className="product-category-v2">{product.category}</span>
+          <h3 className="product-name-v2">{product.name}</h3>
+          <div className="product-price-v2">
+            <span className="currency">₱</span>
+            <span className="price-val">{product.price?.toFixed(2)}</span>
           </div>
         </div>
       </Link>
