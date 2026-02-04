@@ -17,14 +17,47 @@ const reviewSchema = new mongoose.Schema({
         min: 1,
         max: 5
     },
+    title: {
+        type: String,
+        trim: true,
+        maxlength: 100
+    },
     comment: {
         type: String,
-        required: true
+        required: true,
+        maxlength: 1000
+    },
+    photos: [{
+        type: String
+    }],
+    recommend: {
+        type: String,
+        enum: ['yes', 'no'],
+        default: 'yes'
+    },
+    verified: {
+        type: Boolean,
+        default: false
+    },
+    helpfulCount: {
+        type: Number,
+        default: 0
+    },
+    helpfulUsers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    store_response: {
+        text: String,
+        date: {
+            type: Date,
+            default: Date.now
+        }
     },
     status: {
         type: String,
         enum: ['pending', 'approved', 'rejected'],
-        default: 'approved' // Default for backwards compatibility
+        default: 'approved'
     }
 }, {
     timestamps: true

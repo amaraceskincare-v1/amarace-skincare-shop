@@ -49,7 +49,11 @@ router.post('/', protect, async (req, res) => {
             user: req.user._id,
             product: productId,
             rating,
+            title: req.body.title || '',
             comment,
+            photos: req.body.photos || [],
+            recommend: req.body.recommend || 'yes',
+            verified: !!deliveredOrder,
             status
         });
 
@@ -82,11 +86,73 @@ router.get('/product/:productId', async (req, res) => {
     try {
         const reviews = await Review.find({
             product: req.params.productId,
-            status: 'approved' // Only show approved reviews
+            status: 'approved'
         })
             .populate('user', 'name')
             .sort('-createdAt');
-        res.json(reviews);
+
+        // Calculate statistics
+        const stats = {
+            rating: 0,
+            count: reviews.length,
+            breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
+        };
+
+        if (reviews.length > 0) {
+            let total = 0;
+            reviews.forEach(r => {
+                total += r.rating;
+                stats.breakdown[Math.floor(r.rating)]++;
+            });
+            stats.rating = (total / reviews.length).toFixed(1);
+        }
+
+        res.json({ reviews, stats });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Toggle helpful vote
+router.patch('/:id/helpful', protect, async (req, res) => {
+    try {
+        const review = await Review.findById(req.params.id);
+        if (!review) return res.status(404).json({ message: 'Review not found' });
+
+        const userId = req.user._id;
+        const hasVoted = review.helpfulUsers.includes(userId);
+
+        if (hasVoted) {
+            // Remove vote
+            review.helpfulUsers = review.helpfulUsers.filter(id => id.toString() !== userId.toString());
+            review.helpfulCount = Math.max(0, review.helpfulCount - 1);
+        } else {
+            // Add vote
+            review.helpfulUsers.push(userId);
+            review.helpfulCount += 1;
+        }
+
+        await review.save();
+        res.json({ helpfulCount: review.helpfulCount, hasVoted: !hasVoted });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Admin response to review
+router.patch('/:id/response', protect, admin, async (req, res) => {
+    try {
+        const { text } = req.body;
+        const review = await Review.findById(req.params.id);
+        if (!review) return res.status(404).json({ message: 'Review not found' });
+
+        review.store_response = {
+            text,
+            date: Date.now()
+        };
+
+        await review.save();
+        res.json({ message: 'Response added', review });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

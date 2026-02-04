@@ -9,6 +9,7 @@ import '../styles/ProductDetail.css';
 
 import { useSettings } from '../context/SettingsContext';
 import { flyToCart } from '../utils/animations';
+import ProductReviews from '../components/ProductReviews';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -274,65 +275,7 @@ const ProductDetail = () => {
       </div>
 
       {/* Reviews Section */}
-      <div className="reviews-section" ref={reviewsSectionRef}>
-        <h2>Customer Reviews</h2>
-
-        {user && !hasReviewed && (
-          <form className="review-form" onSubmit={handleSubmitReview}>
-            <h3>Write a Review</h3>
-            <div className="star-rating">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  type="button"
-                  onClick={() => setNewReview(p => ({ ...p, rating: star }))}
-                >
-                  <FiStar fill={star <= newReview.rating ? '#1a1a1a' : 'none'} />
-                </button>
-              ))}
-            </div>
-            <textarea
-              placeholder="Share your experience..."
-              value={newReview.comment}
-              onChange={(e) => setNewReview(p => ({ ...p, comment: e.target.value }))}
-              required
-            />
-            <button type="submit" className="submit-review-btn" disabled={submitting}>
-              {submitting ? 'Submitting...' : 'Submit Review'}
-            </button>
-          </form>
-        )}
-
-        {hasReviewed && (
-          <div className="already-reviewed">You have already reviewed this product.</div>
-        )}
-
-        {!user && (
-          <div className="login-prompt">
-            <Link to="/login">Log in</Link> to write a review.
-          </div>
-        )}
-
-        <div className="reviews-list">
-          {reviews.length > 0 ? (
-            reviews.map((review) => (
-              <div key={review._id} className="review-card">
-                <div className="review-header">
-                  <strong>{review.user?.name || 'Anonymous'}</strong>
-                  <div className="review-stars">
-                    {[...Array(5)].map((_, i) => (
-                      <FiStar key={i} size={12} fill={i < review.rating ? '#1a1a1a' : 'none'} />
-                    ))}
-                  </div>
-                </div>
-                <p>{review.comment}</p>
-              </div>
-            ))
-          ) : (
-            <p className="no-reviews">No reviews yet. Be the first!</p>
-          )}
-        </div>
-      </div>
+      <ProductReviews productId={id} user={user} />
     </div>
   );
 };
