@@ -88,7 +88,7 @@ const Home = () => {
     fetchAllProductsAndCountCategories();
   }, []);
 
-  // Use dynamic hero images if available, otherwise fallback to defaults
+  // Use dynamic hero images/videos uploaded from admin
   const displaySlides = (settings?.heroImages && Array.isArray(settings.heroImages) && settings.heroImages.length > 0)
     ? settings.heroImages.map((img, i) => ({
       title: i === 0 ? 'THE FUTURE OF SKINCARE' : 'BEST SELLERS 2026',
@@ -98,16 +98,10 @@ const Home = () => {
     }))
     : [
       {
-        title: 'THE FUTURE OF SKINCARE',
-        subtitle: 'Experience the Ultimate Glow',
-        image: 'https://images.unsplash.com/photo-1598440447192-383794a08832?w=1920&q=80',
+        title: 'WELCOME TO AMARACÉ',
+        subtitle: 'Upload hero images in Admin Dashboard to customize this section',
+        image: '',
         cta: 'Shop Now'
-      },
-      {
-        title: 'BEST SELLERS 2026',
-        subtitle: 'Discover Your New Routine',
-        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1920&q=80',
-        cta: 'Explore All'
       }
     ];
 
@@ -184,8 +178,8 @@ const Home = () => {
             key={index}
             className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
             style={{
-              backgroundImage: !isVideo(slide.image) ? `linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.2)), url(${slide.image})` : 'none',
-              backgroundColor: isVideo(slide.image) ? 'transparent' : '#f0f0f0'
+              backgroundImage: !isVideo(slide.image) && slide.image ? `linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.2)), url(${slide.image})` : 'none',
+              backgroundColor: slide.image ? (isVideo(slide.image) ? 'transparent' : '#f0f0f0') : 'linear-gradient(135deg, #e8b4bc 0%, #f5e6e8 100%)'
             }}
           >
             {isVideo(slide.image) && (
