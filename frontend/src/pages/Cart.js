@@ -163,14 +163,16 @@ const Cart = () => {
             {/* Payment Methods - Centered */}
             <div className="payment-methods-container">
               <div className="payment-icons">
-                {/* GCash Icon - Dynamic with Fallback */}
-                <div className="payment-icon-item">
-                  <img
-                    src={settings?.gcashQR || "/images/gcash-logo.png"}
-                    alt="GCash"
-                    className="payment-icon"
-                  />
-                </div>
+                {/* Payment Logos (GCash/COD/Cards) - Centered and 50px */}
+                {settings?.gcashQR && (
+                  <div className="payment-icon-item">
+                    <img
+                      src={settings.gcashQR}
+                      alt="GCash"
+                      className="payment-icon"
+                    />
+                  </div>
+                )}
 
                 {/* Payment Logos (COD/Cards) - Dynamic with Fallback */}
                 {settings?.paymentLogos && settings.paymentLogos.length > 0 ? (

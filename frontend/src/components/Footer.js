@@ -94,11 +94,13 @@ const Footer = () => {
           </div>
 
           <div className="nav-col-v2">
-            <h4>Store location</h4>
-            <p>Salvacion, Panabo City</p>
-            <p>Davao del Norte, 8105</p>
-            <p>+63 915 266 2648</p>
-            <p>amarace.skincare@gmail.com</p>
+            <h4>STORE LOCATION</h4>
+            <ul>
+              <li>Salvacion, Panabo City</li>
+              <li>Davao del Norte, 8105</li>
+              <li>+63 915 266 2648</li>
+              <li>amarace.skincare@gmail.com</li>
+            </ul>
           </div>
         </div>
       </div>

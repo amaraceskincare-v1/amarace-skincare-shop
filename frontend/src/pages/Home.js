@@ -66,8 +66,8 @@ const Home = () => {
         const products = data?.products || [];
         const counts = {
           'Lip Tint': 0,
-          'Fragrance': 0,
-          'Artisan Soap': 0,
+          'Perfume': 0,
+          'Beauty Soap': 0,
           'All': products.length
         };
         products.forEach(p => {
@@ -152,15 +152,15 @@ const Home = () => {
     },
     {
       name: 'Fragrances',
-      count: `${categoryCounts['Fragrance']} items`,
-      image: settings?.fragranceImage || 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80',
-      path: '/products?category=Fragrance'
+      count: `${categoryCounts['Perfume'] || 0} items`,
+      image: settings?.perfumeImage || 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80',
+      path: '/products?category=Perfume'
     },
     {
       name: 'Artisan Soaps',
-      count: `${categoryCounts['Artisan Soap']} items`,
-      image: settings?.artisanSoapImage || 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&q=80',
-      path: '/products?category=Artisan%20Soap'
+      count: `${categoryCounts['Beauty Soap'] || 0} items`,
+      image: settings?.beautySoapImage || 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&q=80',
+      path: '/products?category=Beauty%20Soap'
     },
     {
       name: 'All Best Sellers',

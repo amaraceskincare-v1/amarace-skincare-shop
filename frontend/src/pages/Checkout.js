@@ -234,7 +234,7 @@ const Checkout = () => {
                       <div className="radio-circle"></div>
                     </div>
                     <span>GCash</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/GCash_logo.svg/2560px-GCash_logo.svg.png" alt="GCash" className="payment-icon-mini" />
+                    <img src="https://raw.githubusercontent.com/amaraceskincare-v1/amarace-skincare-shop/main/frontend/public/images/gcash-logo.png" alt="GCash" className="payment-icon-mini" />
                   </div>
                 </div>
 

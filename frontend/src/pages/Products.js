@@ -14,7 +14,7 @@ const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [gridCols, setGridCols] = useState(4);
+  const [gridCols, setGridCols] = useState(3);
 
   const currentPage = Number(searchParams.get('page')) || 1;
   const category = searchParams.get('category') || '';

@@ -394,26 +394,26 @@ const Dashboard = () => {
 
             {/* Category: Perfumes */}
             <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Perfumes Image</h4>
+              <h4>Fragrances Image</h4>
               <div className="media-preview-mini" style={{ height: '140px' }}>
-                <img src={getPreview(settings.perfumeImage)} alt="Perfumes" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
+                <img src={getPreview(settings.perfumeImage)} alt="Fragrances" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
               </div>
-              <input type="file" id="perfume-upload" onChange={(e) => handleUpdateImage('perfumeImage', e.target.files[0])} style={{ display: 'none' }} />
+              <input type="file" id="fragrances-upload" onChange={(e) => handleUpdateImage('perfumeImage', e.target.files[0])} style={{ display: 'none' }} />
               <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('perfume-upload').click()} className="upload-label-mini">Change</button>
-                <button onClick={() => handleRemoveImage('perfumeImage')} className="upload-label-mini" style={{ background: '#ef4444' }}>Remove</button>
+                <button onClick={() => document.getElementById('fragrances-upload').click()} className="btn-primary-solid">Change</button>
+                <button onClick={() => handleRemoveImage('perfumeImage')} className="btn-danger">Remove</button>
               </div>
             </div>
 
             {/* Category: Beauty Soaps */}
             <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Beauty Soaps Image</h4>
+              <h4>Artisan Soaps Image</h4>
               <div className="media-preview-mini" style={{ height: '140px' }}>
-                <img src={getPreview(settings.beautySoapImage)} alt="Beauty Soaps" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
+                <img src={getPreview(settings.beautySoapImage)} alt="Artisan Soaps" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
               </div>
-              <input type="file" id="soap-upload" onChange={(e) => handleUpdateImage('beautySoapImage', e.target.files[0])} style={{ display: 'none' }} />
+              <input type="file" id="artisan-soap-upload" onChange={(e) => handleUpdateImage('beautySoapImage', e.target.files[0])} style={{ display: 'none' }} />
               <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('soap-upload').click()} className="btn-primary-solid">Change</button>
+                <button onClick={() => document.getElementById('artisan-soap-upload').click()} className="btn-primary-solid">Change</button>
                 <button onClick={() => handleRemoveImage('beautySoapImage')} className="btn-danger">Remove</button>
               </div>
             </div>
