@@ -171,7 +171,7 @@
 
 .footer-social-links-v2 a {
     color: var(--brand-text);
-    font-size: 40px;
+    font-size: 80px;
     transition: var(--transition-normal);
     display: flex;
     align-items: center;
@@ -234,7 +234,7 @@
 }
 
 .payment-logo-premium {
-    height: 25px;
+    height: 80px;
     opacity: 0.6;
     filter: grayscale(1);
     transition: all 0.3s;
