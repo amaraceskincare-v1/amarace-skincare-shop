@@ -301,7 +301,7 @@ const AdminProducts = () => {
                         <div className="upload-placeholder">
                           <FiUpload size={32} />
                           <span>Add Images</span>
-                          <small>PNG, JPG up to 5MB</small>
+                          <small>PNG, JPG up to 10MB</small>
                         </div>
                       </label>
                     </div>
