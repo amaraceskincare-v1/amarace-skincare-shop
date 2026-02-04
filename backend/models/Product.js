@@ -8,10 +8,13 @@ const productSchema = new mongoose.Schema({
   brand: { type: String },
   stock: { type: Number, required: true, default: 0 },
   images: [{ type: String }],
+  sku: { type: String, trim: true },
   ratings: { type: Number, default: 0 },
   numReviews: { type: Number, default: 0 },
   featured: { type: Boolean, default: false },
-  bestSeller: { type: Boolean, default: false }
+  bestSeller: { type: Boolean, default: false },
+  newArrival: { type: Boolean, default: false },
+  published: { type: Boolean, default: true }
 }, { timestamps: true });
 
 productSchema.index({ name: 'text', description: 'text', category: 'text' });

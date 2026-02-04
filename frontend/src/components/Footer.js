@@ -108,19 +108,7 @@ const Footer = () => {
       {/* 4. Bottom Bar */}
       <div className="footer-bottom-v2">
         <div className="bottom-content-v2">
-          <div className="payment-stack-v2">
-            {settings?.paymentLogos && settings.paymentLogos.length > 0 ? (
-              settings.paymentLogos.map((logo, idx) => (
-                <img key={idx} src={logo} alt="Payment Method" className="payment-logo-premium" />
-              ))
-            ) : (
-              <>
-                <img src="https://i.ibb.co/L5fX0gD/gcash-logo.png" alt="GCash" className="payment-logo-premium" />
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa" className="payment-logo-premium" />
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard" className="payment-logo-premium" />
-              </>
-            )}
-          </div>
+          {/* removed payment stack to cleanup footer per user request */}
           <p className="copyright-text-v2">© 2025 AmaraCé Skin Care. Crafted for Radiance. All Rights Reserved.</p>
           <div className="legal-links-v2">
             <Link to="/policies/terms">Terms</Link>

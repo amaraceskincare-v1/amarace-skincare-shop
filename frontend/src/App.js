@@ -45,7 +45,7 @@ const App = () => {
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1200);
+    }, 600);
     return () => clearTimeout(timer);
   }, [location.pathname, lang, location.search]);
 

@@ -107,11 +107,13 @@ router.post('/', protect, admin, upload.array('images', 5), async (req, res) => 
     const productData = {
       ...req.body,
       images,
-      // Parse numeric fields
       price: Number(req.body.price),
       stock: Number(req.body.stock),
-      featured: req.body.featured === 'true',
-      bestSeller: req.body.bestSeller === 'true'
+      sku: req.body.sku || '',
+      featured: req.body.featured === 'true' || req.body.featured === true,
+      bestSeller: req.body.bestSeller === 'true' || req.body.bestSeller === true,
+      newArrival: req.body.newArrival === 'true' || req.body.newArrival === true,
+      published: req.body.published === 'true' || req.body.published === true || req.body.published === undefined
     };
 
     const product = await Product.create(productData);
@@ -144,13 +146,25 @@ router.put('/:id', protect, admin, upload.array('images', 5), async (req, res) =
       product.stock = Number(req.body.stock);
     }
 
-    // Handle boolean fields properly (checkboxes send 'true' or undefined)
+    if (req.body.sku !== undefined) product.sku = req.body.sku;
     product.featured = req.body.featured === 'true' || req.body.featured === true;
     product.bestSeller = req.body.bestSeller === 'true' || req.body.bestSeller === true;
+    product.newArrival = req.body.newArrival === 'true' || req.body.newArrival === true;
+    product.published = req.body.published === 'true' || req.body.published === true;
 
-    // Only update images if new ones are uploaded
+    // Handle images
+    let updatedImages = [];
+    if (req.body.existingImages) {
+      updatedImages = JSON.parse(req.body.existingImages);
+    }
+
     if (req.files && req.files.length > 0) {
-      product.images = req.files.map(file => file.path);
+      const newImages = req.files.map(file => file.path);
+      updatedImages = [...updatedImages, ...newImages];
+    }
+
+    if (updatedImages.length > 0 || req.body.existingImages) {
+      product.images = updatedImages;
     }
 
     const updatedProduct = await product.save();
