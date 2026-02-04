@@ -20,7 +20,13 @@ export const AuthProvider = ({ children }) => {
     }
 
     if (token && userData) {
-      setUser(JSON.parse(userData));
+      try {
+        setUser(JSON.parse(userData));
+      } catch (err) {
+        console.error('Auth rehydration failed:', err);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
     }
     setLoading(false);
   }, []);

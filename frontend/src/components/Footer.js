@@ -97,8 +97,6 @@ const Footer = () => {
             <ul>
               <li>Salvacion, Panabo City</li>
               <li>Davao del Norte, 8105</li>
-              <li>+63 915 266 2648</li>
-              <li>amarace.skincare@gmail.com</li>
             </ul>
           </div>
         </div>
