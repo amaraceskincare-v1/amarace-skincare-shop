@@ -30,11 +30,12 @@ const Cart = () => {
 
   if (items.length === 0) {
     return (
-      <div className="cart-page">
-        <div className="empty-cart">
-          <h2>Your cart is empty</h2>
-          <p>Looks like you haven't added anything yet</p>
-          <Link to="/products" className="continue-shopping">
+      <div className="cart-page-v2">
+        <div className="empty-cart-v2">
+          <div className="empty-cart-icon-v2">🛍️</div>
+          <h2>Your bag is empty</h2>
+          <p>Looks like you haven't added any radiance to your bag yet.</p>
+          <Link to="/products" className="continue-shopping-btn-v2">
             Continue Shopping
           </Link>
         </div>
@@ -129,39 +130,62 @@ const Cart = () => {
 
         {/* Premium Sidebar Summary */}
         <aside className="cart-summary-v2">
-          <div className="summary-card-v2">
-            <h3>Order Summary</h3>
+          <div className="order-summary-card">
+            <h3 className="summary-title">Order Summary</h3>
 
-            <div className="summary-details-v2">
-              <div className="summary-row-v2">
-                <span>Subtotal ({items.length} items)</span>
-                <span>₱{cartTotal.toFixed(2)}</span>
+            <div className="summary-details">
+              {/* Subtotal Row */}
+              <div className="summary-row">
+                <span className="summary-label">Subtotal ({items.length} items)</span>
+                <span className="summary-value">₱{cartTotal.toFixed(2)}</span>
               </div>
-              <div className="summary-row-v2">
-                <span>Estimated Shipping</span>
-                <span className={amountNeeded <= 0 ? 'free' : ''}>
+
+              {/* Shipping Row - with left-aligned calculated text */}
+              <div className="summary-row">
+                <span className="summary-label">Estimated Shipping</span>
+                <span className={`shipping-calculated ${amountNeeded <= 0 ? 'free' : ''}`}>
                   {amountNeeded <= 0 ? 'FREE' : 'Calculated at next step'}
                 </span>
               </div>
             </div>
 
-            <div className="summary-total-v2">
-              <span>Estimated Total</span>
-              <span>₱{cartTotal.toFixed(2)}</span>
+            {/* Total Row */}
+            <div className="summary-total-row">
+              <span className="total-label">Estimated Total</span>
+              <span className="total-amount">₱{cartTotal.toFixed(2)}</span>
             </div>
 
-            <Link to="/checkout" className="checkout-cta-v2">
-              Proceed to Checkout
+            {/* Checkout Button */}
+            <Link to="/checkout" className="proceed-checkout-btn">
+              PROCEED TO CHECKOUT
             </Link>
 
-            <div className="payment-icons-v2">
-              {settings?.gcashQR && (
-                <img src={settings.gcashQR} alt="GCash" style={{ height: '40px', objectFit: 'contain' }} />
-              )}
-              {settings?.paymentLogos && settings.paymentLogos.map((logo, idx) => (
-                <img key={idx} src={logo} alt="Payment method" style={{ height: '40px', objectFit: 'contain' }} />
-              ))}
-              <p>Secure payment methods available</p>
+            {/* Payment Methods - Centered */}
+            <div className="payment-methods-container">
+              <div className="payment-icons">
+                {/* GCash Icon - Dynamic with Fallback */}
+                <div className="payment-icon-item">
+                  <img
+                    src={settings?.gcashQR || "/images/gcash-logo.png"}
+                    alt="GCash"
+                    className="payment-icon"
+                  />
+                </div>
+
+                {/* Payment Logos (COD/Cards) - Dynamic with Fallback */}
+                {settings?.paymentLogos && settings.paymentLogos.length > 0 ? (
+                  settings.paymentLogos.map((logo, idx) => (
+                    <div key={idx} className="payment-icon-item">
+                      <img src={logo} alt="Payment Method" className="payment-icon" />
+                    </div>
+                  ))
+                ) : (
+                  <div className="payment-icon-item">
+                    <img src="/images/cod-icon.png" alt="Cash on Delivery" className="payment-icon" />
+                  </div>
+                )}
+              </div>
+              <p className="payment-methods-text">Secure payment methods available</p>
             </div>
           </div>
         </aside>

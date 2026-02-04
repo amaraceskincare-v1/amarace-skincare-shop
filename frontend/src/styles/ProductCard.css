@@ -25,11 +25,13 @@
   overflow: hidden;
   margin-bottom: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+  width: 100%;
 }
 
 .product-image-v2 img {
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
   transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }

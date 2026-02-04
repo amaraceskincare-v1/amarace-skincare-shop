@@ -63,21 +63,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* 2. Social Media Grid */}
-      <div className="footer-social-grid-v2">
-        <div className="social-header-v2">
-          <h3>Follow Our Journey</h3>
-          <a href="https://instagram.com" className="instagram-handle">@amarace.skincare</a>
-        </div>
-        <div className="instagram-grid-v2">
-          <div className="ig-item-v2"><img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=400" alt="Skincare 1" /></div>
-          <div className="ig-item-v2"><img src="https://images.unsplash.com/photo-1596462502278-27bfdc4033c8?q=80&w=400" alt="Skincare 2" /></div>
-          <div className="ig-item-v2"><img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?q=80&w=400" alt="Skincare 3" /></div>
-          <div className="ig-item-v2"><img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=400" alt="Skincare 4" /></div>
-          <div className="ig-item-v2"><img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=400" alt="Skincare 5" /></div>
-          <div className="ig-item-v2"><img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=400" alt="Skincare 6" /></div>
-        </div>
-      </div>
+      {/* footer-social-grid-v2 removed to prevent duplication with Home page gallery */}
 
       {/* 3. Main Navigation */}
       <div className="footer-nav-container-v2">
