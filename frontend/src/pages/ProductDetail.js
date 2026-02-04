@@ -22,10 +22,6 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [reviews, setReviews] = useState([]);
-  const [newReview, setNewReview] = useState({ rating: 0, comment: '' });
-  const [submitting, setSubmitting] = useState(false);
-  const reviewsSectionRef = useRef(null);
 
   const isVideo = (url) => {
     if (!url) return false;
@@ -48,25 +44,6 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id, navigate]);
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const { data } = await api.get(`/reviews/product/${id}`);
-        setReviews(data);
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
-      }
-    };
-    if (id) fetchReviews();
-  }, [id]);
-
-  useEffect(() => {
-    if (location.state?.scrollToReview && reviewsSectionRef.current && !loading) {
-      setTimeout(() => {
-        reviewsSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
-    }
-  }, [location.state, loading]);
 
   const handleAddToCart = async (e) => {
     const btn = e.currentTarget;
@@ -84,32 +61,10 @@ const ProductDetail = () => {
     }
   };
 
-  const handleSubmitReview = async (e) => {
-    e.preventDefault();
-    if (!newReview.rating || !newReview.comment.trim()) {
-      toast.error('Please provide rating and comment');
-      return;
-    }
-    setSubmitting(true);
-    try {
-      await api.post('/reviews', { productId: id, ...newReview });
-      toast.success('Review submitted!');
-      const { data: updatedReviews } = await api.get(`/reviews/product/${id}`);
-      setReviews(updatedReviews);
-      setNewReview({ rating: 0, comment: '' });
-      const { data: updatedProduct } = await api.get(`/products/${id}`);
-      setProduct(updatedProduct);
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to submit review');
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   if (loading) return <div className="loading-state">Loading...</div>;
   if (!product) return null;
 
-  const hasReviewed = user && reviews.some(r => r.user?._id === user._id);
 
   return (
     <div className="product-detail-page-v2">
