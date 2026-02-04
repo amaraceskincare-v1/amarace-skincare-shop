@@ -53,7 +53,8 @@ const Dashboard = () => {
     if (!file) return;
     setUploading(true);
     const formData = new FormData();
-    if (field === 'heroImages' || field === 'paymentLogos') {
+    // Handle array uploads for multiple image fields
+    if (field === 'heroImages' || field === 'paymentLogos' || field === 'teamImages' || field === 'galleryImages') {
       for (let i = 0; i < file.length; i++) {
         formData.append(field, file[i]);
       }
@@ -152,7 +153,7 @@ const Dashboard = () => {
                 style={{ display: 'none' }}
               />
               <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem' }}>
-                <button onClick={() => document.getElementById('navbar-logo-upload').click()} className="upload-label-mini" style={{ opacity: 1 }}>
+                <button onClick={() => document.getElementById('navbar-logo-upload').click()} className="upload-label-mini" style={{ background: '#2563eb', opacity: 1 }}>
                   Change Logo
                 </button>
                 <button onClick={() => handleRemoveImage('navbarLogo')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>
@@ -369,7 +370,7 @@ const Dashboard = () => {
                   onClick={() => document.getElementById('hero-upload').click()}
                   className="upload-label-mini"
                   disabled={settings.heroImages?.length >= 5}
-                  style={settings.heroImages?.length >= 5 ? { opacity: 0.5, cursor: 'not-allowed' } : { opacity: 1 }}
+                  style={settings.heroImages?.length >= 5 ? { opacity: 0.5, cursor: 'not-allowed' } : { background: '#2563eb', opacity: 1 }}
                 >
                   Add Media
                 </button>
@@ -413,7 +414,7 @@ const Dashboard = () => {
               </div>
               <input type="file" id="soap-upload" onChange={(e) => handleUpdateImage('beautySoapImage', e.target.files[0])} style={{ display: 'none' }} />
               <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('soap-upload').click()} className="upload-label-mini" style={{ opacity: 1 }}>Change</button>
+                <button onClick={() => document.getElementById('soap-upload').click()} className="upload-label-mini" style={{ background: '#2563eb', opacity: 1 }}>Change</button>
                 <button onClick={() => handleRemoveImage('beautySoapImage')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>Remove</button>
               </div>
             </div>
@@ -426,7 +427,7 @@ const Dashboard = () => {
               </div>
               <input type="file" id="all-bestsellers-upload" onChange={(e) => handleUpdateImage('allBestSellersImage', e.target.files[0])} style={{ display: 'none' }} />
               <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('all-bestsellers-upload').click()} className="upload-label-mini" style={{ opacity: 1 }}>Change</button>
+                <button onClick={() => document.getElementById('all-bestsellers-upload').click()} className="upload-label-mini" style={{ background: '#2563eb', opacity: 1 }}>Change</button>
                 <button onClick={() => handleRemoveImage('allBestSellersImage')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>Remove</button>
               </div>
             </div>
@@ -444,7 +445,7 @@ const Dashboard = () => {
                 style={{ display: 'none' }}
               />
               <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('footer-icon-upload').click()} className="upload-label-mini" style={{ opacity: 1 }}>
+                <button onClick={() => document.getElementById('footer-icon-upload').click()} className="upload-label-mini" style={{ background: '#2563eb', opacity: 1 }}>
                   Change Icon
                 </button>
                 <button onClick={() => handleRemoveImage('footerSmallIcon')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>
@@ -510,7 +511,7 @@ const Dashboard = () => {
                   onClick={() => document.getElementById('payment-logo-upload').click()}
                   className="upload-label-mini"
                   disabled={settings.paymentLogos?.length >= 3}
-                  style={settings.paymentLogos?.length >= 3 ? { opacity: 0.5, cursor: 'not-allowed' } : { opacity: 1 }}
+                  style={settings.paymentLogos?.length >= 3 ? { opacity: 0.5, cursor: 'not-allowed' } : { background: '#2563eb', opacity: 1 }}
                 >
                   Add Logos
                 </button>
@@ -533,7 +534,7 @@ const Dashboard = () => {
                 style={{ display: 'none' }}
               />
               <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('our-story-upload').click()} className="upload-label-mini" style={{ opacity: 1 }}>
+                <button onClick={() => document.getElementById('our-story-upload').click()} className="upload-label-mini" style={{ background: '#2563eb', opacity: 1 }}>
                   Change
                 </button>
                 <button onClick={() => handleRemoveImage('ourStoryImage')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>
@@ -599,7 +600,7 @@ const Dashboard = () => {
                   onClick={() => document.getElementById('team-upload').click()}
                   className="upload-label-mini"
                   disabled={settings.teamImages?.length >= 3}
-                  style={settings.teamImages?.length >= 3 ? { opacity: 0.5, cursor: 'not-allowed' } : { opacity: 1 }}
+                  style={settings.teamImages?.length >= 3 ? { opacity: 0.5, cursor: 'not-allowed' } : { background: '#2563eb', opacity: 1 }}
                 >
                   Add Team Images
                 </button>
@@ -667,7 +668,7 @@ const Dashboard = () => {
                   onClick={() => document.getElementById('gallery-upload').click()}
                   className="upload-label-mini"
                   disabled={settings.galleryImages?.length >= 6}
-                  style={settings.galleryImages?.length >= 6 ? { opacity: 0.5, cursor: 'not-allowed' } : { opacity: 1 }}
+                  style={settings.galleryImages?.length >= 6 ? { opacity: 0.5, cursor: 'not-allowed' } : { background: '#2563eb', opacity: 1 }}
                 >
                   Add Images
                 </button>
@@ -717,7 +718,7 @@ const Dashboard = () => {
                 style={{ display: 'none' }}
               />
               <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('product-hero-upload').click()} className="upload-label-mini" style={{ opacity: 1 }}>
+                <button onClick={() => document.getElementById('product-hero-upload').click()} className="upload-label-mini" style={{ background: '#2563eb', opacity: 1 }}>
                   Change Media
                 </button>
                 <button onClick={() => handleRemoveImage('productHeroMedia')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>
@@ -744,7 +745,7 @@ const Dashboard = () => {
                 style={{ display: 'none' }}
               />
               <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('premium-banner-upload').click()} className="upload-label-mini" style={{ opacity: 1 }}>
+                <button onClick={() => document.getElementById('premium-banner-upload').click()} className="upload-label-mini" style={{ background: '#2563eb', opacity: 1 }}>
                   Change Media
                 </button>
                 <button onClick={() => handleRemoveImage('premiumBannerMedia')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>
