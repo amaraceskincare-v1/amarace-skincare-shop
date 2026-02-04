@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://amarace-skincare-shop.onrender.com/sitemap.xml
+Sitemap: https://amaracéskincare.store/sitemap.xml
