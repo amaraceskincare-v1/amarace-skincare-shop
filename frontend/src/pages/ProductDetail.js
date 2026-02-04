@@ -214,16 +214,20 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {/* Collapsible Tabs Placeholder */}
+          {/* Collapsible Tabs */}
           <div className="info-tabs-v2">
-            <div className="tab-v2">
-              <div className="tab-header-v2">Ingredients</div>
-              <div className="tab-body-v2">Aloe Vera, Vitamin E, Hyaluronic Acid, Rosehip Oil.</div>
-            </div>
-            <div className="tab-v2">
-              <div className="tab-header-v2">How to Use</div>
-              <div className="tab-body-v2">Apply twice daily on clean, dry skin. Massage gently until absorbed.</div>
-            </div>
+            {(product.ingredients || product.description) && (
+              <div className="tab-v2">
+                <div className="tab-header-v2">Ingredients</div>
+                <div className="tab-body-v2">{product.ingredients || 'Natural ingredients.'}</div>
+              </div>
+            )}
+            {(product.howToUse || product.description) && (
+              <div className="tab-v2">
+                <div className="tab-header-v2">How to Use</div>
+                <div className="tab-body-v2">{product.howToUse || 'Apply as needed.'}</div>
+              </div>
+            )}
           </div>
         </div>
       </div>

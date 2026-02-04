@@ -137,6 +137,8 @@ router.put('/:id', protect, admin, upload.array('images', 5), async (req, res) =
     if (req.body.description) product.description = req.body.description;
     if (req.body.category) product.category = req.body.category;
     if (req.body.brand) product.brand = req.body.brand;
+    if (req.body.ingredients !== undefined) product.ingredients = req.body.ingredients;
+    if (req.body.howToUse !== undefined) product.howToUse = req.body.howToUse;
 
     // Handle numeric fields (allow 0 values)
     if (req.body.price !== undefined && req.body.price !== '') {

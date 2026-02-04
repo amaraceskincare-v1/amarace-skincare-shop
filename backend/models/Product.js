@@ -14,7 +14,9 @@ const productSchema = new mongoose.Schema({
   featured: { type: Boolean, default: false },
   bestSeller: { type: Boolean, default: false },
   newArrival: { type: Boolean, default: false },
-  published: { type: Boolean, default: true }
+  published: { type: Boolean, default: true },
+  ingredients: { type: String },
+  howToUse: { type: String }
 }, { timestamps: true });
 
 productSchema.index({ name: 'text', description: 'text', category: 'text' });

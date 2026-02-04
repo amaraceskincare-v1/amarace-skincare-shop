@@ -13,7 +13,7 @@ const AdminProducts = () => {
   const [showModal, setShowModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [formData, setFormData] = useState({
-    name: '', description: '', price: '', category: 'Lip Tint', brand: 'AmaraCé', stock: '', sku: '', featured: false, bestSeller: false, newArrival: false, published: true
+    name: '', description: '', price: '', category: 'Lip Tint', brand: 'AmaraCé', stock: '', sku: '', featured: false, bestSeller: false, newArrival: false, published: true, ingredients: '', howToUse: ''
   });
   const [productImages, setProductImages] = useState([]); // For previews and tracking current images
   const [isLoading, setIsLoading] = useState(false);
@@ -91,6 +91,8 @@ const AdminProducts = () => {
     data.append('bestSeller', formData.bestSeller ? 'true' : 'false');
     data.append('newArrival', formData.newArrival ? 'true' : 'false');
     data.append('published', formData.published ? 'true' : 'false');
+    data.append('ingredients', formData.ingredients || '');
+    data.append('howToUse', formData.howToUse || '');
 
     // Handle existing images (to keep) vs new ones
     const existingImageUrls = productImages.filter(img => !img.isNew).map(img => img.url);
@@ -119,7 +121,7 @@ const AdminProducts = () => {
       setShowModal(false);
       setEditProduct(null);
       setFormData({
-        name: '', description: '', price: '', category: 'Lip Tint', brand: 'AmaraCé', stock: '', sku: '', featured: false, bestSeller: false, newArrival: false, published: true
+        name: '', description: '', price: '', category: 'Lip Tint', brand: 'AmaraCé', stock: '', sku: '', featured: false, bestSeller: false, newArrival: false, published: true, ingredients: '', howToUse: ''
       });
       setProductImages([]);
       setImages([]);
@@ -149,7 +151,9 @@ const AdminProducts = () => {
       featured: product.featured || false,
       bestSeller: product.bestSeller || false,
       newArrival: product.newArrival || false,
-      published: product.published !== false // Default to true if not set
+      published: product.published !== false, // Default to true if not set
+      ingredients: product.ingredients || '',
+      howToUse: product.howToUse || ''
     });
     // Set existing images as previews
     const existingImages = (product.images || []).map(url => ({
@@ -168,7 +172,7 @@ const AdminProducts = () => {
       <main className="admin-main">
         <div className="admin-header">
           <h1>Manage Products <small style={{ fontSize: '0.8rem', opacity: 0.6 }}>(v2.0 - Standardized List)</small></h1>
-          <button className="add-btn" onClick={() => setShowModal(true)}><FiPlus /> Add Product</button>
+          <button className="edit-btn-v2" onClick={() => setShowModal(true)}><FiPlus /> Add Product</button>
         </div>
 
         <table className="admin-table compact-table">
@@ -359,6 +363,28 @@ const AdminProducts = () => {
                         required
                       />
                       <small className="form-hint">{formData.description?.length || 0} / 500 characters</small>
+                    </div>
+                    <div className="form-group full-width">
+                      <label className="form-label">Ingredients</label>
+                      <textarea
+                        name="ingredients"
+                        className="form-textarea"
+                        rows="3"
+                        placeholder="e.g., Aloe Vera, Vitamin E, etc."
+                        value={formData.ingredients}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="form-group full-width">
+                      <label className="form-label">How to Use</label>
+                      <textarea
+                        name="howToUse"
+                        className="form-textarea"
+                        rows="3"
+                        placeholder="e.g., Apply twice daily on clean, dry skin."
+                        value={formData.howToUse}
+                        onChange={handleInputChange}
+                      />
                     </div>
                   </div>
                 </div>
