@@ -86,7 +86,7 @@ const Footer = () => {
             <h4 className="footer-logo-v2">AmaraCé</h4>
             <p className="footer-motto-v2">Celebrating your natural radiance with dermatologist-tested, luxury skincare solutions.</p>
             <div className="footer-social-links-v2">
-              <a href="https://facebook.com"><FaFacebook /></a>
+              <a href="https://facebook.com/AmaraCeSkinCare"><FaFacebook /></a>
             </div>
           </div>
 
@@ -104,14 +104,14 @@ const Footer = () => {
             <h4>Experience</h4>
             <ul>
               <li><Link to="/about">Our Story</Link></li>
-              <li><Link to="/contact">Concierge</Link></li>
+              <li><Link to="/contact">Talk to Our Concierge</Link></li>
               <li><Link to="/faqs">FAQ</Link></li>
               <li><Link to="/blog">Beauty Blog</Link></li>
             </ul>
           </div>
 
           <div className="nav-col-v2">
-            <h4>Bespoke Care</h4>
+            <h4>Store location</h4>
             <p>Salvacion, Panabo City</p>
             <p>Davao del Norte, 8105</p>
             <p>+63 915 266 2648</p>
@@ -124,11 +124,19 @@ const Footer = () => {
       <div className="footer-bottom-v2">
         <div className="bottom-content-v2">
           <div className="payment-stack-v2">
-            <img src="https://i.ibb.co/L5fX0gD/gcash-logo.png" alt="GCash" className="payment-logo-premium" />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa" className="payment-logo-premium" />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard" className="payment-logo-premium" />
+            {settings?.paymentLogos && settings.paymentLogos.length > 0 ? (
+              settings.paymentLogos.map((logo, idx) => (
+                <img key={idx} src={logo} alt="Payment Method" className="payment-logo-premium" />
+              ))
+            ) : (
+              <>
+                <img src="https://i.ibb.co/L5fX0gD/gcash-logo.png" alt="GCash" className="payment-logo-premium" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa" className="payment-logo-premium" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard" className="payment-logo-premium" />
+              </>
+            )}
           </div>
-          <p className="copyright-text-v2">© 2025 AmaraCé. Crafted for Radiance. All Rights Reserved.</p>
+          <p className="copyright-text-v2">© 2025 AmaraCé Skin Care. Crafted for Radiance. All Rights Reserved.</p>
           <div className="legal-links-v2">
             <Link to="/policies/terms">Terms</Link>
             <Link to="/policies/privacy">Privacy</Link>

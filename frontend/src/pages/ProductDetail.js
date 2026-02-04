@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import '../styles/ProductDetail.css';
 
+import { useSettings } from '../context/SettingsContext';
 import { flyToCart } from '../utils/animations';
 
 const ProductDetail = () => {
@@ -15,6 +16,7 @@ const ProductDetail = () => {
   const location = useLocation();
   const { addToCart } = useCart();
   const { user } = useAuth();
+  const { settings } = useSettings();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -23,6 +25,12 @@ const ProductDetail = () => {
   const [newReview, setNewReview] = useState({ rating: 0, comment: '' });
   const [submitting, setSubmitting] = useState(false);
   const reviewsSectionRef = useRef(null);
+
+  const isVideo = (url) => {
+    if (!url) return false;
+    const videoExtensions = ['.mp4', '.mov', '.webm', '.m4v'];
+    return videoExtensions.some(ext => url.toLowerCase().includes(ext));
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -104,8 +112,24 @@ const ProductDetail = () => {
 
   return (
     <div className="product-detail-page-v2">
-      <div className="shop-hero-small-v2">
-        <div className="breadcrumbs-v3">
+      <div className="shop-hero-small-v2" style={{
+        backgroundImage: !isVideo(settings?.productHeroMedia) ? `url(${settings?.productHeroMedia})` : 'none',
+        backgroundColor: '#f9f9f9',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {isVideo(settings?.productHeroMedia) && (
+          <video
+            src={settings.productHeroMedia}
+            autoPlay
+            loop
+            muted
+            playsInline
+            style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', minWidth: '100%', minHeight: '100%', objectFit: 'cover', zIndex: 0 }}
+          />
+        )}
+        <div className="hero-overlay-v2" style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.2)', zIndex: 1 }}></div>
+        <div className="breadcrumbs-v3" style={{ position: 'relative', zIndex: 2 }}>
           <Link to="/">Home</Link> <span>/</span> <Link to="/products">Shop</Link> <span>/</span> <span className="active">{product.name}</span>
         </div>
       </div>

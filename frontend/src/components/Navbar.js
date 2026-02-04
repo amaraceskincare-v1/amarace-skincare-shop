@@ -109,6 +109,9 @@ const Navbar = () => {
                       src={settings.navbarLogo}
                       alt={`${settings.brandName || 'AmaraCé'} Logo`}
                       className="navbar-logo-img"
+                      loading="eager"
+                      fetchpriority="high"
+                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                     />
                   ) : (
                     <div className="logo-emblem-v2" style={{
@@ -215,9 +218,9 @@ const Navbar = () => {
         <ul className="nav-links-centered">
           <li><Link to="/" className={isActive('/') ? 'active' : ''}>{t('home')}</Link></li>
           <li><Link to="/products" className={location.pathname === '/products' && !location.search ? 'active' : ''}>{t('shop_all')}</Link></li>
-          <li><Link to="/products?category=Lip%20Tint" className={location.search.includes('Lip%20Tint') ? 'active' : ''}>{t('lip_tints')}</Link></li>
-          <li><Link to="/products?category=Perfume" className={location.search.includes('Perfume') ? 'active' : ''}>{t('perfumes')}</Link></li>
-          <li><Link to="/products?category=Beauty%20Soap" className={location.search.includes('Beauty%20Soap') ? 'active' : ''}>{t('beauty_soaps')}</Link></li>
+          <li><Link to="/products?category=Lip%20Tint" className={location.search.includes('Lip%20Tint') ? 'active' : ''}>{t('lip rituals')}</Link></li>
+          <li><Link to="/products?category=Perfume" className={location.search.includes('Perfume') ? 'active' : ''}>{t('fragrance')}</Link></li>
+          <li><Link to="/products?category=Beauty%20Soap" className={location.search.includes('Beauty%20Soap') ? 'active' : ''}>{t('artisan soaps')}</Link></li>
         </ul>
       </nav>
 
@@ -248,9 +251,9 @@ const Navbar = () => {
         <ul className="mobile-links">
           <li><Link to="/" onClick={() => setMenuOpen(false)}>HOME</Link></li>
           <li><Link to="/products" onClick={() => setMenuOpen(false)}>SHOP ALL</Link></li>
-          <li><Link to="/products?category=Lip%20Tint" onClick={() => setMenuOpen(false)}>LIP TINTS</Link></li>
-          <li><Link to="/products?category=Perfume" onClick={() => setMenuOpen(false)}>PERFUMES</Link></li>
-          <li><Link to="/products?category=Beauty%20Soap" onClick={() => setMenuOpen(false)}>BEAUTY SOAPS</Link></li>
+          <li><Link to="/products?category=Lip%20Tint" onClick={() => setMenuOpen(false)}>LIP RITUALS</Link></li>
+          <li><Link to="/products?category=Perfume" onClick={() => setMenuOpen(false)}>FRAGRANCE</Link></li>
+          <li><Link to="/products?category=Beauty%20Soap" onClick={() => setMenuOpen(false)}>ARTISAN SOAPS</Link></li>
           <hr />
           <li><Link to="/about" onClick={() => setMenuOpen(false)}>About Us</Link></li>
           <li><Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link></li>

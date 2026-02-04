@@ -36,6 +36,14 @@
   visibility: visible;
 }
 
+/* Performance Optimizations */
+.hero-slide {
+  background-size: cover;
+  background-position: center;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
 .hero-video-wrapper {
   position: absolute;
   inset: 0;
@@ -46,6 +54,23 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scale(1.01);
+  /* Avoid white edges */
+}
+
+/* Centering Utility */
+.centered-section .section-header-modern {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.centered-section .section-divider-v2 {
+  margin: 1rem auto 2rem;
+}
+
+.centered-section .products-grid-v2 {
+  justify-content: center;
 }
 
 .hero-video-overlay {

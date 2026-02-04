@@ -46,6 +46,8 @@ router.put('/', protect, admin, upload.fields([
     { name: 'beautySoapImage', maxCount: 1 },
     { name: 'allBestSellersImage', maxCount: 1 },
     { name: 'ourStoryImage', maxCount: 1 },
+    { name: 'productHeroMedia', maxCount: 1 },
+    { name: 'premiumBannerMedia', maxCount: 1 },
     { name: 'teamImages', maxCount: 3 }
 ]), async (req, res) => {
     try {
@@ -59,7 +61,7 @@ router.put('/', protect, admin, upload.fields([
             'beautySoapImage', 'allBestSellersImage', 'ourStoryImage',
             'brandName', 'showBrandName', 'brandNamePosition',
             'brandNameColor', 'brandNameFontSize', 'brandNameFontWeight',
-            'headerLogoSize'
+            'headerLogoSize', 'productHeroMedia', 'premiumBannerMedia'
         ];
 
         singleFields.forEach(field => {

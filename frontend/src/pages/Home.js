@@ -11,8 +11,8 @@ const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [categoryCounts, setCategoryCounts] = useState({
     'Lip Tint': 0,
-    'Perfume': 0,
-    'Beauty Soap': 0,
+    'Fragrance': 0,
+    'Artisan Soap': 0,
     'All': 0
   });
 
@@ -65,8 +65,8 @@ const Home = () => {
         const products = data?.products || [];
         const counts = {
           'Lip Tint': 0,
-          'Perfume': 0,
-          'Beauty Soap': 0,
+          'Fragrance': 0,
+          'Artisan Soap': 0,
           'All': products.length
         };
         products.forEach(p => {
@@ -88,30 +88,28 @@ const Home = () => {
     fetchAllProductsAndCountCategories();
   }, []);
 
-  // Use dynamic hero images if available, otherwise fallback to defaults (only after settings load)
-  const displaySlides = !settings
-    ? [] // Empty while loading
-    : (settings.heroImages && Array.isArray(settings.heroImages) && settings.heroImages.length > 0)
-      ? settings.heroImages.map((img, i) => ({
-        title: i === 0 ? 'THE FUTURE OF SKINCARE' : 'BEST SELLERS 2026',
-        subtitle: i === 0 ? 'Experience the Ultimate Glow' : 'Discover Your New Routine',
-        image: img,
-        cta: i === 0 ? 'Shop Now' : 'Explore All'
-      }))
-      : [
-        {
-          title: 'THE FUTURE OF SKINCARE',
-          subtitle: 'Experience the Ultimate Glow',
-          image: 'https://images.unsplash.com/photo-1598440447192-383794a08832?w=1920&q=80',
-          cta: 'Shop Now'
-        },
-        {
-          title: 'BEST SELLERS 2026',
-          subtitle: 'Discover Your New Routine',
-          image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1920&q=80',
-          cta: 'Explore All'
-        }
-      ];
+  // Use dynamic hero images if available, otherwise fallback to defaults
+  const displaySlides = (settings?.heroImages && Array.isArray(settings.heroImages) && settings.heroImages.length > 0)
+    ? settings.heroImages.map((img, i) => ({
+      title: i === 0 ? 'THE FUTURE OF SKINCARE' : 'BEST SELLERS 2026',
+      subtitle: i === 0 ? 'Experience the Ultimate Glow' : 'Discover Your New Routine',
+      image: img,
+      cta: i === 0 ? 'Shop Now' : 'Explore All'
+    }))
+    : [
+      {
+        title: 'THE FUTURE OF SKINCARE',
+        subtitle: 'Experience the Ultimate Glow',
+        image: 'https://images.unsplash.com/photo-1598440447192-383794a08832?w=1920&q=80',
+        cta: 'Shop Now'
+      },
+      {
+        title: 'BEST SELLERS 2026',
+        subtitle: 'Discover Your New Routine',
+        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1920&q=80',
+        cta: 'Explore All'
+      }
+    ];
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -122,7 +120,7 @@ const Home = () => {
 
   const features = [
     { icon: FiTruck, title: 'Free Shipping', desc: 'On orders over ₱500' },
-    { icon: FiRefreshCw, title: 'Money Guarantee', desc: '30-day return policy' },
+    { icon: FiRefreshCw, title: 'Money Guarantee', desc: '7-day return policy' },
     { icon: FiMessageCircle, title: 'Online Support', desc: '24/7 customer care' },
     { icon: FiCreditCard, title: 'Flexible Payment', desc: 'Multiple options' }
   ];
@@ -130,19 +128,19 @@ const Home = () => {
   const testimonials = [
     {
       name: 'Maria Santos',
-      product: 'Cherry Lip Tint',
+      product: 'Allure Lip Tint',
       rating: 5,
       text: 'Absolutely love this lip tint! The color is so vibrant and it lasts all day. Will definitely buy again!'
     },
     {
       name: 'Ana Cruz',
-      product: 'Vanilla Perfume',
+      product: 'Clinique Happy Perfume',
       rating: 5,
       text: 'The scent is amazing and lasts for hours. I get compliments everywhere I go!'
     },
     {
       name: 'Jessica Reyes',
-      product: 'Lavender Beauty Soap',
+      product: 'Barbie Whitening Soap',
       rating: 5,
       text: 'My skin has never felt so soft and smooth. This soap is now a staple in my skincare routine.'
     }
@@ -158,16 +156,16 @@ const Home = () => {
       path: '/products?category=Lip%20Tint'
     },
     {
-      name: 'Perfumes',
-      count: `${categoryCounts['Perfume']} items`,
-      image: settings?.perfumeImage || 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80',
-      path: '/products?category=Perfume'
+      name: 'Fragrances',
+      count: `${categoryCounts['Fragrance']} items`,
+      image: settings?.fragranceImage || 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80',
+      path: '/products?category=Fragrance'
     },
     {
-      name: 'Beauty Soaps',
-      count: `${categoryCounts['Beauty Soap']} items`,
-      image: settings?.beautySoapImage || 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&q=80',
-      path: '/products?category=Beauty%20Soap'
+      name: 'Artisan Soaps',
+      count: `${categoryCounts['Artisan Soap']} items`,
+      image: settings?.artisanSoapImage || 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&q=80',
+      path: '/products?category=Artisan%20Soap'
     },
     {
       name: 'All Best Sellers',
@@ -256,7 +254,14 @@ const Home = () => {
             <Link to={cat.path} key={index} className={`category-card-v2 cat-${index}`}>
               <div className="category-visual">
                 <div className="category-bg-gradient"></div>
-                <img src={cat.image} alt={cat.name} className="category-img-v2" />
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  className="category-img-v2"
+                  loading="lazy"
+                  width="200"
+                  height="200"
+                />
                 <div className="category-overlay-v2">
                   <span className="view-btn">Discover →</span>
                 </div>
@@ -272,7 +277,7 @@ const Home = () => {
 
       {/* Featured Products Section */}
       {featuredProducts.length > 0 && (
-        <section className="featured-section">
+        <section className="featured-section centered-section">
           <div className="section-header-modern">
             <span className="section-tagline">Handpicked favorites for you</span>
             <h2 className="section-title-v2">{t('featured')} <span className="title-accent">Products</span></h2>
@@ -292,10 +297,10 @@ const Home = () => {
       )}
 
       {/* Best Sellers Section */}
-      <section className="bestsellers-section-v2">
+      <section className="bestsellers-section-v2 centered-section">
         <div className="section-header-modern">
           <span className="section-tagline">Trending Now</span>
-          <h2 className="section-title-v2">Best Selling <span className="title-accent">{t('best_sellers')}</span></h2>
+          <h2 className="section-title-v2">Our <span className="title-accent">{t('Best Selling')}</span></h2>
           <div className="section-divider-v2"></div>
         </div>
 
@@ -333,22 +338,33 @@ const Home = () => {
           </div>
         </div>
         <div className="banner-panel light-panel">
-          <img
-            src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=1000&q=80"
-            alt="Product Showcase"
-            className="full-panel-img"
-          />
-          <div className="floating-badge">New Arrival</div>
+          {isVideo(settings?.premiumBannerMedia) ? (
+            <video
+              src={settings.premiumBannerMedia}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="full-panel-img"
+            />
+          ) : (
+            <img
+              src={settings?.premiumBannerMedia || "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=1000&q=80"}
+              alt="Product Showcase"
+              className="full-panel-img"
+              loading="lazy"
+            />
+          )}
         </div>
       </section>
 
       {/* Testimonials Redesign */}
       <section className="testimonials-section-v2">
         <div className="section-header-modern">
-          <span className="section-tagline">Real reviews from real people</span>
+          <span className="section-tagline">LOVED BY OUR LOCAL CUSTOMERS</span>
           <h2 className="section-title-v2">What Our <span className="title-accent">Customers Say</span></h2>
           <div className="section-divider-v2"></div>
-          <p className="testimonial-summary">4.9/5 stars from 1,200+ global reviews</p>
+          <p className="testimonial-summary">4.9/5 average customer rating</p>
         </div>
 
         <div className="testimonials-grid-v2">

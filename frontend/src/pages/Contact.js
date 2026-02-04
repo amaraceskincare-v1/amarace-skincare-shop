@@ -37,14 +37,14 @@ const Contact = () => {
         {
             icon: FiMail,
             title: 'Email',
-            content: 'hello@amarace.com',
-            link: 'mailto:hello@amarace.com',
+            content: 'amarace.skincare@gmail.com',
+            link: 'mailto:amarace.skincare@gmail.com',
         },
         {
             icon: FiPhone,
             title: 'Phone',
-            content: '+63 912 345 6789',
-            link: 'tel:+639123456789',
+            content: '+63 915 266 2648',
+            link: 'tel:+639152662648',
         },
         {
             icon: FiClock,
@@ -57,8 +57,8 @@ const Contact = () => {
         <div className="contact-page">
             {/* Page Header */}
             <div className="page-header">
-                <h1>Contact Us</h1>
-                <p>We'd love to hear from you</p>
+                <h1>Talk to Our Concierge</h1>
+                <p>Personalized skincare guidance, product recommendations, and custom requests just for you.</p>
             </div>
 
             <div className="contact-container">

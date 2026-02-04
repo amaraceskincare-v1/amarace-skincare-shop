@@ -327,7 +327,7 @@ const Dashboard = () => {
                             setUploading(true);
                             try {
                               const { data } = await api.put('/settings', { heroImages: newHero });
-                              setSettings(data);
+                              updateSettings(data);
                               setUploading(false);
                             } catch (error) {
                               setUploading(false);
@@ -469,7 +469,7 @@ const Dashboard = () => {
                             setUploading(true);
                             try {
                               const { data } = await api.put('/settings', { paymentLogos: newLogos });
-                              setSettings(data);
+                              updateSettings(data);
                               setUploading(false);
                             } catch (error) {
                               setUploading(false);
@@ -558,7 +558,7 @@ const Dashboard = () => {
                             setUploading(true);
                             try {
                               const { data } = await api.put('/settings', { teamImages: newTeam });
-                              setSettings(data);
+                              updateSettings(data);
                               setUploading(false);
                             } catch (error) {
                               setUploading(false);
@@ -625,6 +625,60 @@ const Dashboard = () => {
                   Change QR
                 </button>
                 <button onClick={() => handleRemoveImage('gcashQRCode')} className="upload-label-mini" style={{ background: '#ef4444' }}>
+                  Remove
+                </button>
+              </div>
+            </div>
+
+            {/* Product Page Hero Media */}
+            <div className="settings-card" style={{ minHeight: '280px' }}>
+              <h4>Product Page Hero (Img/Vid)</h4>
+              <div className="media-preview-mini" style={{ height: '140px' }}>
+                {isVideo(settings.productHeroMedia) ? (
+                  <div className="video-placeholder-mini">VIDEO</div>
+                ) : (
+                  <img src={getPreview(settings.productHeroMedia)} alt="Product Hero" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
+                )}
+              </div>
+              <input
+                type="file"
+                id="product-hero-upload"
+                accept="image/*,video/*"
+                onChange={(e) => handleUpdateImage('productHeroMedia', e.target.files[0])}
+                style={{ display: 'none' }}
+              />
+              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+                <button onClick={() => document.getElementById('product-hero-upload').click()} className="upload-label-mini">
+                  Change Media
+                </button>
+                <button onClick={() => handleRemoveImage('productHeroMedia')} className="upload-label-mini" style={{ background: '#ef4444' }}>
+                  Remove
+                </button>
+              </div>
+            </div>
+
+            {/* Premium Banner Media */}
+            <div className="settings-card" style={{ minHeight: '280px' }}>
+              <h4>Premium Banner (Img/Vid)</h4>
+              <div className="media-preview-mini" style={{ height: '140px' }}>
+                {isVideo(settings.premiumBannerMedia) ? (
+                  <div className="video-placeholder-mini">VIDEO</div>
+                ) : (
+                  <img src={getPreview(settings.premiumBannerMedia)} alt="Premium Banner" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
+                )}
+              </div>
+              <input
+                type="file"
+                id="premium-banner-upload"
+                accept="image/*,video/*"
+                onChange={(e) => handleUpdateImage('premiumBannerMedia', e.target.files[0])}
+                style={{ display: 'none' }}
+              />
+              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+                <button onClick={() => document.getElementById('premium-banner-upload').click()} className="upload-label-mini">
+                  Change Media
+                </button>
+                <button onClick={() => handleRemoveImage('premiumBannerMedia')} className="upload-label-mini" style={{ background: '#ef4444' }}>
                   Remove
                 </button>
               </div>

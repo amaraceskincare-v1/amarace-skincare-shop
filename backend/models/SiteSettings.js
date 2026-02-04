@@ -14,6 +14,8 @@ const siteSettingsSchema = new mongoose.Schema({
     beautySoapImage: { type: String, default: '' },
     allBestSellersImage: { type: String, default: '' },
     ourStoryImage: { type: String, default: '' },
+    productHeroMedia: { type: String, default: '' },
+    premiumBannerMedia: { type: String, default: '' },
     brandName: { type: String, default: '' },
     showBrandName: { type: Boolean, default: true },
     brandNamePosition: { type: String, default: 'right' },
