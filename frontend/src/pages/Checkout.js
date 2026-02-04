@@ -402,7 +402,7 @@ const Checkout = () => {
           </div>
 
           <div className="accepted-payment-methods">
-            <p className="payment-methods-title">We Accept:</p>
+            <p className="payment-methods-title">WE ACCEPT:</p>
             <div className="payment-icons-row">
               <div className="payment-method-icon-card">
                 <img
