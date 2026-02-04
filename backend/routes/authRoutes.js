@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const { protect } = require('../middleware/auth');
+const { protect, admin } = require('../middleware/auth');
 const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
 
@@ -271,6 +271,65 @@ router.put('/profile', protect, async (req, res) => {
         email: updatedUser.email,
         role: updatedUser.role
       });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// @desc    Get all users
+// @route   GET /api/auth
+// @access  Private/Admin
+router.get('/', protect, admin, async (req, res) => {
+  try {
+    const users = await User.find({}).select('-password').sort('-createdAt');
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// @desc    Delete a user
+// @route   DELETE /api/auth/:id
+// @access  Private/Admin
+router.delete('/:id', protect, admin, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (user) {
+      if (user.role === 'admin' && req.user._id.toString() === user._id.toString()) {
+        return res.status(400).json({ message: 'You cannot delete your own admin account' });
+      }
+      await User.findByIdAndDelete(req.params.id);
+      res.json({ message: 'User removed' });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// @desc    Toggle user role
+// @route   PUT /api/auth/:id/role
+// @access  Private/Admin
+router.put('/:id/role', protect, admin, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) {
+      if (req.user._id.toString() === user._id.toString()) {
+        return res.status(400).json({ message: 'You cannot change your own role' });
+      }
+      user.role = user.role === 'admin' ? 'user' : 'admin';
+      const updatedUser = await user.save();
+      res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role
+      });
+    } else {
+      res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });

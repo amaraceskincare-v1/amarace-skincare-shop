@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { FiLayout, FiPackage, FiShoppingCart, FiCreditCard, FiStar, FiArrowLeft, FiSettings } from 'react-icons/fi';
+import { FiLayout, FiPackage, FiShoppingCart, FiCreditCard, FiStar, FiArrowLeft, FiSettings, FiUsers } from 'react-icons/fi';
 
 const AdminSidebar = () => {
     const location = useLocation();
@@ -10,6 +10,7 @@ const AdminSidebar = () => {
         { path: '/admin/orders', name: 'Orders', icon: <FiShoppingCart /> },
         { path: '/admin/payments', name: 'GCash Payments', icon: <FiCreditCard /> },
         { path: '/admin/reviews', name: 'Reviews', icon: <FiStar /> },
+        { path: '/admin/users', name: 'Users', icon: <FiUsers /> },
     ];
 
     return (
