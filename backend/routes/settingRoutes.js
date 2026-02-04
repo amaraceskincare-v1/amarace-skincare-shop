@@ -48,7 +48,8 @@ router.put('/', protect, admin, upload.fields([
     { name: 'ourStoryImage', maxCount: 1 },
     { name: 'productHeroMedia', maxCount: 1 },
     { name: 'premiumBannerMedia', maxCount: 1 },
-    { name: 'teamImages', maxCount: 3 }
+    { name: 'teamImages', maxCount: 3 },
+    { name: 'galleryImages', maxCount: 6 }
 ]), async (req, res) => {
     try {
         let settings = await SiteSettings.findOne();
@@ -101,6 +102,16 @@ router.put('/', protect, admin, upload.fields([
             settings.teamImages = [];
         } else if (Array.isArray(req.body['teamImages'])) {
             settings.teamImages = req.body['teamImages'];
+        }
+
+        // Special handling for Gallery images (Append, max 6)
+        if (req.files && req.files['galleryImages']) {
+            const newGallery = req.files['galleryImages'].map(f => f.path);
+            settings.galleryImages = [...settings.galleryImages, ...newGallery].slice(0, 6);
+        } else if (req.body['galleryImages'] === 'remove') {
+            settings.galleryImages = [];
+        } else if (Array.isArray(req.body['galleryImages'])) {
+            settings.galleryImages = req.body['galleryImages'];
         }
 
         await settings.save();

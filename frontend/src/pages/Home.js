@@ -403,6 +403,27 @@ const Home = () => {
           })}
         </div>
       </section>
+
+      {/* Follow Our Journey Gallery */}
+      {settings?.galleryImages && settings.galleryImages.length > 0 && (
+        <section className="gallery-section">
+          <div className="section-header-modern">
+            <span className="section-tagline">Instagram</span>
+            <h2 className="section-title-v2">Follow Our Journey</h2>
+            <div className="section-divider-v2"></div>
+          </div>
+          <div className="gallery-grid">
+            {settings.galleryImages.map((img, index) => (
+              <div key={index} className="gallery-item">
+                <img src={img} alt={`Gallery ${index + 1}`} loading="lazy" />
+                <div className="gallery-overlay">
+                  <span className="gallery-icon">📷</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 };

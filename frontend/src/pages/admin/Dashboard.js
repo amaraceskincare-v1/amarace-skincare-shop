@@ -609,6 +609,74 @@ const Dashboard = () => {
               </div>
             </div>
 
+            {/* Follow Our Journey Gallery (Max 6) */}
+            <div className="settings-card" style={{ minHeight: '280px' }}>
+              <h4>Follow Our Journey Gallery (Max 6)</h4>
+              <p style={{ fontSize: '0.7rem', color: '#666', marginBottom: '5px' }}>{settings.galleryImages?.length || 0} / 6 loaded</p>
+              <div className="media-preview-mini" style={{ height: '140px' }}>
+                <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', padding: '10px', height: '100%' }}>
+                  {settings.galleryImages && settings.galleryImages.length > 0 ? (
+                    settings.galleryImages.map((img, i) => (
+                      <div key={i} style={{ position: 'relative', flexShrink: 0 }}>
+                        <img src={img} alt="" style={{ height: '100px', width: '100px', objectFit: 'cover', borderRadius: '4px' }} />
+                        <button
+                          onClick={async () => {
+                            if (!window.confirm('Remove this gallery image?')) return;
+                            const newGallery = settings.galleryImages.filter((_, idx) => idx !== i);
+                            setUploading(true);
+                            try {
+                              const { data } = await api.put('/settings', { galleryImages: newGallery });
+                              updateSettings(data);
+                              setUploading(false);
+                            } catch (error) {
+                              setUploading(false);
+                              toast.error('Failed to remove');
+                            }
+                          }}
+                          style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <img src="https://via.placeholder.com/100?text=None" alt="No Gallery" />
+                  )}
+                </div>
+              </div>
+              <input
+                type="file"
+                id="gallery-upload"
+                multiple
+                accept="image/*"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files);
+                  const currentCount = settings.galleryImages?.length || 0;
+                  if (currentCount + files.length > 6) {
+                    toast.warning('Max 6 gallery images allowed. Truncating.');
+                    handleUpdateImage('galleryImages', files.slice(0, 6 - currentCount));
+                  } else {
+                    handleUpdateImage('galleryImages', files);
+                  }
+                }}
+                style={{ display: 'none' }}
+                disabled={settings.galleryImages?.length >= 6}
+              />
+              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+                <button
+                  onClick={() => document.getElementById('gallery-upload').click()}
+                  className="upload-label-mini"
+                  disabled={settings.galleryImages?.length >= 6}
+                  style={settings.galleryImages?.length >= 6 ? { opacity: 0.5, cursor: 'not-allowed' } : { opacity: 1 }}
+                >
+                  Add Images
+                </button>
+                <button onClick={() => handleRemoveImage('galleryImages')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>
+                  Clear All
+                </button>
+              </div>
+            </div>
+
             {/* GCash QR Code */}
             <div className="settings-card" style={{ minHeight: '280px' }}>
               <h4>GCash QR Code</h4>

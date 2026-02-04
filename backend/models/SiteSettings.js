@@ -24,6 +24,7 @@ const siteSettingsSchema = new mongoose.Schema({
     brandNameFontWeight: { type: String, default: 'bold' },
     headerLogoSize: { type: Number, default: 60 },
     teamImages: { type: [String], default: [] },
+    galleryImages: { type: [String], default: [] }, // Instagram/Journey gallery (max 6)
 }, { timestamps: true });
 
 module.exports = mongoose.model('SiteSettings', siteSettingsSchema);
