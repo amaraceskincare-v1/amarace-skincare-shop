@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && xcopy /Y public\\_redirects build\\_redirects*"
+    "build": "react-scripts build && cp public/_redirects build/_redirects"
   },
   "browserslist": {
     "production": [
