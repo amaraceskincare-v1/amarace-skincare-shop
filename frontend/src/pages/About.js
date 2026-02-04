@@ -7,6 +7,7 @@ const About = () => {
     const [settings, setSettings] = useState(null);
 
     useEffect(() => {
+        document.title = 'About Us | The AmaraCé Story & Vision';
         const fetchSettings = async () => {
             try {
                 const { data } = await api.get('/settings');

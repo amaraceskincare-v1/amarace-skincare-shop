@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FiMail, FiPhone, FiMapPin, FiSend, FiClock } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import '../styles/Contact.css';
 
 const Contact = () => {
+    useEffect(() => {
+        document.title = 'Contact Us | AmaraCé Skincare Concierge';
+    }, []);
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',

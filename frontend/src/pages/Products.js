@@ -24,6 +24,10 @@ const Products = () => {
   const maxPrice = searchParams.get('maxPrice') || '';
 
   useEffect(() => {
+    document.title = 'Shop All | AmaraCé Skincare collection';
+  }, []);
+
+  useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);

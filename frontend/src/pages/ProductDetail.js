@@ -34,6 +34,9 @@ const ProductDetail = () => {
       try {
         const { data } = await api.get(`/products/${id}`);
         setProduct(data);
+        if (data && data.name) {
+          document.title = `${data.name} | AmaraCé Skincare`;
+        }
       } catch (error) {
         toast.error('Product not found');
         navigate('/products');
@@ -42,6 +45,10 @@ const ProductDetail = () => {
       }
     };
     fetchProduct();
+
+    return () => {
+      document.title = 'AmaraCé | Premium Skincare & Beauty Essentials';
+    };
   }, [id, navigate]);
 
 

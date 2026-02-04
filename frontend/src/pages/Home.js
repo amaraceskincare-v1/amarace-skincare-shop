@@ -28,6 +28,7 @@ const Home = () => {
   const { t } = useLanguage();
 
   useEffect(() => {
+    document.title = 'AmaraCé | Premium Skincare & Beauty Essentials';
     const fetchSettings = async () => {
       try {
         const { data } = await api.get('/settings');
