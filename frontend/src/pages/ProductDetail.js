@@ -99,7 +99,6 @@ const ProductDetail = () => {
               alt={product.name}
               className="main-view-v2"
             />
-            <div className="zoom-indicator">Hover to zoom</div>
           </div>
           {product.images?.length > 1 && (
             <div className="thumbnails-grid-v2">
