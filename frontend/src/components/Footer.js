@@ -85,9 +85,6 @@ const Footer = () => {
           <div className="nav-col-v2 branding">
             <h4 className="footer-logo-v2">AmaraCé</h4>
             <p className="footer-motto-v2">Celebrating your natural radiance with dermatologist-tested, luxury skincare solutions.</p>
-            <div className="footer-social-links-v2">
-              <a href="https://facebook.com/AmaraCeSkinCare"><FaFacebook /></a>
-            </div>
           </div>
 
           <div className="nav-col-v2">

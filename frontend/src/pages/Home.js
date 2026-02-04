@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FiTruck, FiRefreshCw, FiMessageCircle, FiCreditCard, FiStar } from 'react-icons/fi';
+import { FiTruck, FiRefreshCw, FiMessageCircle, FiCreditCard, FiStar } from "react-icons/fi";
+import { FaFacebookF } from "react-icons/fa";
 import api from '../utils/api';
 import { useLanguage } from '../context/LanguageContext';
 import ProductCard from '../components/ProductCard';
@@ -412,6 +413,22 @@ const Home = () => {
             <h2 className="section-title-v2">Follow Our Journey</h2>
             <div className="section-divider-v2"></div>
           </div>
+
+          {/* Facebook Icon */}
+          <div className="instagram-social-link">
+            <a
+              href="https://facebook.com/AmaraCeSkinCare"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="facebook-link-circle"
+            >
+              <div className="facebook-icon-wrapper">
+                <FaFacebookF size={24} />
+              </div>
+            </a>
+            <p className="social-handle">@amarace.skincare</p>
+          </div>
+
           <div className="gallery-grid">
             {settings.galleryImages.map((img, index) => (
               <div key={index} className="gallery-item">
