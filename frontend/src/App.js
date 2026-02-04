@@ -42,10 +42,19 @@ const App = () => {
 
   // Show loading screen on route change or language change
   useEffect(() => {
+    // Detect if this is the initial page load vs internal navigation
+    const entries = window.performance?.getEntriesByType('navigation');
+    const isRefresh = entries && entries.length > 0 && entries[0].type === 'reload';
+
+    // Skip loading for the very first mount on refresh to avoid a "white flash"
+    if (isRefresh) {
+      return;
+    }
+
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 600);
+    }, 400); // Slightly faster timeout for better feel
     return () => clearTimeout(timer);
   }, [location.pathname, lang, location.search]);
 
