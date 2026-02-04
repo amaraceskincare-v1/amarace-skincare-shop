@@ -1,10 +1,25 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiMinus, FiPlus, FiX, FiArrowLeft } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
+import api from '../utils/api';
 import '../styles/Cart.css';
 
 const Cart = () => {
   const { cart, updateQuantity, removeFromCart, cartTotal } = useCart();
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const { data } = await api.get('/settings');
+        setSettings(data);
+      } catch (error) {
+        console.error('Error fetching settings:', error);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   // Get items array safely
   const items = cart?.items || [];
@@ -128,10 +143,6 @@ const Cart = () => {
                   {amountNeeded <= 0 ? 'FREE' : 'Calculated at next step'}
                 </span>
               </div>
-              <div className="summary-row-v2">
-                <span>Tax</span>
-                <span>₱0.00</span>
-              </div>
             </div>
 
             <div className="summary-total-v2">
@@ -144,9 +155,12 @@ const Cart = () => {
             </Link>
 
             <div className="payment-icons-v2">
-              <span>💳</span>
-              <span>🏦</span>
-              <span>📱</span>
+              {settings?.gcashQR && (
+                <img src={settings.gcashQR} alt="GCash" style={{ height: '40px', objectFit: 'contain' }} />
+              )}
+              {settings?.paymentLogos && settings.paymentLogos.map((logo, idx) => (
+                <img key={idx} src={logo} alt="Payment method" style={{ height: '40px', objectFit: 'contain' }} />
+              ))}
               <p>Secure payment methods available</p>
             </div>
           </div>

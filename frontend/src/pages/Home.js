@@ -426,7 +426,6 @@ const Home = () => {
                 <FaFacebookF size={24} />
               </div>
             </a>
-            <p className="social-handle">@amarace.skincare</p>
           </div>
 
           <div className="gallery-grid">
