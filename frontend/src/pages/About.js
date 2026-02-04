@@ -117,43 +117,56 @@ const About = () => {
                 <div className="team-grid">
                     {settings?.teamImages && settings.teamImages.length > 0 ? (
                         settings.teamImages.map((img, i) => (
-                            <div key={i} className="team-member">
-                                <div className="member-image">
-                                    <img src={img} alt={`Team Member ${i + 1}`} />
+                            <div key={i} className="team-member-card">
+                                <div className="team-image-container">
+                                    <img
+                                        src={img}
+                                        alt={`Team Member ${i + 1}`}
+                                        className="team-member-image"
+                                    />
                                 </div>
+                                <h3 className="team-member-name">Team Member</h3>
+                                <p className="team-member-role">AmaraCé Specialist</p>
+                                <p className="team-member-bio">Dedicated to providing the best beauty experience for our valued community.</p>
                             </div>
                         ))
                     ) : (
                         <>
-                            <div className="team-member">
-                                <div className="member-image">
+                            <div className="team-member-card">
+                                <div className="team-image-container">
                                     <img
                                         src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=80"
-                                        alt="Team Member"
+                                        alt="Founder & CEO"
+                                        className="team-member-image"
                                     />
                                 </div>
-                                <h3>Founder & CEO</h3>
-                                <p>Leading our vision for accessible beauty</p>
+                                <h3 className="team-member-name">Founder & CEO</h3>
+                                <p className="team-member-role">Leading our vision</p>
+                                <p className="team-member-bio">Leading our vision for accessible beauty with a passion for natural radiance.</p>
                             </div>
-                            <div className="team-member">
-                                <div className="member-image">
+                            <div className="team-member-card">
+                                <div className="team-image-container">
                                     <img
                                         src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80"
-                                        alt="Team Member"
+                                        alt="Beauty Director"
+                                        className="team-member-image"
                                     />
                                 </div>
-                                <h3>Beauty Director</h3>
-                                <p>Curating our product collection</p>
+                                <h3 className="team-member-name">Beauty Director</h3>
+                                <p className="team-member-role">Curating collections</p>
+                                <p className="team-member-bio">Curating our product collection to bring you the best in skincare and cosmetics.</p>
                             </div>
-                            <div className="team-member">
-                                <div className="member-image">
+                            <div className="team-member-card">
+                                <div className="team-image-container">
                                     <img
                                         src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80"
-                                        alt="Team Member"
+                                        alt="Customer Experience"
+                                        className="team-member-image"
                                     />
                                 </div>
-                                <h3>Customer Experience</h3>
-                                <p>Ensuring your satisfaction</p>
+                                <h3 className="team-member-name">Customer Experience</h3>
+                                <p className="team-member-role">Ensuring satisfaction</p>
+                                <p className="team-member-bio">Ensuring your satisfaction with every AmaraCé purchase and interaction.</p>
                             </div>
                         </>
                     )}

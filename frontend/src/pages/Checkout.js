@@ -234,7 +234,15 @@ const Checkout = () => {
                       <div className="radio-circle"></div>
                     </div>
                     <span>GCash</span>
-                    <img src="https://raw.githubusercontent.com/amaraceskincare-v1/amarace-skincare-shop/main/frontend/public/images/gcash-logo.png" alt="GCash" className="payment-icon-mini" />
+                    <img
+                      src="/images/payment/gcash-logo.png"
+                      alt="GCash"
+                      className="payment-icon-mini"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://raw.githubusercontent.com/amaraceskincare-v1/amarace-skincare-shop/main/frontend/public/images/gcash-logo.png';
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -390,6 +398,36 @@ const Checkout = () => {
             <div className="summary-row total">
               <span>Total</span>
               <span>₱{total.toFixed(2)}</span>
+            </div>
+          </div>
+
+          <div className="accepted-payment-methods">
+            <p className="payment-methods-title">We Accept:</p>
+            <div className="payment-icons-row">
+              <div className="payment-method-icon-card">
+                <img
+                  src="/images/payment/gcash-logo.png"
+                  alt="GCash"
+                  className="payment-method-icon"
+                  title="GCash"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://raw.githubusercontent.com/amaraceskincare-v1/amarace-skincare-shop/main/frontend/public/images/gcash-logo.png';
+                  }}
+                />
+              </div>
+              <div className="payment-method-icon-card">
+                <img
+                  src="/images/payment/cod-icon.png"
+                  alt="Cash on Delivery"
+                  className="payment-method-icon"
+                  title="Cash on Delivery"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://cdn-icons-png.flaticon.com/512/2311/2311531.png';
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>

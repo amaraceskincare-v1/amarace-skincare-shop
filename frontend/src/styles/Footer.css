@@ -200,16 +200,18 @@
     margin-bottom: 15px;
 }
 
-.nav-col-v2 a,
-.nav-col-v2 p {
-    font-size: 0.95rem;
-    color: var(--brand-secondary);
+.footer-nav-grid-v2 .nav-col-v2 ul li a {
+    color: #374151 !important;
     text-decoration: none;
-    transition: color 0.3s;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: block;
+    padding: 2px 0;
 }
 
-.nav-col-v2 a:hover {
-    color: var(--brand-primary);
+.footer-nav-grid-v2 .nav-col-v2 ul li a:hover {
+    color: #1F2937 !important;
+    padding-left: 8px;
 }
 
 /* 4. BOTTOM BAR */
