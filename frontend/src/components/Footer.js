@@ -89,7 +89,6 @@ const Footer = () => {
               <li><Link to="/about">Our Story</Link></li>
               <li><Link to="/contact">Talk to Our Concierge</Link></li>
               <li><Link to="/faqs">FAQ</Link></li>
-              <li><Link to="/blog">Beauty Blog</Link></li>
             </ul>
           </div>
 
