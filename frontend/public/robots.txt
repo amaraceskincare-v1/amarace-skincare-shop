@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://amaracéskincare.store/sitemap.xml
+Sitemap: https://xn--amaracskincare-nkb.store/sitemap.xml
