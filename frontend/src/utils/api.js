@@ -1,16 +1,17 @@
 import axios from 'axios';
 
-const api = axios.create({
-  // Use absolute root URL for production
-  baseURL: window.location.hostname === 'localhost'
-    ? 'http://localhost:5000'
-    : 'https://amara-skincare-backend.onrender.com'
-});
+const api = axios.create();
 
 api.interceptors.request.use((config) => {
-  // Ensure all request URLs start with /api
-  if (config.url && !config.url.startsWith('/api')) {
-    config.url = `/api${config.url.startsWith('/') ? '' : '/'}${config.url}`;
+  const backendBase = window.location.hostname === 'localhost'
+    ? 'http://localhost:5000'
+    : 'https://amara-skincare-backend.onrender.com';
+
+  // Ensure the URL is absolute and correctly prefixed with /api
+  if (config.url && !config.url.startsWith('http')) {
+    const path = config.url.startsWith('/') ? config.url : `/${config.url}`;
+    const apiPath = path.startsWith('/api') ? path : `/api${path}`;
+    config.url = `${backendBase}${apiPath}`;
   }
 
   const token = localStorage.getItem('token');
@@ -18,6 +19,8 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
+}, (error) => {
+  return Promise.reject(error);
 });
 
 api.interceptors.response.use(

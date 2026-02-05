@@ -46,7 +46,7 @@ const Products = () => {
         setTotalPages(data.totalPages);
       } catch (error) {
         console.error('Error fetching products:', error);
-        setError('Failed to load products. Please check your connection.');
+        setError(`Connection Issue: Unable to reach ${error.config?.url || 'server'}. Please refresh.`);
       } finally {
         setLoading(false);
       }

@@ -12,7 +12,7 @@ services:
     headers:
       - path: /*.(jpg|jpeg|png|gif|svg|webp|mp4|webm|woff|woff2)
         name: Cache-Control
-        value: no-store, no-cache, must-revalidate
+        value: public, max-age=60
       - path: /static/*
         name: Cache-Control
-        value: no-store, no-cache, must-revalidate
+        value: public, max-age=60

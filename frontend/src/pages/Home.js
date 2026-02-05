@@ -130,8 +130,8 @@ const Home = () => {
     return [
       {
         title: 'WELCOME TO AMARACÉ',
-        subtitle: settings ? 'Experience Premium Beauty and Self-Care Essentials' : 'Connection issue - Please refresh the page',
-        image: '/logo.png',
+        subtitle: settings ? 'Experience Premium Beauty and Self-Care Essentials' : 'Connecting to our premium skincare collection...',
+        image: '', // Remove logo from BG as it looks "messed up" when massive
         cta: 'Shop Now'
       }
     ];
