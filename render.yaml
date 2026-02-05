@@ -6,7 +6,7 @@ services:
     publishPath: frontend/build
     routes:
       - source: /api/*
-        destination: https://amara-skincare-backend.onrender.com/api/*
+        destination: https://amarace-api.onrender.com/api/*
       - source: /*
         destination: /index.html
     headers:
