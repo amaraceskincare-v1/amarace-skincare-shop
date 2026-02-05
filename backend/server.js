@@ -52,6 +52,10 @@ console.log('ENV CHECK CLOUDINARY:', !!process.env.CLOUDINARY_CLOUD_NAME);
 const allowedOrigins = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
+  'https://amaracéskincare.store',
+  'https://www.amaracéskincare.store',
+  'https://xn--amaracskincare-fva.store',
+  'https://www.xn--amaracskincare-fva.store',
   process.env.CLIENT_URL
 ].filter(Boolean);
 

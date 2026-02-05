@@ -85,10 +85,23 @@ const Home = () => {
       }
     };
 
-    fetchSettings();
-    fetchFeaturedProducts();
-    fetchBestSellers();
-    fetchAllProductsAndCountCategories();
+    const fetchAllData = async () => {
+      try {
+        setLoading(true);
+        await Promise.all([
+          fetchSettings(),
+          fetchFeaturedProducts(),
+          fetchBestSellers(),
+          fetchAllProductsAndCountCategories()
+        ]);
+      } catch (err) {
+        console.error("Error fetching homepage data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllData();
   }, []);
 
   // Determine slides to show
