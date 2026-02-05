@@ -102,8 +102,8 @@ const Home = () => {
     : [
       {
         title: 'WELCOME TO AMARACÉ',
-        subtitle: 'Upload hero images in Admin Dashboard to customize this section',
-        image: '',
+        subtitle: 'Experience Premium Beauty and Self-Care Essentials',
+        image: '/logo.png', // Use local logo as initial fallback
         cta: 'Shop Now'
       }
     ];
@@ -182,7 +182,9 @@ const Home = () => {
             className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
             style={{
               backgroundImage: !isVideo(slide.image) && slide.image ? `linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.2)), url(${optimizeImage(slide.image, 1600)})` : 'none',
-              backgroundColor: slide.image ? (isVideo(slide.image) ? 'transparent' : '#f0f0f0') : 'linear-gradient(135deg, #e8b4bc 0%, #f5e6e8 100%)'
+              backgroundColor: slide.image ? (isVideo(slide.image) ? 'transparent' : '#f8f9fa') : 'linear-gradient(135deg, #e8b4bc 0%, #f5e6e8 100%)',
+              backgroundSize: slide.image === '/logo.png' ? 'contain' : 'cover', // special case for logo
+              backgroundRepeat: 'no-repeat'
             }}
           >
             {isVideo(slide.image) && (

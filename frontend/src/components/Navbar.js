@@ -89,49 +89,38 @@ const Navbar = () => {
       <div className="logo-bar" style={settings?.headerBackground ? { background: 'transparent', borderBottom: 'none' } : {}}>
         <div className="logo-bar-container">
           <Link to="/" className="navbar-brand-link">
-            {!settings ? (
-              <div className="logo-placeholder-v2"></div>
-            ) : (
-              <div
-                className={`navbar-brand-flex position-${settings.brandNamePosition || 'right'}`}
-                style={{ gap: `${settings.brandNamePosition === 'below' ? '5px' : '16px'}` }}
-              >
-                <div className="navbar-logo-container" style={{
-                  height: `${settings.headerLogoSize || 60}px`,
-                  width: `${settings.headerLogoSize || 60}px`
-                }}>
-                  {settings.navbarLogo ? (
-                    <img
-                      src={optimizeImage(settings.navbarLogo, 120)}
-                      alt={`${settings.brandName || 'AmaraCé'} Logo`}
-                      className="navbar-logo-img"
-                      loading="eager"
-                      fetchpriority="high"
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
-                  ) : (
-                    <div className="logo-emblem-v2" style={{
-                      fontSize: `${(settings.headerLogoSize || 60) * 0.4}px`
-                    }}>
-                      AC
-                    </div>
-                  )}
-                </div>
-
-                {settings.showBrandName !== false && settings.brandName && (
-                  <div className="navbar-brand-info">
-                    <h1 className="brand-name-main" style={{
-                      color: settings.brandNameColor || 'var(--dark)',
-                      fontSize: settings.brandNameFontSize === 'small' ? '1.2rem' :
-                        settings.brandNameFontSize === 'large' ? '2.2rem' : '1.75rem',
-                      fontWeight: settings.brandNameFontWeight === 'regular' ? '500' : '700'
-                    }}>
-                      {settings.brandName}
-                    </h1>
-                  </div>
-                )}
+            <div
+              className={`navbar-brand-flex position-${settings?.brandNamePosition || 'right'}`}
+              style={{ gap: `${settings?.brandNamePosition === 'below' ? '5px' : '16px'}` }}
+            >
+              <div className="navbar-logo-container" style={{
+                height: `${settings?.headerLogoSize || 60}px`,
+                width: `${settings?.headerLogoSize || 60}px`
+              }}>
+                <img
+                  src={optimizeImage(settings?.navbarLogo || '/logo.png', 120)}
+                  alt={`${settings?.brandName || 'AmaraCé'} Logo`}
+                  className="navbar-logo-img"
+                  loading="eager"
+                  fetchpriority="high"
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  onError={(e) => { e.target.src = '/logo.png'; }}
+                />
               </div>
-            )}
+
+              {settings?.showBrandName !== false && (
+                <div className="navbar-brand-info">
+                  <h1 className="brand-name-main" style={{
+                    color: settings?.brandNameColor || 'var(--dark)',
+                    fontSize: settings?.brandNameFontSize === 'small' ? '1.2rem' :
+                      settings?.brandNameFontSize === 'large' ? '2.2rem' : '1.75rem',
+                    fontWeight: settings?.brandNameFontWeight === 'regular' ? '500' : '700'
+                  }}>
+                    {settings?.brandName || 'AmaraCé'}
+                  </h1>
+                </div>
+              )}
+            </div>
           </Link>
 
           <div className="logo-spacer"></div>
