@@ -129,9 +129,9 @@ const Home = () => {
     // Fallback if no images found or if loading failed
     return [
       {
-        title: 'WELCOME TO AMARACÉ',
-        subtitle: settings ? 'Experience Premium Beauty and Self-Care Essentials' : 'Connecting to our premium skincare collection...',
-        image: '', // Remove logo from BG as it looks "messed up" when massive
+        title: 'RESTORING PREMIUM EXPERIENCE...',
+        subtitle: settings ? 'Experience Premium Beauty and Self-Care Essentials' : 'Syncing with our premium skincare ritual...',
+        image: '', // No image during fallback to avoid messy stretching
         cta: 'Shop Now'
       }
     ];

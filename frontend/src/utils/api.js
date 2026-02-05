@@ -1,26 +1,17 @@
 import axios from 'axios';
 
-const api = axios.create();
+const api = axios.create({
+  // Use relative path to leverage Render's proxy (/api/* -> backend/api/*)
+  // This is more reliable for custom domains
+  baseURL: window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api'
+});
 
 api.interceptors.request.use((config) => {
-  const backendBase = window.location.hostname === 'localhost'
-    ? 'http://localhost:5000'
-    : 'https://amara-skincare-backend.onrender.com';
-
-  // Ensure the URL is absolute and correctly prefixed with /api
-  if (config.url && !config.url.startsWith('http')) {
-    const path = config.url.startsWith('/') ? config.url : `/${config.url}`;
-    const apiPath = path.startsWith('/api') ? path : `/api${path}`;
-    config.url = `${backendBase}${apiPath}`;
-  }
-
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
-}, (error) => {
-  return Promise.reject(error);
 });
 
 api.interceptors.response.use(
