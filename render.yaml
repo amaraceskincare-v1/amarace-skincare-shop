@@ -9,3 +9,10 @@ services:
         destination: https://amara-skincare-backend.onrender.com/api/*
       - source: /*
         destination: /index.html
+    headers:
+      - path: /*.(jpg|jpeg|png|gif|svg|webp|mp4|webm|woff|woff2)
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /static/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable

@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import '../styles/ProductCard.css';
 import { flyToCart } from '../utils/animations';
 
+import { optimizeImage } from '../utils/imageOptimizer';
+
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
 
@@ -29,15 +31,17 @@ const ProductCard = ({ product }) => {
       <Link to={`/products/${product._id}`} className="product-link-v2">
         <div className="product-image-v2">
           <img
-            src={product.images?.[0] || '/placeholder.jpg'}
+            src={optimizeImage(product.images?.[0] || '/placeholder.jpg', 400)}
             alt={product.name}
             className="primary-img"
+            loading="lazy"
           />
           {product.images?.length > 1 && (
             <img
-              src={product.images[1]}
+              src={optimizeImage(product.images[1], 400)}
               alt={`${product.name} alternate`}
               className="secondary-img"
+              loading="lazy"
             />
           )}
 

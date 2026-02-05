@@ -1,11 +1,4 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { FiTruck, FiRefreshCw, FiMessageCircle, FiCreditCard, FiStar } from "react-icons/fi";
-import { FaFacebookF } from "react-icons/fa";
-import api from '../utils/api';
-import { useLanguage } from '../context/LanguageContext';
-import ProductCard from '../components/ProductCard';
-import '../styles/Home.css';
+import { optimizeImage } from '../utils/imageOptimizer';
 
 const Home = () => {
   const [bestSellers, setBestSellers] = useState([]);
@@ -148,25 +141,25 @@ const Home = () => {
     {
       name: 'Lip Tints',
       count: `${categoryCounts['Lip Tint']} items`,
-      image: settings?.lipTintImage || 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&q=80',
+      image: optimizeImage(settings?.lipTintImage || 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&q=80', 600),
       path: '/products?category=Lip%20Tint'
     },
     {
       name: 'Fragrances',
       count: `${categoryCounts['Perfume'] || 0} items`,
-      image: settings?.perfumeImage || 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80',
+      image: optimizeImage(settings?.perfumeImage || 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80', 600),
       path: '/products?category=Perfume'
     },
     {
       name: 'Artisan Soaps',
       count: `${categoryCounts['Beauty Soap'] || 0} items`,
-      image: settings?.beautySoapImage || 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&q=80',
+      image: optimizeImage(settings?.beautySoapImage || 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&q=80', 600),
       path: '/products?category=Beauty%20Soap'
     },
     {
       name: 'All Best Sellers',
       count: `${categoryCounts['All']} items`,
-      image: settings?.allBestSellersImage || 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&q=80',
+      image: optimizeImage(settings?.allBestSellersImage || 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&q=80', 600),
       path: '/products'
     }
   ];
@@ -180,7 +173,7 @@ const Home = () => {
             key={index}
             className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
             style={{
-              backgroundImage: !isVideo(slide.image) && slide.image ? `linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.2)), url(${slide.image})` : 'none',
+              backgroundImage: !isVideo(slide.image) && slide.image ? `linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.2)), url(${optimizeImage(slide.image, 1600)})` : 'none',
               backgroundColor: slide.image ? (isVideo(slide.image) ? 'transparent' : '#f0f0f0') : 'linear-gradient(135deg, #e8b4bc 0%, #f5e6e8 100%)'
             }}
           >

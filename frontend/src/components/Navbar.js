@@ -5,8 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useSettings } from '../context/SettingsContext';
-import api from '../utils/api';
-import '../styles/Navbar.css';
+import { optimizeImage } from '../utils/imageOptimizer';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,8 +26,6 @@ const Navbar = () => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
-
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -70,12 +67,10 @@ const Navbar = () => {
     return location.pathname.startsWith(path);
   };
 
-
-
   return (
     <header
       className={`header ${scrolled ? 'scrolled' : ''}`}
-      style={settings?.headerBackground ? { backgroundImage: `url(${settings.headerBackground})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+      style={settings?.headerBackground ? { backgroundImage: `url(${optimizeImage(settings.headerBackground, 1200)})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
     >
       {/* Level 1: Announcement Bar */}
       <div className="announcement-bar">
@@ -106,7 +101,7 @@ const Navbar = () => {
                 }}>
                   {settings.navbarLogo ? (
                     <img
-                      src={settings.navbarLogo}
+                      src={optimizeImage(settings.navbarLogo, 120)}
                       alt={`${settings.brandName || 'AmaraCé'} Logo`}
                       className="navbar-logo-img"
                       loading="eager"
