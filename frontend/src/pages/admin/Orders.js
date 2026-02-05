@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { FiInfo, FiX, FiExternalLink, FiSave, FiTrash2 } from 'react-icons/fi';
 import AdminSidebar from '../../components/AdminSidebar';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
@@ -6,6 +7,8 @@ import '../../styles/Admin.css';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
+  const [expandedCustomer, setExpandedCustomer] = useState(null);
+  const [trackingInputs, setTrackingInputs] = useState({});
 
   useEffect(() => { fetchOrders(); }, []);
 
@@ -29,13 +32,22 @@ const AdminOrders = () => {
     }
   };
 
-  const verifyPayment = async (id) => {
+  const saveTracking = async (orderId) => {
+    const trackingNumber = trackingInputs[orderId] || '';
+
+    // Validation: alphanumeric, 10-20 characters for JNT format flexibility
+    const isValid = /^[A-Za-z0-9]{10,20}$/.test(trackingNumber);
+    if (!isValid) {
+      toast.error('Invalid tracking number. Must be 10-20 alphanumeric characters.');
+      return;
+    }
+
     try {
-      await api.put(`/orders/${id}/verify-payment`);
-      toast.success('Payment Verified & Email Sent');
+      await api.put(`/orders/${orderId}/tracking`, { trackingNumber });
+      toast.success('Tracking number saved!');
       fetchOrders();
-    } catch (error) {
-      toast.error('Verification failed');
+    } catch (err) {
+      toast.error('Failed to save tracking number');
     }
   };
 
@@ -51,74 +63,200 @@ const AdminOrders = () => {
     }
   };
 
+  // Format order ID from date
+  const formatOrderId = (createdAt) => {
+    const d = new Date(createdAt);
+    const year = d.getFullYear();
+    const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+    const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
+    return `${year}-${mmdd}-${hhmm}`;
+  };
+
+  // Format date for display
+  const formatDate = (date) => {
+    return new Date(date).toLocaleString('en-PH', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  // Check if tracking should be editable (shipped or higher)
+  const canEditTracking = (status) => {
+    return ['shipped', 'delivered'].includes(status);
+  };
+
   return (
     <div className="admin-layout">
       <AdminSidebar />
 
       <main className="admin-main">
         <h1>Manage Orders</h1>
-        <table className="admin-table compact-table">
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Customer</th>
-              <th>Items</th>
-              <th>Total</th>
-              <th>Payment</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map(order => (
-              <tr key={order._id}>
-                <td>
-                  # {(() => {
-                    const d = new Date(order.createdAt);
-                    const year = d.getFullYear();
-                    const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-                    const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
-                    return `${year}-${mmdd}-${hhmm}`;
-                  })()}
-                </td>
-                <td>{order.user?.name}<br /><small>{order.user?.email}</small></td>
-                <td>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                    {(order.items || []).map((item, index) => (
-                      <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <img
-                          src={item.product?.images?.[0] || '/placeholder.jpg'}
-                          alt=""
-                          style={{ width: '30px', height: '30px', objectFit: 'cover', borderRadius: '4px' }}
-                        />
-                        <span style={{ fontSize: '0.9rem' }}>{item.product?.name} (x{item.quantity})</span>
+
+        <div className="orders-table-container">
+          <table className="admin-table orders-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer's Details</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Tracking Number</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order, index) => (
+                <tr key={order._id} className={index % 2 === 0 ? 'row-even' : 'row-odd'}>
+                  {/* Order ID - No Wrap */}
+                  <td className="order-id-cell">
+                    #{formatOrderId(order.createdAt)}
+                  </td>
+
+                  {/* Customer Details - Expandable */}
+                  <td className="customer-cell">
+                    <div className="customer-summary">
+                      <strong>{order.user?.name || order.shippingAddress?.fullName || 'Guest'}</strong>
+                      <small>{order.user?.email || 'N/A'}</small>
+                      <button
+                        className="info-toggle-btn"
+                        onClick={() => setExpandedCustomer(expandedCustomer === order._id ? null : order._id)}
+                        aria-label="Toggle customer details"
+                      >
+                        {expandedCustomer === order._id ? <FiX /> : <FiInfo />}
+                      </button>
+                    </div>
+
+                    {/* Expandable Customer Details Card */}
+                    {expandedCustomer === order._id && (
+                      <div className="customer-details-card">
+                        <div className="details-grid">
+                          <div className="detail-row">
+                            <span className="detail-label">Full Name:</span>
+                            <span>{order.shippingAddress?.fullName || order.user?.name || 'N/A'}</span>
+                          </div>
+                          <div className="detail-row">
+                            <span className="detail-label">Email:</span>
+                            <span>{order.user?.email || 'N/A'}</span>
+                          </div>
+                          <div className="detail-row">
+                            <span className="detail-label">Phone:</span>
+                            <span>{order.shippingAddress?.phone || 'N/A'}</span>
+                          </div>
+                          <div className="detail-row">
+                            <span className="detail-label">Shipping Address:</span>
+                            <span>
+                              {order.shippingAddress ? (
+                                <>
+                                  {order.shippingAddress.street}, {order.shippingAddress.city}<br />
+                                  {order.shippingAddress.province}, {order.shippingAddress.postalCode}<br />
+                                  {order.shippingAddress.country || 'Philippines'}
+                                </>
+                              ) : 'N/A'}
+                            </span>
+                          </div>
+                          <div className="detail-row">
+                            <span className="detail-label">Order Date:</span>
+                            <span>{formatDate(order.createdAt)}</span>
+                          </div>
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </td>
-                <td>₱{(order.total || 0).toFixed(2)}</td>
-                <td>
-                  <span style={{ textTransform: 'uppercase', fontWeight: 'bold' }}>{order.paymentMethod}</span>
-                  {order.paymentProof && (
-                    <div style={{ marginTop: '5px' }}>
+                    )}
+                  </td>
+
+                  {/* Items */}
+                  <td className="items-cell">
+                    <div className="items-list">
+                      {(order.items || []).map((item, idx) => (
+                        <div key={idx} className="item-row">
+                          <img
+                            src={item.product?.images?.[0] || '/placeholder.jpg'}
+                            alt=""
+                            className="item-thumb"
+                          />
+                          <span>{item.product?.name} (x{item.quantity})</span>
+                        </div>
+                      ))}
+                    </div>
+                  </td>
+
+                  {/* Total */}
+                  <td className="total-cell">
+                    ₱{(order.total || 0).toFixed(2)}
+                  </td>
+
+                  {/* Payment */}
+                  <td className="payment-cell">
+                    <span className="payment-method">{order.paymentMethod?.toUpperCase()}</span>
+                    {order.paymentProof && (
                       <a
                         href={order.paymentProof}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#007bff', fontSize: '0.85rem', textDecoration: 'underline' }}
+                        className="view-proof-link"
                       >
                         View Proof
                       </a>
-                    </div>
-                  )}
-                </td>
-                <td><span className={`status ${order.status}`}>{order.status}</span></td>
-                <td>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '150px' }}>
+                    )}
+                  </td>
+
+                  {/* Status */}
+                  <td className="status-cell">
+                    <span className={`status-badge-orders ${order.status}`}>
+                      {order.status}
+                    </span>
+                  </td>
+
+                  {/* Tracking Number - Dedicated Column */}
+                  <td className="tracking-cell">
+                    {canEditTracking(order.status) ? (
+                      order.trackingNumber ? (
+                        <a
+                          href={`https://www.jntexpress.ph/tracking?tracking_number=${order.trackingNumber}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="tracking-link"
+                        >
+                          {order.trackingNumber}
+                          <FiExternalLink />
+                        </a>
+                      ) : (
+                        <div className="tracking-input-group">
+                          <input
+                            type="text"
+                            className="tracking-input"
+                            placeholder="Enter J&T tracking #"
+                            value={trackingInputs[order._id] || ''}
+                            onChange={(e) => setTrackingInputs(prev => ({
+                              ...prev,
+                              [order._id]: e.target.value.toUpperCase()
+                            }))}
+                            maxLength={20}
+                          />
+                          <button
+                            className="save-tracking-btn"
+                            onClick={() => saveTracking(order._id)}
+                            title="Save Tracking"
+                          >
+                            <FiSave />
+                          </button>
+                        </div>
+                      )
+                    ) : (
+                      <span className="tracking-na">—</span>
+                    )}
+                  </td>
+
+                  {/* Action */}
+                  <td className="action-cell">
                     <select
                       value={order.status}
                       onChange={(e) => updateStatus(order._id, e.target.value)}
-                      style={{ padding: '5px', borderRadius: '4px' }}
+                      className="status-select"
                     >
                       <option value="pending">Pending</option>
                       <option value="processing">Processing</option>
@@ -127,87 +265,25 @@ const AdminOrders = () => {
                       <option value="cancelled">Cancelled</option>
                     </select>
 
-                    {/* J&T Tracking Section */}
-                    {order.status === 'shipped' && (
-                      <div className="admin-fulfillment-box">
-                        <small style={{ fontWeight: '600' }}>J&T Tracking:</small>
-                        <div style={{ display: 'flex', gap: '5px' }}>
-                          <input
-                            placeholder="Enter Tracking #"
-                            defaultValue={order.trackingNumber || ''}
-                            onBlur={async (e) => {
-                              try {
-                                await api.put(`/orders/${order._id}/tracking`, { trackingNumber: e.target.value });
-                                toast.success('Tracking updated');
-                              } catch (err) { toast.error('Update failed'); }
-                            }}
-                            style={{ fontSize: '0.8rem', padding: '3px', width: '100%' }}
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Delivery Proof Section */}
-                    {order.status === 'delivered' && (
-                      <div className="admin-fulfillment-box">
-                        <small style={{ fontWeight: '600' }}>Delivery Proof:</small>
-                        {order.deliveryProof ? (
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                            <a href={order.deliveryProof} target="_blank" rel="noreferrer" style={{ fontSize: '0.75rem', color: '#007bff' }}>View Proof</a>
-                            <button
-                              onClick={async () => {
-                                if (window.confirm('Remove proof?')) {
-                                  await api.put(`/orders/${order._id}/remove-delivery-proof`);
-                                  fetchOrders();
-                                }
-                              }}
-                              style={{ fontSize: '0.7rem', color: '#ff4d4d', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer', padding: 0 }}
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        ) : (
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={async (e) => {
-                              const file = e.target.files[0];
-                              if (!file) return;
-                              const formData = new FormData();
-                              formData.append('deliveryProof', file);
-                              try {
-                                await api.put(`/orders/${order._id}/delivery-proof`, formData);
-                                toast.success('Proof uploaded');
-                                fetchOrders();
-                              } catch (err) { toast.error('Upload failed'); }
-                            }}
-                            style={{ fontSize: '0.7rem', width: '100%' }}
-                          />
-                        )}
-                      </div>
-                    )}
-
                     <button
                       onClick={() => deleteOrder(order._id)}
-                      style={{
-                        background: '#ff4d4d',
-                        color: 'white',
-                        border: 'none',
-                        padding: '5px 10px',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '0.85rem',
-                        marginTop: '5px'
-                      }}
+                      className="delete-order-btn"
+                      title="Delete Order"
                     >
-                      Delete
+                      <FiTrash2 />
                     </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {orders.length === 0 && (
+          <div className="no-orders-message">
+            <p>No orders found.</p>
+          </div>
+        )}
       </main>
     </div>
   );

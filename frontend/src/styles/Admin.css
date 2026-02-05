@@ -1266,3 +1266,466 @@
     transform: none !important;
     box-shadow: none !important;
 }
+
+/* =========================================
+   ADMIN ORDERS TABLE - REDESIGN V2
+   ========================================= */
+
+.orders-table-container {
+    overflow-x: auto;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1000px;
+}
+
+.orders-table th {
+    text-align: center;
+    padding: 16px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: #C41E3A;
+    border-bottom: 2px solid #a01830;
+}
+
+.orders-table td {
+    text-align: center;
+    padding: 16px 12px;
+    font-size: 0.9rem;
+    color: var(--dark);
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: top;
+}
+
+/* Alternating Row Colors */
+.orders-table tbody tr.row-even {
+    background: #fff;
+}
+
+.orders-table tbody tr.row-odd {
+    background: #f9fafb;
+}
+
+/* Row Hover Effect */
+.orders-table tbody tr:hover {
+    background: #fef2f4 !important;
+    transition: background 0.2s ease;
+}
+
+/* Order ID Cell - No Wrap */
+.order-id-cell {
+    white-space: nowrap;
+    width: 150px;
+    font-weight: 700;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: 0.85rem;
+    color: #374151;
+}
+
+/* Customer Cell */
+.customer-cell {
+    text-align: left !important;
+    min-width: 220px;
+    position: relative;
+}
+
+.customer-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: relative;
+}
+
+.customer-summary strong {
+    font-size: 0.9rem;
+    color: #1f2937;
+}
+
+.customer-summary small {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.info-toggle-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #f3f4f6;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.2s;
+}
+
+.info-toggle-btn:hover {
+    background: #C41E3A;
+    color: white;
+}
+
+/* Customer Details Card - Expandable */
+.customer-details-card {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detail-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.detail-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #9ca3af;
+    letter-spacing: 0.05em;
+}
+
+.detail-row span:last-child {
+    font-size: 0.8rem;
+    color: #374151;
+    line-height: 1.4;
+}
+
+/* Items Cell */
+.items-cell {
+    text-align: left !important;
+    min-width: 180px;
+}
+
+.items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.item-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+}
+
+.item-thumb {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+}
+
+/* Total Cell */
+.total-cell {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #059669;
+}
+
+/* Payment Cell */
+.payment-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.payment-method {
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #374151;
+}
+
+.view-proof-link {
+    font-size: 0.75rem;
+    color: #007bff;
+    text-decoration: underline;
+}
+
+/* Status Badges - Color Coded */
+.status-badge-orders {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-badge-orders.pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-badge-orders.processing {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.status-badge-orders.shipped {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.status-badge-orders.delivered {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-badge-orders.cancelled {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Tracking Cell */
+.tracking-cell {
+    min-width: 180px;
+}
+
+.tracking-input-group {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+}
+
+.tracking-input {
+    width: 130px;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #f9fafb;
+    text-transform: uppercase;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    transition: all 0.2s;
+}
+
+.tracking-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.save-tracking-btn {
+    padding: 8px 10px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.save-tracking-btn:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+.tracking-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #0284c7;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-decoration: none;
+    padding: 6px 12px;
+    background: #e0f2fe;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+}
+
+.tracking-link:hover {
+    background: #bae6fd;
+    color: #0369a1;
+}
+
+.tracking-na {
+    color: #9ca3af;
+    font-size: 1.2rem;
+}
+
+/* Action Cell */
+.action-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 130px;
+}
+
+.status-select {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.status-select:focus {
+    outline: none;
+    border-color: #C41E3A;
+    box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
+}
+
+.delete-order-btn {
+    padding: 8px 14px;
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.delete-order-btn:hover {
+    background: #fecaca;
+    color: #b91c1c;
+}
+
+/* No Orders Message */
+.no-orders-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1199px) {
+    .orders-table {
+        min-width: 900px;
+    }
+
+    .customer-details-card {
+        font-size: 0.75rem;
+    }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+    .orders-table-container {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    .orders-table {
+        min-width: 100%;
+        display: block;
+    }
+
+    .orders-table thead {
+        display: none;
+    }
+
+    .orders-table tbody,
+    .orders-table tr,
+    .orders-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .orders-table tr {
+        margin-bottom: 16px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    .orders-table td {
+        text-align: left !important;
+        padding: 8px 0;
+        border: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .orders-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        color: #9ca3af;
+        min-width: 100px;
+    }
+
+    .order-id-cell {
+        padding-top: 0 !important;
+        font-size: 1rem;
+    }
+
+    .tracking-input-group {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .tracking-input {
+        width: 100%;
+    }
+
+    .action-cell {
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 12px;
+    }
+
+    .status-select {
+        width: auto;
+    }
+}
