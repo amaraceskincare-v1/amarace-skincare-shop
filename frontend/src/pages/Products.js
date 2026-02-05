@@ -14,6 +14,7 @@ const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [error, setError] = useState(null);
   const [gridCols, setGridCols] = useState(3);
 
   const currentPage = Number(searchParams.get('page')) || 1;
@@ -44,7 +45,8 @@ const Products = () => {
         setTotalProducts(data.total || data.products?.length || 0);
         setTotalPages(data.totalPages);
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error fetching products:', error);
+        setError('Failed to load products. Please check your connection.');
       } finally {
         setLoading(false);
       }
@@ -251,6 +253,13 @@ const Products = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          ) : error ? (
+            <div className="no-products-v2">
+              <div className="no-products-icon">⚠️</div>
+              <h3>Connection Issue</h3>
+              <p>{error}</p>
+              <button className="btn-modern-outline" onClick={() => window.location.reload()}>Retry Connection</button>
             </div>
           ) : products.length > 0 ? (
             <div className="products-grid-v2">

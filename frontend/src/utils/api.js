@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // Use relative path for production (Render proxy) and localhost for development
-  baseURL: process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api')
+  // Use absolute URL for production to ensure connectivity from custom domain
+  baseURL: window.location.hostname === 'localhost'
+    ? 'http://localhost:5000/api'
+    : 'https://amara-skincare-backend.onrender.com/api'
 });
 
 api.interceptors.request.use((config) => {
