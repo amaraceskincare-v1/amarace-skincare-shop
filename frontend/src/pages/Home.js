@@ -91,22 +91,38 @@ const Home = () => {
     fetchAllProductsAndCountCategories();
   }, []);
 
-  // Use dynamic hero images/videos uploaded from admin
-  const displaySlides = (settings?.heroImages && Array.isArray(settings.heroImages) && settings.heroImages.length > 0)
-    ? settings.heroImages.map((img, i) => ({
-      title: i === 0 ? 'THE FUTURE OF SKINCARE' : 'BEST SELLERS 2026',
-      subtitle: i === 0 ? 'Experience the Ultimate Glow' : 'Discover Your New Routine',
-      image: img,
-      cta: i === 0 ? 'Shop Now' : 'Explore All'
-    }))
-    : [
+  // Determine slides to show
+  const displaySlides = (() => {
+    // If we have settings and hero images, use them
+    if (settings?.heroImages?.length > 0) {
+      return settings.heroImages.map((img, i) => ({
+        title: i === 0 ? 'THE FUTURE OF SKINCARE' : 'BEST SELLERS 2026',
+        subtitle: i === 0 ? 'Experience the Ultimate Glow' : 'Discover Your New Routine',
+        image: img,
+        cta: i === 0 ? 'Shop Now' : 'Explore All'
+      }));
+    }
+
+    // If still loading, show a neutral loading slide
+    if (loading) {
+      return [{
+        title: 'LOADING YOUR EXPERIENCE...',
+        subtitle: 'Preparing the ultimate skincare ritual',
+        image: '',
+        cta: 'Please Wait'
+      }];
+    }
+
+    // Fallback if no images found in settings after loading
+    return [
       {
         title: 'WELCOME TO AMARACÉ',
         subtitle: 'Experience Premium Beauty and Self-Care Essentials',
-        image: '/logo.png', // Use local logo as initial fallback
+        image: '/logo.png',
         cta: 'Shop Now'
       }
     ];
+  })();
 
   useEffect(() => {
     const timer = setInterval(() => {
