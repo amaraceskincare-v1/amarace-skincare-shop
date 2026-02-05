@@ -1,3 +1,11 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { FiTruck, FiRefreshCw, FiMessageCircle, FiCreditCard, FiStar } from "react-icons/fi";
+import { FaFacebookF } from "react-icons/fa";
+import api from '../utils/api';
+import { useLanguage } from '../context/LanguageContext';
+import ProductCard from '../components/ProductCard';
+import '../styles/Home.css';
 import { optimizeImage } from '../utils/imageOptimizer';
 
 const Home = () => {
