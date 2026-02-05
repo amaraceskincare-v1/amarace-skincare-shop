@@ -3,6 +3,7 @@ import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { FiGrid, FiList, FiChevronDown, FiX } from 'react-icons/fi';
 import api from '../utils/api';
 import ProductCard from '../components/ProductCard';
+import { useSettings } from '../context/SettingsContext';
 import '../styles/Products.css';
 
 const Products = () => {
@@ -16,6 +17,14 @@ const Products = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [error, setError] = useState(null);
   const [gridCols, setGridCols] = useState(3);
+  const { settings } = useSettings();
+
+  // Helper to check if media is a video
+  const isVideo = (url) => {
+    if (!url) return false;
+    const videoExtensions = ['.mp4', '.mov', '.webm'];
+    return videoExtensions.some(ext => url.toLowerCase().includes(ext));
+  };
 
   const currentPage = Number(searchParams.get('page')) || 1;
   const category = searchParams.get('category') || '';
@@ -95,7 +104,23 @@ const Products = () => {
   return (
     <div className="products-page-v2">
       {/* Premium Shop Hero */}
-      <div className="shop-hero-v2">
+      <div
+        className="shop-hero-v2"
+        style={!isVideo(settings?.productHeroMedia) && settings?.productHeroMedia ? {
+          backgroundImage: `url(${settings.productHeroMedia})`
+        } : {}}
+      >
+        {/* Video Background */}
+        {isVideo(settings?.productHeroMedia) && (
+          <video
+            className="hero-video-bg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            src={settings.productHeroMedia}
+          />
+        )}
         <div className="hero-overlay"></div>
         <div className="hero-content">
           <span className="hero-tagline">Premium Collection</span>
