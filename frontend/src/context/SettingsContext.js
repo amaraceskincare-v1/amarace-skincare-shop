@@ -4,7 +4,8 @@ import api from '../utils/api';
 const SettingsContext = createContext();
 
 export const SettingsProvider = ({ children }) => {
-    const [settings, setSettings] = useState(null);
+    // Default to empty object to prevent null reference errors
+    const [settings, setSettings] = useState({});
     const [loading, setLoading] = useState(true);
 
     const fetchSettings = async () => {
