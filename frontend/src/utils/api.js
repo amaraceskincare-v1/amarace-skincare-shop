@@ -1,13 +1,18 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // Use absolute URL for production to ensure connectivity from custom domain
+  // Use absolute root URL for production
   baseURL: window.location.hostname === 'localhost'
-    ? 'http://localhost:5000/api'
-    : 'https://amara-skincare-backend.onrender.com/api'
+    ? 'http://localhost:5000'
+    : 'https://amara-skincare-backend.onrender.com'
 });
 
 api.interceptors.request.use((config) => {
+  // Ensure all request URLs start with /api
+  if (config.url && !config.url.startsWith('/api')) {
+    config.url = `/api${config.url.startsWith('/') ? '' : '/'}${config.url}`;
+  }
+
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

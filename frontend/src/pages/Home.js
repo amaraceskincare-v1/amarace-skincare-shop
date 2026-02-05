@@ -126,11 +126,11 @@ const Home = () => {
       }];
     }
 
-    // Fallback if no images found in settings after loading
+    // Fallback if no images found or if loading failed
     return [
       {
         title: 'WELCOME TO AMARACÉ',
-        subtitle: 'Experience Premium Beauty and Self-Care Essentials',
+        subtitle: settings ? 'Experience Premium Beauty and Self-Care Essentials' : 'Connection issue - Please refresh the page',
         image: '/logo.png',
         cta: 'Shop Now'
       }
