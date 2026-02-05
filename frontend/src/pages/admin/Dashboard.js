@@ -701,7 +701,7 @@ const Dashboard = () => {
 
             {/* Product Page Hero Media */}
             <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Product Page Hero (Img/Vid)</h4>
+              <h4>Shop Page Hero Banner</h4>
               <div className="media-preview-mini" style={{ height: '140px' }}>
                 {isVideo(settings.productHeroMedia) ? (
                   <div className="video-placeholder-mini">VIDEO</div>
@@ -728,7 +728,7 @@ const Dashboard = () => {
 
             {/* Premium Banner Media */}
             <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Premium Banner (Img/Vid)</h4>
+              <h4>Home Page Hero Banner</h4>
               <div className="media-preview-mini" style={{ height: '140px' }}>
                 {isVideo(settings.premiumBannerMedia) ? (
                   <div className="video-placeholder-mini">VIDEO</div>
