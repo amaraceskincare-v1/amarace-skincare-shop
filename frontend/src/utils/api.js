@@ -1,9 +1,10 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // Use relative path to leverage Render's proxy (/api/* -> backend/api/*)
-  // This is more reliable for custom domains
-  baseURL: window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api'
+  // Use absolute URL for production to ensure reliable connectivity
+  baseURL: window.location.hostname === 'localhost'
+    ? 'http://localhost:5000/api'
+    : 'https://amarace-api.onrender.com/api'
 });
 
 api.interceptors.request.use((config) => {
