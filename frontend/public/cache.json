@@ -1,0 +1,125 @@
+{
+  "version": "1.0",
+  "name": "Amaraé Skincare Store Cache Configuration",
+  "description": "Service worker cache configuration for optimal performance",
+  "cacheStrategies": {
+    "static": {
+      "strategy": "CacheFirst",
+      "cacheName": "static-resources-v1",
+      "maxAge": 2592000,
+      "maxEntries": 100,
+      "patterns": [
+        "/css/**",
+        "/js/**",
+        "/fonts/**",
+        "*.css",
+        "*.js",
+        "*.woff",
+        "*.woff2",
+        "*.ttf",
+        "*.eot"
+      ]
+    },
+    "images": {
+      "strategy": "CacheFirst",
+      "cacheName": "image-cache-v1",
+      "maxAge": 604800,
+      "maxEntries": 200,
+      "patterns": [
+        "/images/**",
+        "/assets/images/**",
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.gif",
+        "*.webp",
+        "*.svg",
+        "*.ico"
+      ]
+    },
+    "products": {
+      "strategy": "NetworkFirst",
+      "cacheName": "product-data-v1",
+      "maxAge": 3600,
+      "maxEntries": 50,
+      "networkTimeout": 3000,
+      "patterns": [
+        "/products/**",
+        "/api/products/**",
+        "/collections/**"
+      ]
+    },
+    "pages": {
+      "strategy": "NetworkFirst",
+      "cacheName": "pages-cache-v1",
+      "maxAge": 86400,
+      "maxEntries": 30,
+      "networkTimeout": 3000,
+      "patterns": [
+        "/about",
+        "/contact",
+        "/faq",
+        "/shipping",
+        "/returns",
+        "/privacy",
+        "/terms"
+      ]
+    },
+    "api": {
+      "strategy": "NetworkFirst",
+      "cacheName": "api-cache-v1",
+      "maxAge": 300,
+      "maxEntries": 25,
+      "networkTimeout": 2000,
+      "patterns": [
+        "/api/**"
+      ]
+    },
+    "homepage": {
+      "strategy": "NetworkFirst",
+      "cacheName": "homepage-v1",
+      "maxAge": 1800,
+      "maxEntries": 1,
+      "networkTimeout": 3000,
+      "patterns": [
+        "/",
+        "/index.html"
+      ]
+    }
+  },
+  "precache": [
+    "/",
+    "/css/main.css",
+    "/js/app.js",
+    "/images/logo.png",
+    "/offline.html"
+  ],
+  "runtimeCaching": {
+    "googleFonts": {
+      "strategy": "CacheFirst",
+      "cacheName": "google-fonts-v1",
+      "maxAge": 31536000,
+      "patterns": [
+        "https://fonts.googleapis.com/**",
+        "https://fonts.gstatic.com/**"
+      ]
+    },
+    "cdn": {
+      "strategy": "CacheFirst",
+      "cacheName": "cdn-resources-v1",
+      "maxAge": 2592000,
+      "patterns": [
+        "https://cdn.jsdelivr.net/**",
+        "https://cdnjs.cloudflare.com/**",
+        "https://unpkg.com/**"
+      ]
+    }
+  },
+  "offlineFallback": {
+    "page": "/offline.html",
+    "image": "/images/offline-placeholder.png"
+  },
+  "cleanupOnActivate": true,
+  "skipWaiting": true,
+  "clientsClaim": true
+}

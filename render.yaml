@@ -1,0 +1,18 @@
+services:
+  - type: static
+    name: amara-skincare-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    publishPath: frontend/build
+    routes:
+      - source: /api/*
+        destination: https://amarace-api.onrender.com/api/*
+      - source: /*
+        destination: /index.html
+    headers:
+      - path: /*.(jpg|jpeg|png|gif|svg|webp|mp4|webm|woff|woff2)
+        name: Cache-Control
+        value: public, max-age=60
+      - path: /static/*
+        name: Cache-Control
+        value: public, max-age=60
