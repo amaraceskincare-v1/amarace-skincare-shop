@@ -33,6 +33,7 @@ import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import ScrollToTop from './components/ScrollToTop';
 
 const App = () => {
   const location = useLocation();
@@ -67,6 +68,7 @@ const App = () => {
 
   return (
     <div className="app">
+      <ScrollToTop />
       <LoadingScreen isLoading={isLoading} />
       <Navbar />
       <CartDrawer isOpen={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />

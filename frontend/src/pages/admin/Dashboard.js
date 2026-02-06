@@ -20,6 +20,8 @@ const Dashboard = () => {
   const { settings, updateSettings } = useSettings();
   const [uploading, setUploading] = useState(false);
   const [statusOverlay, setStatusOverlay] = useState({ show: false, message: '' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const cardsPerPage = 6;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,8 +57,12 @@ const Dashboard = () => {
     const formData = new FormData();
     // Handle array uploads for multiple image fields
     if (field === 'heroImages' || field === 'paymentLogos' || field === 'teamImages' || field === 'galleryImages') {
-      for (let i = 0; i < file.length; i++) {
-        formData.append(field, file[i]);
+      if (file.length) {
+        for (let i = 0; i < file.length; i++) {
+          formData.append(field, file[i]);
+        }
+      } else {
+        formData.append(field, file);
       }
     } else {
       formData.append(field, file);
@@ -94,7 +100,7 @@ const Dashboard = () => {
   const isVideo = (url) => {
     if (!url) return false;
     const videoExtensions = ['.mp4', '.mov', '.webm'];
-    return videoExtensions.some(ext => url.toLowerCase().includes(ext));
+    return videoExtensions.some(ext => typeof url === 'string' && url.toLowerCase().includes(ext));
   };
 
   const getPreview = (url) => {
@@ -103,13 +109,201 @@ const Dashboard = () => {
     return url;
   };
 
+  const mediaConfigs = [
+    {
+      id: 'navbarLogo',
+      title: 'Logo (Header)',
+      subtitle: 'Primary branding',
+      preview: settings.navbarLogo,
+      uploadId: 'navbar-logo-upload',
+      actions: [
+        { label: 'Change Logo', type: 'primary', onClick: () => document.getElementById('navbar-logo-upload').click() },
+        { label: 'Remove', type: 'danger', onClick: () => handleRemoveImage('navbarLogo') }
+      ]
+    },
+    {
+      id: 'heroImages',
+      title: 'Hero Slider (Max 5)',
+      subtitle: `${settings.heroImages?.length || 0} / 5 items loaded`,
+      preview: settings.heroImages?.[0],
+      isMultiple: true,
+      items: settings.heroImages || [],
+      uploadId: 'hero-upload',
+      multiple: true,
+      accept: 'image/*,video/*',
+      max: 5,
+      actions: [
+        { label: 'Add Media', type: 'primary', onClick: () => document.getElementById('hero-upload').click(), disabled: settings.heroImages?.length >= 5 },
+        { label: 'Clear All', type: 'danger', onClick: () => handleRemoveImage('heroImages') }
+      ]
+    },
+    {
+      id: 'lipTintImage',
+      title: 'Lip Tints Image',
+      subtitle: 'Category banner',
+      preview: settings.lipTintImage,
+      uploadId: 'lip-tint-upload',
+      actions: [
+        { label: 'Change', type: 'primary', onClick: () => document.getElementById('lip-tint-upload').click() },
+        { label: 'Remove', type: 'danger', onClick: () => handleRemoveImage('lipTintImage') }
+      ]
+    },
+    {
+      id: 'perfumeImage',
+      title: 'Fragrances Image',
+      subtitle: 'Category banner',
+      preview: settings.perfumeImage,
+      uploadId: 'fragrances-upload',
+      actions: [
+        { label: 'Change', type: 'primary', onClick: () => document.getElementById('fragrances-upload').click() },
+        { label: 'Remove', type: 'danger', onClick: () => handleRemoveImage('perfumeImage') }
+      ]
+    },
+    {
+      id: 'beautySoapImage',
+      title: 'Artisan Soaps Image',
+      subtitle: 'Collection highlight',
+      preview: settings.beautySoapImage,
+      uploadId: 'artisan-soap-upload',
+      actions: [
+        { label: 'Change', type: 'primary', onClick: () => document.getElementById('artisan-soap-upload').click() },
+        { label: 'Remove', type: 'danger', onClick: () => handleRemoveImage('beautySoapImage') }
+      ]
+    },
+    {
+      id: 'allBestSellersImage',
+      title: 'Best Sellers Image',
+      subtitle: 'Featured products',
+      preview: settings.allBestSellersImage,
+      uploadId: 'all-bestsellers-upload',
+      actions: [
+        { label: 'Change', type: 'primary', onClick: () => document.getElementById('all-bestsellers-upload').click() },
+        { label: 'Remove', type: 'danger', onClick: () => handleRemoveImage('allBestSellersImage') }
+      ]
+    },
+    {
+      id: 'footerSmallIcon',
+      title: 'Facebook Link Icon (Footer)',
+      subtitle: 'Social promotion',
+      preview: settings.footerSmallIcon,
+      uploadId: 'footer-icon-upload',
+      actions: [
+        { label: 'Change Icon', type: 'primary', onClick: () => document.getElementById('footer-icon-upload').click() },
+        { label: 'Remove', type: 'danger', onClick: () => handleRemoveImage('footerSmallIcon') }
+      ]
+    },
+    {
+      id: 'paymentLogos',
+      title: 'Payment Methods (Max 3)',
+      subtitle: `${settings.paymentLogos?.length || 0} / 3 loaded`,
+      preview: settings.paymentLogos?.[0],
+      isMultiple: true,
+      items: settings.paymentLogos || [],
+      uploadId: 'payment-logo-upload',
+      multiple: true,
+      max: 3,
+      actions: [
+        { label: 'Add Logos', type: 'primary', onClick: () => document.getElementById('payment-logo-upload').click(), disabled: settings.paymentLogos?.length >= 3 },
+        { label: 'Clear All', type: 'danger', onClick: () => handleRemoveImage('paymentLogos') }
+      ]
+    },
+    {
+      id: 'ourStoryImage',
+      title: 'Our Story Image',
+      subtitle: 'About section',
+      preview: settings.ourStoryImage,
+      uploadId: 'our-story-upload',
+      actions: [
+        { label: 'Change', type: 'primary', onClick: () => document.getElementById('our-story-upload').click() },
+        { label: 'Remove', type: 'danger', onClick: () => handleRemoveImage('ourStoryImage') }
+      ]
+    },
+    {
+      id: 'teamImages',
+      title: 'Meet Our Team (Max 3)',
+      subtitle: `${settings.teamImages?.length || 0} / 3 loaded`,
+      preview: settings.teamImages?.[0],
+      isMultiple: true,
+      items: settings.teamImages || [],
+      uploadId: 'team-upload',
+      multiple: true,
+      max: 3,
+      actions: [
+        { label: 'Add Team Images', type: 'primary', onClick: () => document.getElementById('team-upload').click(), disabled: settings.teamImages?.length >= 3 },
+        { label: 'Clear All', type: 'danger', onClick: () => handleRemoveImage('teamImages') }
+      ]
+    },
+    {
+      id: 'galleryImages',
+      title: 'Gallery Images (Max 6)',
+      subtitle: `${settings.galleryImages?.length || 0} / 6 loaded`,
+      preview: settings.galleryImages?.[0],
+      isMultiple: true,
+      items: settings.galleryImages || [],
+      uploadId: 'gallery-upload',
+      multiple: true,
+      max: 6,
+      accept: 'image/*',
+      actions: [
+        { label: 'Add Images', type: 'primary', onClick: () => document.getElementById('gallery-upload').click(), disabled: settings.galleryImages?.length >= 6 },
+        { label: 'Clear All', type: 'danger', onClick: () => handleRemoveImage('galleryImages') }
+      ]
+    },
+    {
+      id: 'gcashQRCode',
+      title: 'GCash QR Code',
+      subtitle: 'Payment gateway',
+      preview: settings.gcashQRCode,
+      uploadId: 'gcash-upload',
+      actions: [
+        { label: 'Change QR', type: 'primary', onClick: () => document.getElementById('gcash-upload').click() },
+        { label: 'Remove', type: 'danger', onClick: () => handleRemoveImage('gcashQRCode') }
+      ]
+    },
+    {
+      id: 'productHeroMedia',
+      title: 'Shop Page Hero Banner',
+      subtitle: 'Additional promotion',
+      preview: settings.productHeroMedia,
+      uploadId: 'product-hero-upload',
+      accept: 'image/*,video/*',
+      actions: [
+        { label: 'Change Media', type: 'primary', onClick: () => document.getElementById('product-hero-upload').click() },
+        { label: 'Remove', type: 'danger', onClick: () => handleRemoveImage('productHeroMedia') }
+      ]
+    },
+    {
+      id: 'premiumBannerMedia',
+      title: 'Home Page Hero Banner',
+      subtitle: 'Main landing banner',
+      preview: settings.premiumBannerMedia,
+      uploadId: 'premium-banner-upload',
+      accept: 'image/*,video/*',
+      actions: [
+        { label: 'Change Hero', type: 'primary', onClick: () => document.getElementById('premium-banner-upload').click() },
+        { label: 'Remove', type: 'danger', onClick: () => handleRemoveImage('premiumBannerMedia') }
+      ]
+    }
+  ];
+
+  const totalPages = Math.ceil(mediaConfigs.length / cardsPerPage);
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  const currentCards = mediaConfigs.slice(indexOfFirstCard, indexOfLastCard);
+
+  const changePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    document.querySelector('.media-quick-settings')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  };
+
   return (
     <div className="admin-layout">
       <AdminSidebar />
 
-      {/* Main Content */}
       <main className="admin-main">
-        {/* Loading/Success Overlays */}
         {uploading && (
           <div className="admin-status-overlay">
             <div className="loading-spinner-v2"></div>
@@ -131,633 +325,143 @@ const Dashboard = () => {
 
         <div className="admin-header">
           <h1>Dashboard Overview</h1>
+          <p style={{ fontSize: '14px', color: '#666', fontWeight: 300, letterSpacing: '0.5px' }}>
+            Manage your site's media and content with elegance
+          </p>
         </div>
 
-        {/* Quick Settings Section */}
-        <div className="admin-section media-quick-settings">
-          <div className="section-header">
-            <h2>Quick Media Management</h2>
-            <p>Update your site's main visuals instantly</p>
-          </div>
+        <div className="admin-section media-quick-settings" style={{ background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 }}>
+          <h2 className="section-title-premium">Quick Media Management</h2>
+
           <div className="settings-grid-v2">
-            {/* Navbar Logo */}
-            <div className="settings-card" style={{ minHeight: '380px' }}>
-              <h4>Logo (Header)</h4>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                <img src={getPreview(settings.navbarLogo)} alt="Navbar Logo" style={{ height: '100%', width: '100%', objectFit: 'contain' }} />
-              </div>
-              <input
-                type="file"
-                id="navbar-logo-upload"
-                onChange={(e) => handleUpdateImage('navbarLogo', e.target.files[0])}
-                style={{ display: 'none' }}
-              />
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '1.5rem' }}>
-                <button onClick={() => document.getElementById('navbar-logo-upload').click()} className="btn-primary-solid">
-                  Change Logo
-                </button>
-                <button onClick={() => handleRemoveImage('navbarLogo')} className="btn-danger">
-                  Remove
-                </button>
-              </div>
+            {currentCards.map((card) => (
+              <motion.div
+                key={card.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="settings-card"
+              >
+                <div className="settings-card-header">
+                  <div className="settings-card-title" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '18px', fontWeight: 600, color: 'var(--primary)', marginBottom: '4px' }}>
+                    {card.title}
+                  </div>
+                  <div className="settings-card-subtitle">{card.subtitle}</div>
+                </div>
 
-
-              {/* Branding Overhaul Section - Hidden to fix overflow */}
-              <div style={{ marginTop: '1.5rem', borderTop: '2px solid #f0f0f0', paddingTop: '1.5rem', display: 'none' }}>
-                <h4 style={{ fontSize: '0.9rem', marginBottom: '1rem', color: '#333' }}>Advanced Branding Controls</h4>
-
-                {/* Real-time Preview Box */}
-                <div className="branding-preview-container">
-                  <p className="preview-label">LIVE HEADER PREVIEW</p>
-                  <div className="branding-preview-box">
-                    <div className={`navbar-brand-flex position-${settings.brandNamePosition || 'right'}`} style={{ gap: `${settings.brandNamePosition === 'below' ? '5px' : '16px'}` }}>
-                      <div className="navbar-logo-container" style={{ height: `${settings.headerLogoSize || 60}px`, width: `${settings.headerLogoSize || 60}px` }}>
-                        {settings.navbarLogo ? (
-                          <img src={settings.navbarLogo} alt="Logo" className="navbar-logo-img" />
-                        ) : (
-                          <div className="logo-emblem-v2" style={{ fontSize: `${(settings.headerLogoSize || 60) * 0.4}px` }}>AC</div>
-                        )}
-                      </div>
-                      {settings.showBrandName !== false && (
-                        <div className="navbar-brand-info">
-                          <h1 className="brand-name-main" style={{
-                            color: settings.brandNameColor || 'var(--dark)',
-                            fontSize: settings.brandNameFontSize === 'small' ? '1.2rem' :
-                              settings.brandNameFontSize === 'large' ? '2.2rem' : '1.75rem',
-                            fontWeight: settings.brandNameFontWeight === 'regular' ? '500' : '700'
-                          }}>
-                            {settings.brandName || 'Your Brand Name'}
-                          </h1>
-                        </div>
+                <div className="media-preview-mini">
+                  {card.isMultiple ? (
+                    <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', padding: '10px', width: '100%', height: '100%', alignItems: 'center' }}>
+                      {card.items.length > 0 ? (
+                        card.items.map((img, i) => (
+                          <div key={i} style={{ position: 'relative', flexShrink: 0 }}>
+                            {isVideo(img) ? (
+                              <div style={{ height: '100px', width: '100px', background: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '10px', borderRadius: '4px' }}>VIDEO</div>
+                            ) : (
+                              <img src={img} alt="" style={{ height: '100px', width: '100px', objectFit: 'cover', borderRadius: '4px' }} />
+                            )}
+                            <button
+                              onClick={async () => {
+                                if (!window.confirm('Remove this media?')) return;
+                                const newItems = card.items.filter((_, idx) => idx !== i);
+                                setUploading(true);
+                                try {
+                                  const { data } = await api.put('/settings', { [card.id]: newItems });
+                                  updateSettings(data);
+                                  setUploading(false);
+                                } catch (error) {
+                                  setUploading(false);
+                                  toast.error('Failed to remove');
+                                }
+                              }}
+                              style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))
+                      ) : (
+                        <div style={{ width: '100%', textAlign: 'center', color: '#ccc', fontStyle: 'italic' }}>No items</div>
                       )}
                     </div>
-                  </div>
-                </div>
-
-                <div className="branding-controls-grid">
-                  {/* Brand Name Input */}
-                  <div className="control-group">
-                    <label>Brand Name</label>
-                    <div className="input-with-button">
-                      <input
-                        type="text"
-                        id="brand-name-input"
-                        defaultValue={settings.brandName || ''}
-                        placeholder="Enter brand name"
-                      />
-                      <button onClick={async () => {
-                        const val = document.getElementById('brand-name-input').value;
-                        setUploading(true);
-                        try {
-                          const { data } = await api.put('/settings', { brandName: val });
-                          updateSettings(data);
-                          setUploading(false);
-                          setStatusOverlay({ show: true, message: 'NAME UPDATED' });
-                          setTimeout(() => setStatusOverlay({ show: false, message: '' }), 2000);
-                        } catch (err) {
-                          setUploading(false);
-                          toast.error('Update failed');
-                        }
-                      }}>Update</button>
-                    </div>
-                  </div>
-
-                  {/* Visibility & Alignment */}
-                  <div className="branding-options-row">
-                    <div className="option-item">
-                      <label className="switch-label">
-                        <input
-                          type="checkbox"
-                          checked={settings.showBrandName !== false}
-                          onChange={async (e) => {
-                            const { data } = await api.put('/settings', { showBrandName: e.target.checked });
-                            updateSettings(data);
-                          }}
-                        />
-                        <span>Show Name in Header</span>
-                      </label>
-                    </div>
-
-                    <div className="option-item">
-                      <label>Position</label>
-                      <select
-                        value={settings.brandNamePosition || 'right'}
-                        onChange={async (e) => {
-                          const { data } = await api.put('/settings', { brandNamePosition: e.target.value });
-                          updateSettings(data);
-                        }}
-                      >
-                        <option value="right">Right of Logo</option>
-                        <option value="left">Left of Logo</option>
-                        <option value="below">Below Logo</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Sizing & Color */}
-                  <div className="branding-options-row">
-                    <div className="option-item">
-                      <label>Text Size</label>
-                      <select
-                        value={settings.brandNameFontSize || 'medium'}
-                        onChange={async (e) => {
-                          const { data } = await api.put('/settings', { brandNameFontSize: e.target.value });
-                          updateSettings(data);
-                        }}
-                      >
-                        <option value="small">Small</option>
-                        <option value="medium">Medium</option>
-                        <option value="large">Large</option>
-                      </select>
-                    </div>
-
-                    <div className="option-item">
-                      <label>Brand Color</label>
-                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                        <input
-                          type="color"
-                          value={settings.brandNameColor || '#2D2D2D'}
-                          onChange={async (e) => {
-                            const { data } = await api.put('/settings', { brandNameColor: e.target.value });
-                            updateSettings(data);
-                          }}
-                          style={{ width: '40px', height: '30px', padding: '0', border: 'none', background: 'none' }}
-                        />
-                        <span style={{ fontSize: '0.7rem' }}>{settings.brandNameColor || '#2D2D2D'}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="branding-options-row">
-                    <div className="option-item">
-                      <label>Logo Size (px)</label>
-                      <input
-                        type="range"
-                        min="40"
-                        max="100"
-                        value={settings.headerLogoSize || 60}
-                        onChange={async (e) => {
-                          const { data } = await api.put('/settings', { headerLogoSize: parseInt(e.target.value) });
-                          updateSettings(data);
-                        }}
-                      />
-                      <span style={{ fontSize: '0.7rem' }}>{settings.headerLogoSize || 60}px</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Hero Photos/Videos Card */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Hero Slider (Max 5)</h4>
-              <p style={{ fontSize: '0.7rem', color: '#666', marginBottom: '5px' }}>{settings.heroImages?.length || 0} / 5 loaded</p>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', padding: '10px', height: '100%' }}>
-                  {settings.heroImages && settings.heroImages.length > 0 ? (
-                    settings.heroImages.map((img, i) => (
-                      <div key={i} style={{ position: 'relative', flexShrink: 0 }}>
-                        {isVideo(img) ? (
-                          <div style={{ height: '100px', width: '100px', background: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '10px', borderRadius: '4px' }}>VIDEO</div>
-                        ) : (
-                          <img src={img} alt="" style={{ height: '100px', width: '100px', objectFit: 'cover', borderRadius: '4px' }} />
-                        )}
-                        <button
-                          onClick={async () => {
-                            if (!window.confirm('Remove this media?')) return;
-                            const newHero = settings.heroImages.filter((_, idx) => idx !== i);
-                            setUploading(true);
-                            try {
-                              const { data } = await api.put('/settings', { heroImages: newHero });
-                              updateSettings(data);
-                              setUploading(false);
-                            } catch (error) {
-                              setUploading(false);
-                              toast.error('Failed to remove');
-                            }
-                          }}
-                          style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))
                   ) : (
-                    <img src="https://via.placeholder.com/100?text=None" alt="No Media" />
+                    isVideo(card.preview) ? (
+                      <div className="video-placeholder-mini" style={{ width: '100%', height: '100%', background: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>VIDEO</div>
+                    ) : (
+                      <img src={getPreview(card.preview)} alt={card.title} style={{ width: '100%', height: '100%', objectFit: card.id === 'navbarLogo' || card.id === 'gcashQRCode' ? 'contain' : 'cover' }} />
+                    )
                   )}
                 </div>
-              </div>
-              <input
-                type="file"
-                id="hero-upload"
-                multiple
-                accept="image/*,video/*"
-                onChange={(e) => {
-                  const files = Array.from(e.target.files);
-                  const currentCount = settings.heroImages?.length || 0;
-                  if (currentCount + files.length > 5) {
-                    toast.warning('Max 5 hero items allowed. Truncating.');
-                    handleUpdateImage('heroImages', files.slice(0, 5 - currentCount));
-                  } else {
-                    handleUpdateImage('heroImages', files);
-                  }
-                }}
-                style={{ display: 'none' }}
-                disabled={settings.heroImages?.length >= 5}
-              />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button
-                  onClick={() => document.getElementById('hero-upload').click()}
-                  className="btn-primary-solid"
-                  disabled={settings.heroImages?.length >= 5}
-                >
-                  Add Media
-                </button>
-                <button onClick={() => handleRemoveImage('heroImages')} className="btn-danger">
-                  Clear All
-                </button>
-              </div>
-            </div>
 
-            {/* Category: Lip Tints */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Lip Tints Image</h4>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                <img src={getPreview(settings.lipTintImage)} alt="Lip Tints" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
-              </div>
-              <input type="file" id="lip-tint-upload" onChange={(e) => handleUpdateImage('lipTintImage', e.target.files[0])} style={{ display: 'none' }} />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('lip-tint-upload').click()} className="upload-label-mini">Change</button>
-                <button onClick={() => handleRemoveImage('lipTintImage')} className="upload-label-mini" style={{ background: '#ef4444' }}>Remove</button>
-              </div>
-            </div>
+                <input
+                  type="file"
+                  id={card.uploadId}
+                  multiple={card.multiple}
+                  accept={card.accept || 'image/*'}
+                  onChange={(e) => {
+                    const files = card.multiple ? Array.from(e.target.files) : e.target.files[0];
+                    if (card.multiple) {
+                      const currentCount = card.items?.length || 0;
+                      if (currentCount + files.length > card.max) {
+                        toast.warning(`Max ${card.max} items allowed. Truncating.`);
+                        handleUpdateImage(card.id, files.slice(0, card.max - currentCount));
+                      } else {
+                        handleUpdateImage(card.id, files);
+                      }
+                    } else {
+                      handleUpdateImage(card.id, files);
+                    }
+                  }}
+                  style={{ display: 'none' }}
+                />
 
-            {/* Category: Perfumes */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Fragrances Image</h4>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                <img src={getPreview(settings.perfumeImage)} alt="Fragrances" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
-              </div>
-              <input type="file" id="fragrances-upload" onChange={(e) => handleUpdateImage('perfumeImage', e.target.files[0])} style={{ display: 'none' }} />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('fragrances-upload').click()} className="btn-primary-solid">Change</button>
-                <button onClick={() => handleRemoveImage('perfumeImage')} className="btn-danger">Remove</button>
-              </div>
-            </div>
-
-            {/* Category: Beauty Soaps */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Artisan Soaps Image</h4>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                <img src={getPreview(settings.beautySoapImage)} alt="Artisan Soaps" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
-              </div>
-              <input type="file" id="artisan-soap-upload" onChange={(e) => handleUpdateImage('beautySoapImage', e.target.files[0])} style={{ display: 'none' }} />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('artisan-soap-upload').click()} className="btn-primary-solid">Change</button>
-                <button onClick={() => handleRemoveImage('beautySoapImage')} className="btn-danger">Remove</button>
-              </div>
-            </div>
-
-            {/* Category: All Best Sellers */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Best Sellers Image</h4>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                <img src={getPreview(settings.allBestSellersImage)} alt="Best Sellers" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
-              </div>
-              <input type="file" id="all-bestsellers-upload" onChange={(e) => handleUpdateImage('allBestSellersImage', e.target.files[0])} style={{ display: 'none' }} />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('all-bestsellers-upload').click()} className="btn-primary-solid">Change</button>
-                <button onClick={() => handleRemoveImage('allBestSellersImage')} className="btn-danger">Remove</button>
-              </div>
-            </div>
-
-            {/* Facebook Link Icon */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Facebook Link Icon (Footer)</h4>
-              <div className="media-preview-mini" style={{ height: '140px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <img src={getPreview(settings.footerSmallIcon)} alt="Facebook Icon" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
-              </div>
-              <input
-                type="file"
-                id="footer-icon-upload"
-                onChange={(e) => handleUpdateImage('footerSmallIcon', e.target.files[0])}
-                style={{ display: 'none' }}
-              />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('footer-icon-upload').click()} className="btn-primary-solid">
-                  Change Icon
-                </button>
-                <button onClick={() => handleRemoveImage('footerSmallIcon')} className="btn-danger">
-                  Remove
-                </button>
-              </div>
-            </div>
-
-            {/* Payment Methods Logo */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Payment Methods (Max 3)</h4>
-              <p style={{ fontSize: '0.7rem', color: '#666', marginBottom: '5px' }}>{settings.paymentLogos?.length || 0} / 3 loaded</p>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', padding: '10px', height: '100%' }}>
-                  {settings.paymentLogos && settings.paymentLogos.length > 0 ? (
-                    settings.paymentLogos.map((img, i) => (
-                      <div key={i} style={{ position: 'relative', flexShrink: 0 }}>
-                        <img src={img} alt="" style={{ height: '100px', width: '100px', objectFit: 'contain', background: '#f9f9f9', borderRadius: '4px' }} />
-                        <button
-                          onClick={async () => {
-                            if (!window.confirm('Remove this payment logo?')) return;
-                            const newLogos = settings.paymentLogos.filter((_, idx) => idx !== i);
-                            setUploading(true);
-                            try {
-                              const { data } = await api.put('/settings', { paymentLogos: newLogos });
-                              updateSettings(data);
-                              setUploading(false);
-                            } catch (error) {
-                              setUploading(false);
-                              toast.error('Failed to remove');
-                            }
-                          }}
-                          style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))
-                  ) : (
-                    <img src="https://via.placeholder.com/100?text=None" alt="No Media" />
-                  )}
+                <div className="media-actions-premium">
+                  {card.actions.map((action, idx) => (
+                    <button
+                      key={idx}
+                      onClick={action.onClick}
+                      disabled={action.disabled}
+                      className={`btn-premium btn-premium-${action.type}`}
+                    >
+                      {action.label}
+                    </button>
+                  ))}
                 </div>
-              </div>
-              <input
-                type="file"
-                id="payment-logo-upload"
-                multiple
-                onChange={(e) => {
-                  const files = Array.from(e.target.files);
-                  const currentCount = settings.paymentLogos?.length || 0;
-                  if (currentCount + files.length > 3) {
-                    toast.warning('Max 3 payment logos allowed. Truncating.');
-                    handleUpdateImage('paymentLogos', files.slice(0, 3 - currentCount));
-                  } else {
-                    handleUpdateImage('paymentLogos', files);
-                  }
-                }}
-                style={{ display: 'none' }}
-                disabled={settings.paymentLogos?.length >= 3}
-              />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="pagination-container-premium">
+            <button
+              className="pagination-btn-premium"
+              onClick={() => changePage(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              ← Previous
+            </button>
+
+            <div className="page-numbers-premium">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
                 <button
-                  onClick={() => document.getElementById('payment-logo-upload').click()}
-                  className="upload-label-mini"
-                  disabled={settings.paymentLogos?.length >= 3}
-                  style={settings.paymentLogos?.length >= 3 ? { opacity: 0.5, cursor: 'not-allowed' } : { background: '#2563eb', opacity: 1 }}
+                  key={number}
+                  className={`page-number-premium ${currentPage === number ? 'active' : ''}`}
+                  onClick={() => changePage(number)}
                 >
-                  Add Logos
+                  {number}
                 </button>
-                <button onClick={() => handleRemoveImage('paymentLogos')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>
-                  Clear All
-                </button>
-              </div>
+              ))}
             </div>
 
-            {/* Our Story Image */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Our Story Image</h4>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                <img src={getPreview(settings.ourStoryImage)} alt="Our Story" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
-              </div>
-              <input
-                type="file"
-                id="our-story-upload"
-                onChange={(e) => handleUpdateImage('ourStoryImage', e.target.files[0])}
-                style={{ display: 'none' }}
-              />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('our-story-upload').click()} className="upload-label-mini" style={{ background: '#2563eb', opacity: 1 }}>
-                  Change
-                </button>
-                <button onClick={() => handleRemoveImage('ourStoryImage')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>
-                  Remove
-                </button>
-              </div>
-            </div>
-
-            {/* Meet Our Team (Max 3) */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Meet Our Team (Max 3)</h4>
-              <p style={{ fontSize: '0.7rem', color: '#666', marginBottom: '5px' }}>{settings.teamImages?.length || 0} / 3 loaded</p>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', padding: '10px', height: '100%' }}>
-                  {settings.teamImages && settings.teamImages.length > 0 ? (
-                    settings.teamImages.map((img, i) => (
-                      <div key={i} style={{ position: 'relative', flexShrink: 0 }}>
-                        <img src={img} alt="" style={{ height: '100px', width: '100px', objectFit: 'cover', borderRadius: '4px' }} />
-                        <button
-                          onClick={async () => {
-                            if (!window.confirm('Remove this team member image?')) return;
-                            const newTeam = settings.teamImages.filter((_, idx) => idx !== i);
-                            setUploading(true);
-                            try {
-                              const { data } = await api.put('/settings', { teamImages: newTeam });
-                              updateSettings(data);
-                              setUploading(false);
-                            } catch (error) {
-                              setUploading(false);
-                              toast.error('Failed to remove');
-                            }
-                          }}
-                          style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))
-                  ) : (
-                    <img src="https://via.placeholder.com/100?text=None" alt="No Team" />
-                  )}
-                </div>
-              </div>
-              <input
-                type="file"
-                id="team-upload"
-                multiple
-                onChange={(e) => {
-                  const files = Array.from(e.target.files);
-                  const currentCount = settings.teamImages?.length || 0;
-                  if (currentCount + files.length > 3) {
-                    toast.warning('Max 3 team images allowed. Truncating.');
-                    handleUpdateImage('teamImages', files.slice(0, 3 - currentCount));
-                  } else {
-                    handleUpdateImage('teamImages', files);
-                  }
-                }}
-                style={{ display: 'none' }}
-                disabled={settings.teamImages?.length >= 3}
-              />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button
-                  onClick={() => document.getElementById('team-upload').click()}
-                  className="upload-label-mini"
-                  disabled={settings.teamImages?.length >= 3}
-                  style={settings.teamImages?.length >= 3 ? { opacity: 0.5, cursor: 'not-allowed' } : { background: '#2563eb', opacity: 1 }}
-                >
-                  Add Team Images
-                </button>
-                <button onClick={() => handleRemoveImage('teamImages')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>
-                  Clear All
-                </button>
-              </div>
-            </div>
-
-            {/* Follow Our Journey Gallery (Max 6) */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Follow Our Journey Gallery (Max 6)</h4>
-              <p style={{ fontSize: '0.7rem', color: '#666', marginBottom: '5px' }}>{settings.galleryImages?.length || 0} / 6 loaded</p>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', padding: '10px', height: '100%' }}>
-                  {settings.galleryImages && settings.galleryImages.length > 0 ? (
-                    settings.galleryImages.map((img, i) => (
-                      <div key={i} style={{ position: 'relative', flexShrink: 0 }}>
-                        <img src={img} alt="" style={{ height: '100px', width: '100px', objectFit: 'cover', borderRadius: '4px' }} />
-                        <button
-                          onClick={async () => {
-                            if (!window.confirm('Remove this gallery image?')) return;
-                            const newGallery = settings.galleryImages.filter((_, idx) => idx !== i);
-                            setUploading(true);
-                            try {
-                              const { data } = await api.put('/settings', { galleryImages: newGallery });
-                              updateSettings(data);
-                              setUploading(false);
-                            } catch (error) {
-                              setUploading(false);
-                              toast.error('Failed to remove');
-                            }
-                          }}
-                          style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))
-                  ) : (
-                    <img src="https://via.placeholder.com/100?text=None" alt="No Gallery" />
-                  )}
-                </div>
-              </div>
-              <input
-                type="file"
-                id="gallery-upload"
-                multiple
-                accept="image/*"
-                onChange={(e) => {
-                  const files = Array.from(e.target.files);
-                  const currentCount = settings.galleryImages?.length || 0;
-                  if (currentCount + files.length > 6) {
-                    toast.warning('Max 6 gallery images allowed. Truncating.');
-                    handleUpdateImage('galleryImages', files.slice(0, 6 - currentCount));
-                  } else {
-                    handleUpdateImage('galleryImages', files);
-                  }
-                }}
-                style={{ display: 'none' }}
-                disabled={settings.galleryImages?.length >= 6}
-              />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button
-                  onClick={() => document.getElementById('gallery-upload').click()}
-                  className="upload-label-mini"
-                  disabled={settings.galleryImages?.length >= 6}
-                  style={settings.galleryImages?.length >= 6 ? { opacity: 0.5, cursor: 'not-allowed' } : { background: '#2563eb', opacity: 1 }}
-                >
-                  Add Images
-                </button>
-                <button onClick={() => handleRemoveImage('galleryImages')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>
-                  Clear All
-                </button>
-              </div>
-            </div>
-
-            {/* GCash QR Code */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>GCash QR Code</h4>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                <img src={getPreview(settings.gcashQRCode)} alt="GCash QR" style={{ height: '100%', width: '100%', objectFit: 'contain' }} />
-              </div>
-              <input
-                type="file"
-                id="gcash-upload"
-                onChange={(e) => handleUpdateImage('gcashQRCode', e.target.files[0])}
-                style={{ display: 'none' }}
-              />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('gcash-upload').click()} className="upload-label-mini">
-                  Change QR
-                </button>
-                <button onClick={() => handleRemoveImage('gcashQRCode')} className="upload-label-mini" style={{ background: '#ef4444' }}>
-                  Remove
-                </button>
-              </div>
-            </div>
-
-            {/* Product Page Hero Media */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Shop Page Hero Banner</h4>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                {isVideo(settings.productHeroMedia) ? (
-                  <div className="video-placeholder-mini">VIDEO</div>
-                ) : (
-                  <img src={getPreview(settings.productHeroMedia)} alt="Product Hero" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
-                )}
-              </div>
-              <input
-                type="file"
-                id="product-hero-upload"
-                accept="image/*,video/*"
-                onChange={(e) => handleUpdateImage('productHeroMedia', e.target.files[0])}
-                style={{ display: 'none' }}
-              />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('product-hero-upload').click()} className="upload-label-mini" style={{ background: '#2563eb', opacity: 1 }}>
-                  Change Media
-                </button>
-                <button onClick={() => handleRemoveImage('productHeroMedia')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>
-                  Remove
-                </button>
-              </div>
-            </div>
-
-            {/* Premium Banner Media */}
-            <div className="settings-card" style={{ minHeight: '280px' }}>
-              <h4>Home Page Hero Banner</h4>
-              <div className="media-preview-mini" style={{ height: '140px' }}>
-                {isVideo(settings.premiumBannerMedia) ? (
-                  <div className="video-placeholder-mini">VIDEO</div>
-                ) : (
-                  <img src={getPreview(settings.premiumBannerMedia)} alt="Premium Banner" style={{ height: '100%', width: '100%', objectFit: 'cover' }} />
-                )}
-              </div>
-              <input
-                type="file"
-                id="premium-banner-upload"
-                accept="image/*,video/*"
-                onChange={(e) => handleUpdateImage('premiumBannerMedia', e.target.files[0])}
-                style={{ display: 'none' }}
-              />
-              <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                <button onClick={() => document.getElementById('premium-banner-upload').click()} className="upload-label-mini" style={{ background: '#2563eb', opacity: 1 }}>
-                  Change Media
-                </button>
-                <button onClick={() => handleRemoveImage('premiumBannerMedia')} className="upload-label-mini" style={{ background: '#ef4444', opacity: 1 }}>
-                  Remove
-                </button>
-              </div>
-            </div>
+            <button
+              className="pagination-btn-premium"
+              onClick={() => changePage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next →
+            </button>
           </div>
         </div>
 
-        {/* Stats */}
         <div className="stats-grid">
-          {/* ... existing stats ... */}
           <div className="stat-card">
             <div className="stat-icon-wrapper products">
               <FiPackage />
@@ -789,7 +493,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Recent Orders */}
         <div className="admin-section">
           <div className="section-header">
             <h2>Recent Orders</h2>
@@ -830,8 +533,8 @@ const Dashboard = () => {
             </table>
           </div>
         </div>
-      </main >
-    </div >
+      </main>
+    </div>
   );
 };
 
