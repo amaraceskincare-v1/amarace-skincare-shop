@@ -1020,10 +1020,10 @@
 
 .data-table-premium {
     width: 100%;
-    min-width: 1200px;
+    min-width: 1100px;
     border-collapse: separate;
     border-spacing: 0;
-    table-layout: auto;
+    table-layout: fixed;
 }
 
 .data-table-premium thead th {
@@ -1039,29 +1039,51 @@
     white-space: nowrap;
 }
 
-/* Header/Cell Alignment & Widths */
-.data-table-premium th:nth-child(4),
-.data-table-premium td:nth-child(4),
-.data-table-premium th:nth-child(5),
-.data-table-premium td:nth-child(5),
-.data-table-premium th:nth-child(6),
-.data-table-premium td:nth-child(6) {
+/* Vertical Alignment & Column Widths */
+.data-table-premium th:nth-child(1) {
+    width: 10%;
+}
+
+/* Order ID */
+.data-table-premium th:nth-child(2) {
+    width: 12%;
+}
+
+/* Customer */
+.data-table-premium th:nth-child(3) {
+    width: 26%;
+}
+
+/* Items */
+.data-table-premium th:nth-child(4) {
+    width: 10%;
+}
+
+/* Total */
+.data-table-premium th:nth-child(5) {
+    width: 12%;
+}
+
+/* Payment */
+.data-table-premium th:nth-child(6) {
+    width: 8%;
+}
+
+/* Status */
+.data-table-premium th:nth-child(7) {
+    width: 14%;
+}
+
+/* Tracking */
+.data-table-premium th:nth-child(8) {
+    width: 8%;
+}
+
+/* Action */
+
+.data-table-premium th:nth-child(n+4),
+.data-table-premium td:nth-child(n+4) {
     text-align: center;
-}
-
-.data-table-premium th:nth-child(3),
-.data-table-premium td:nth-child(3) {
-    min-width: 300px;
-}
-
-.data-table-premium th:nth-child(4),
-.data-table-premium td:nth-child(4) {
-    min-width: 140px;
-}
-
-.data-table-premium th:nth-child(5),
-.data-table-premium td:nth-child(5) {
-    min-width: 180px;
 }
 
 .data-table-premium tbody td {
@@ -1116,7 +1138,6 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    white-space: nowrap;
 }
 
 .product-image-premium {
@@ -1149,8 +1170,6 @@
     color: #ef4444;
     /* Premium Red */
     font-size: 16px;
-    white-space: nowrap;
-    display: inline-block;
 }
 
 .payment-method-premium {

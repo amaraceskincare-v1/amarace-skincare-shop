@@ -127,7 +127,7 @@ const AdminOrders = () => {
                     <td>
                       <div className="total-amount-premium">₱{order.total.toFixed(2)}</div>
                     </td>
-                    <td style={{ textAlign: 'center' }}>
+                    <td>
                       <div className="payment-method-premium">{order.paymentMethod?.toUpperCase()}</div>
                       {order.paymentProof && (
                         <button
