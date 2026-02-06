@@ -1039,11 +1039,35 @@
     white-space: nowrap;
 }
 
-.data-table-premium tbody td {
-    padding: 24px 16px;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-    vertical-align: middle;
+/* Header/Cell Alignment & Widths */
+.data-table-premium th:nth-child(4),
+.data-table-premium td:nth-child(4),
+.data-table-premium th:nth-child(5),
+.data-table-premium td:nth-child(5),
+.data-table-premium th:nth-child(6),
+.data-table-premium td:nth-child(6) {
+    text-align: center;
+}
+
+.data-table-premium th:nth-child(3),
+.data-table-premium td:nth-child(3) {
+    min-width: 300px;
+}
+
+.data-table-premium th:nth-child(4),
+.data-table-premium td:nth-child(4) {
+    min-width: 140px;
+}
+
+.data-table-premium th:nth-child(5),
+.data-table-premium td:nth-child(5) {
+    min-width: 180px;
+}
+
+padding: 24px 16px;
+border-bottom: 1px solid var(--border);
+font-size: 14px;
+vertical-align: middle;
 }
 
 .data-table-premium tbody tr:hover {
@@ -1125,6 +1149,7 @@
     /* Premium Red */
     font-size: 16px;
     white-space: nowrap;
+    display: inline-block;
 }
 
 .payment-method-premium {
