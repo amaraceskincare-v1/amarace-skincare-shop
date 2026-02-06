@@ -9,20 +9,28 @@ const Profile = () => {
   const { user, updateProfile, logout } = useAuth();
   const navigate = useNavigate();
 
-  // Parse name into first/last if not already split
+  // Parse name into first/middle/last if not already split
   const getInitialName = () => {
     if (user?.firstName || user?.lastName) {
-      return { firstName: user.firstName || '', lastName: user.lastName || '' };
+      return {
+        firstName: user.firstName || '',
+        middleName: user.middleName || '',
+        lastName: user.lastName || ''
+      };
     }
     // Fallback: split name field
-    const parts = (user?.name || '').split(' ');
-    return { firstName: parts[0] || '', lastName: parts.slice(1).join(' ') || '' };
+    const parts = (user?.name || '').trim().split(/\s+/);
+    if (parts.length === 1) return { firstName: parts[0] || '', middleName: '', lastName: '' };
+
+    // Simple heuristic for fallback (first part is first, rest is last)
+    return { firstName: parts[0] || '', middleName: '', lastName: parts.slice(1).join(' ') || '' };
   };
 
   const initialName = getInitialName();
 
   const [formData, setFormData] = useState({
     firstName: initialName.firstName,
+    middleName: initialName.middleName,
     lastName: initialName.lastName,
     email: user?.email || '',
     phone: user?.phone || '',
@@ -40,8 +48,9 @@ const Profile = () => {
     setLoading(true);
     try {
       await updateProfile({
-        name: `${formData.firstName} ${formData.lastName}`.trim(),
+        name: [formData.firstName, formData.middleName, formData.lastName].filter(Boolean).join(' '),
         firstName: formData.firstName,
+        middleName: formData.middleName,
         lastName: formData.lastName,
         email: formData.email,
         phone: formData.phone,
@@ -90,7 +99,7 @@ const Profile = () => {
             </div>
           )}
           <div className="profile-info">
-            <h1>{formData.firstName} {formData.lastName}</h1>
+            <h1>{[formData.firstName, formData.middleName, formData.lastName].filter(Boolean).join(' ')}</h1>
             <p className="profile-email">{user?.email}</p>
             {user?.authProvider && user.authProvider !== 'local' && (
               <span className="auth-provider-badge">
@@ -115,6 +124,14 @@ const Profile = () => {
                 value={formData.firstName}
                 onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                 placeholder="Enter first name"
+              />
+            </div>
+            <div className="form-group">
+              <label>Middle Initial/Name</label>
+              <input
+                value={formData.middleName}
+                onChange={(e) => setFormData({ ...formData, middleName: e.target.value })}
+                placeholder="Optional"
               />
             </div>
             <div className="form-group">

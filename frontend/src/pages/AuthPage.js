@@ -134,6 +134,8 @@ const AuthPage = () => {
                 credential: tokenResponse.access_token,
                 email: userInfo.email,
                 name: userInfo.name,
+                firstName: userInfo.given_name,
+                lastName: userInfo.family_name,
                 picture: userInfo.picture,
                 googleId: userInfo.sub
             });
@@ -168,7 +170,7 @@ const AuthPage = () => {
         window.FB.login(function (response) {
             if (response.authResponse) {
                 // Get user info from Facebook
-                window.FB.api('/me', { fields: 'id,name,email,picture.type(large)' }, async function (userInfo) {
+                window.FB.api('/me', { fields: 'id,name,first_name,last_name,middle_name,email,picture.type(large)' }, async function (userInfo) {
                     if (!userInfo.email) {
                         toast.error('Email permission is required. Please try again.');
                         setFacebookLoading(false);
@@ -180,6 +182,9 @@ const AuthPage = () => {
                         const { data } = await api.post('/social-auth/facebook', {
                             email: userInfo.email,
                             name: userInfo.name,
+                            firstName: userInfo.first_name,
+                            middleName: userInfo.middle_name,
+                            lastName: userInfo.last_name,
                             picture: userInfo.picture?.data?.url,
                             facebookId: userInfo.id
                         });

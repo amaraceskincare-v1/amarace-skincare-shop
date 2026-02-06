@@ -237,6 +237,7 @@ router.post('/login', async (req, res) => {
         _id: user._id,
         name: user.name,
         firstName: user.firstName,
+        middleName: user.middleName,
         lastName: user.lastName,
         email: user.email,
         phone: user.phone,
@@ -265,8 +266,9 @@ router.put('/profile', protect, async (req, res) => {
     const user = await User.findById(req.user._id);
     if (user) {
       user.name = req.body.name || user.name;
-      user.firstName = req.body.firstName || user.firstName;
-      user.lastName = req.body.lastName || user.lastName;
+      user.firstName = req.body.firstName !== undefined ? req.body.firstName : user.firstName;
+      user.middleName = req.body.middleName !== undefined ? req.body.middleName : user.middleName;
+      user.lastName = req.body.lastName !== undefined ? req.body.lastName : user.lastName;
       user.phone = req.body.phone || user.phone;
       // Only allow email change for local auth
       if (user.authProvider === 'local' || !user.authProvider) {
@@ -281,6 +283,7 @@ router.put('/profile', protect, async (req, res) => {
         _id: updatedUser._id,
         name: updatedUser.name,
         firstName: updatedUser.firstName,
+        middleName: updatedUser.middleName,
         lastName: updatedUser.lastName,
         email: updatedUser.email,
         phone: updatedUser.phone,
