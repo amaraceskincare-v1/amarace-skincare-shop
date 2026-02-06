@@ -61,7 +61,15 @@ const Orders = () => {
                   {order.trackingNumber && (
                     <div className="tracking-info">
                       <span className="label">J&T Tracking:</span>
-                      <span className="value">{order.trackingNumber}</span>
+                      <a
+                        href={`https://www.jtexpress.ph/index/query/gzquery.html?bills=${order.trackingNumber}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="tracking-link-user"
+                        style={{ color: 'var(--primary)', fontWeight: '600', textDecoration: 'underline', marginLeft: '5px' }}
+                      >
+                        {order.trackingNumber}
+                      </a>
                     </div>
                   )}
                   {order.deliveryProof && (
