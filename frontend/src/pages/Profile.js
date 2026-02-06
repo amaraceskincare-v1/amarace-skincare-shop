@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { FiUser, FiMail, FiPhone, FiLock, FiChevronRight, FiLogOut, FiPackage } from 'react-icons/fi';
 import '../styles/Profile.css';
 

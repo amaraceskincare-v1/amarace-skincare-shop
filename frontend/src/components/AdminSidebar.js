@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { FiLayout, FiPackage, FiShoppingCart, FiStar, FiArrowLeft, FiSettings, FiUsers } from 'react-icons/fi';
+import { FiLayout, FiPackage, FiShoppingCart, FiStar, FiArrowLeft, FiUsers } from 'react-icons/fi';
 
 const AdminSidebar = () => {
     const location = useLocation();

@@ -8,7 +8,6 @@ import '../../styles/Admin.css';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [proofImage, setProofImage] = useState(null);
   const [trackingInputs, setTrackingInputs] = useState({});
@@ -16,15 +15,12 @@ const AdminOrders = () => {
   useEffect(() => { fetchOrders(); }, []);
 
   const fetchOrders = async () => {
-    setLoading(true);
     try {
       const { data } = await api.get('/orders');
       setOrders(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Fetch orders failed:', error);
       setOrders([]);
-    } finally {
-      setLoading(false);
     }
   };
 
