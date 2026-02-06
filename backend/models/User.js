@@ -11,12 +11,14 @@ const userSchema = new mongoose.Schema({
   otpExpire: Date,
   resetPasswordToken: String,
   resetPasswordExpire: Date,
+  phone: String,
   address: {
     street: String,
     city: String,
     state: String,
     zipCode: String,
-    country: String
+    country: String,
+    phone: String
   }
 }, { timestamps: true });
 

@@ -729,8 +729,300 @@
 }
 
 /* =========================================
-   GCASH VERIFICATION SYSTEM V2
+   ADMIN ORDERS V2 - PREMIUM UNIFIED VIEW
    ========================================= */
+
+.admin-header-v2 {
+    margin-bottom: 40px;
+}
+
+.admin-header-v2 h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    color: var(--primary);
+    margin: 0;
+}
+
+.orders-table-container-premium {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+    overflow-x: auto;
+    border: 1px solid var(--border);
+}
+
+.admin-table-premium {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table-premium th {
+    background: #fafaf9;
+    padding: 20px;
+    text-align: left;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b;
+    border-bottom: 1px solid var(--border);
+}
+
+.admin-table-premium td {
+    padding: 24px 20px;
+    border-bottom: 1px solid #f8f8f8;
+    vertical-align: middle;
+}
+
+/* Customer Cell & Popover */
+.customer-cell-premium {
+    position: relative;
+    min-width: 200px;
+}
+
+.cust-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cust-name {
+    font-weight: 700;
+    color: var(--dark);
+    font-size: 0.95rem;
+}
+
+.cust-info-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    display: flex;
+    font-size: 1.1rem;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.cust-info-btn:hover {
+    opacity: 1;
+}
+
+.customer-details-popover {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 300px;
+    background: white;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+    border-radius: 16px;
+    z-index: 100;
+    padding: 20px;
+    border: 1px solid var(--border);
+}
+
+.popover-header {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    margin-bottom: 15px;
+}
+
+.popover-row {
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+}
+
+.popover-row span {
+    font-weight: 600;
+    color: var(--primary);
+    margin-right: 5px;
+}
+
+.popover-row.address p {
+    margin: 5px 0 0;
+    color: #64748b;
+    font-style: italic;
+}
+
+.popover-footer {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    font-size: 0.7rem;
+    color: #94a3b8;
+}
+
+/* Payment Cell */
+.verify-pay-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f1f5f9;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.status-pill-premium {
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-pill-premium.pending {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-pill-premium.processing {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-pill-premium.shipped {
+    background: #ede9fe;
+    color: #5b21b6;
+}
+
+.status-pill-premium.delivered {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+/* Integrated Modal */
+.payment-verify-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.payment-verify-modal {
+    background: white;
+    width: 100%;
+    max-width: 1100px;
+    height: 80vh;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal-header-v2 {
+    padding: 20px 30px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-content-v2 {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.proof-viewer-v2 {
+    flex: 1;
+    background: #f8fafc;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.img-container {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.img-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.verification-sidebar-v2 {
+    width: 400px;
+    padding: 30px;
+    border-left: 1px solid #eee;
+    overflow-y: auto;
+}
+
+.info-block-v2 {
+    margin-bottom: 30px;
+}
+
+.info-block-v2 label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: #94a3b8;
+}
+
+.amount-label {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--dark);
+}
+
+.checklist-v2 {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.approve-btn-v2 {
+    width: 100%;
+    padding: 16px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.reject-btn-v2 {
+    width: 100%;
+    padding: 16px;
+    background: #f1f5f9;
+    color: #64748b;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
 
 .proof-thumbnail-wrapper {
     position: relative;
