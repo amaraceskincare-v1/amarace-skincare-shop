@@ -2596,3 +2596,126 @@
         width: auto;
     }
 }
+
+/* =====================================================
+   ORDERS PAGE – FINAL TABLE ALIGNMENT (PRODUCTION SAFE)
+   Fixes ITEMS → TOTAL gap & header/body mismatch
+   ===================================================== */
+
+/* Lock table behavior */
+.orders-table,
+.data-table-premium {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+/* Base cell styling */
+.orders-table th,
+.orders-table td,
+.data-table-premium th,
+.data-table-premium td {
+    padding: 12px 10px;
+    text-align: left;
+    vertical-align: middle;
+    line-height: 1.2;
+}
+
+/* ===== COLUMN WIDTH LOCK ===== */
+.orders-table th:nth-child(1),
+.orders-table td:nth-child(1) {
+    width: 15%;
+}
+
+/* Order ID */
+
+.orders-table th:nth-child(2),
+.orders-table td:nth-child(2) {
+    width: 16%;
+}
+
+/* Customer */
+
+.orders-table th:nth-child(3),
+.orders-table td:nth-child(3) {
+    width: 18%;
+    /* ITEMS */
+    white-space: normal;
+    /* allow wrapping */
+}
+
+.orders-table th:nth-child(4),
+.orders-table td:nth-child(4) {
+    width: 10%;
+    /* TOTAL */
+    white-space: nowrap;
+}
+
+.orders-table th:nth-child(5),
+.orders-table td:nth-child(5) {
+    width: 16%;
+}
+
+/* Payment */
+
+.orders-table th:nth-child(6),
+.orders-table td:nth-child(6) {
+    width: 10%;
+}
+
+/* Status */
+
+.orders-table th:nth-child(7),
+.orders-table td:nth-child(7) {
+    width: 15%;
+}
+
+/* Tracking */
+
+.orders-table th:nth-child(8),
+.orders-table td:nth-child(8) {
+    width: 10%;
+}
+
+/* Action */
+
+
+/* ===== ITEMS CELL (IMAGE + TEXT) ===== */
+.orders-table td:nth-child(3),
+.items-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+}
+
+/* Product image safety */
+.orders-table td:nth-child(3) img,
+.product-image-premium,
+.item-thumb {
+    width: 40px;
+    height: auto;
+    flex-shrink: 0;
+}
+
+/* Prevent flex + nowrap from breaking layout */
+.product-item-premium,
+.item-row {
+    white-space: normal !important;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* ===== BUTTONS / INPUTS SAFETY ===== */
+.orders-table button,
+.orders-table input,
+.orders-table select {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* ===== SCROLL SAFETY (if table overflows) ===== */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
