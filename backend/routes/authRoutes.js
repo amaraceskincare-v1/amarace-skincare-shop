@@ -236,8 +236,14 @@ router.post('/login', async (req, res) => {
       res.json({
         _id: user._id,
         name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
+        phone: user.phone,
         role: user.role,
+        profilePicture: user.profilePicture,
+        authProvider: user.authProvider || 'local',
+        address: user.address,
         token: generateToken(user._id)
       });
     } else {
@@ -259,17 +265,29 @@ router.put('/profile', protect, async (req, res) => {
     const user = await User.findById(req.user._id);
     if (user) {
       user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
+      user.firstName = req.body.firstName || user.firstName;
+      user.lastName = req.body.lastName || user.lastName;
+      user.phone = req.body.phone || user.phone;
+      // Only allow email change for local auth
+      if (user.authProvider === 'local' || !user.authProvider) {
+        user.email = req.body.email || user.email;
+      }
       user.address = req.body.address || user.address;
-      if (req.body.password) {
+      if (req.body.password && (user.authProvider === 'local' || !user.authProvider)) {
         user.password = req.body.password;
       }
       const updatedUser = await user.save();
       res.json({
         _id: updatedUser._id,
         name: updatedUser.name,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
         email: updatedUser.email,
-        role: updatedUser.role
+        phone: updatedUser.phone,
+        role: updatedUser.role,
+        profilePicture: updatedUser.profilePicture,
+        authProvider: updatedUser.authProvider,
+        address: updatedUser.address
       });
     }
   } catch (error) {

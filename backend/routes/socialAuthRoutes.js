@@ -3,6 +3,15 @@ const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
+// Helper to split full name into first/last
+const splitName = (fullName) => {
+    if (!fullName) return { firstName: '', lastName: '' };
+    const parts = fullName.trim().split(' ');
+    const firstName = parts[0] || '';
+    const lastName = parts.slice(1).join(' ') || '';
+    return { firstName, lastName };
+};
+
 // Google OAuth Login/Register
 router.post('/google', async (req, res) => {
     try {
@@ -12,25 +21,38 @@ router.post('/google', async (req, res) => {
             return res.status(400).json({ message: 'Email is required' });
         }
 
+        const { firstName, lastName } = splitName(name);
+
         // Check if user exists
         let user = await User.findOne({ email });
 
         if (user) {
-            // User exists - update Google ID if not set
+            // User exists - update Google ID and profile data if not set
             if (!user.googleId) {
                 user.googleId = googleId;
-                user.profilePicture = user.profilePicture || picture;
-                await user.save();
             }
+            if (!user.profilePicture && picture) {
+                user.profilePicture = picture;
+            }
+            if (!user.firstName && firstName) {
+                user.firstName = firstName;
+            }
+            if (!user.lastName && lastName) {
+                user.lastName = lastName;
+            }
+            await user.save();
         } else {
             // Create new user
             user = new User({
                 name,
+                firstName,
+                lastName,
                 email,
                 googleId,
                 profilePicture: picture,
-                isVerified: true, // Google accounts are pre-verified
-                password: require('crypto').randomBytes(32).toString('hex'), // Random password for social users
+                authProvider: 'google',
+                isVerified: true,
+                password: require('crypto').randomBytes(32).toString('hex'),
             });
             await user.save();
         }
@@ -45,9 +67,14 @@ router.post('/google', async (req, res) => {
         res.json({
             _id: user._id,
             name: user.name,
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email,
+            phone: user.phone,
             role: user.role,
             profilePicture: user.profilePicture,
+            authProvider: user.authProvider || 'google',
+            address: user.address,
             token,
         });
     } catch (error) {
