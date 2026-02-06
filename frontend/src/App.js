@@ -25,6 +25,7 @@ import AdminOrders from './pages/admin/Orders';
 import AdminReviews from './pages/admin/Reviews';
 import AdminPayments from './pages/admin/Payments';
 import AdminUsers from './pages/admin/Users';
+import AdminSettings from './pages/admin/Settings';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import FAQs from './pages/FAQs';
@@ -163,6 +164,14 @@ const App = () => {
             element={
               <ProtectedRoute adminOnly>
                 <AdminUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminSettings />
               </ProtectedRoute>
             }
           />

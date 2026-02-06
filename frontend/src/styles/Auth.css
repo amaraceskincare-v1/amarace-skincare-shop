@@ -128,32 +128,48 @@
 /* Password toggle icon (eye) - positioned on right side */
 .password-toggle {
     position: absolute;
-    right: 15px;
+    right: 8px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    padding: 5px;
+    /* 44x44px touch target for mobile accessibility */
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2;
+    border-radius: 10px;
+    background: transparent;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .password-toggle svg {
     position: static;
     transform: none;
     left: auto;
-    opacity: 0.6;
-    transition: opacity 0.2s ease;
+    opacity: 0.5;
+    font-size: 1.2rem;
+    transition: opacity 0.2s ease, color 0.2s ease;
+    color: var(--text-color);
+}
+
+.password-toggle:hover {
+    background: rgba(255, 154, 158, 0.15);
 }
 
 .password-toggle:hover svg {
     opacity: 1;
+    color: var(--primary-color);
+}
+
+.password-toggle:active {
+    transform: translateY(-50%) scale(0.95);
 }
 
 .auth-input-group input {
     width: 100%;
-    padding: 14px 20px 14px 55px;
+    padding: 14px 55px 14px 55px;
     background: rgba(255, 255, 255, 0.4);
     border: 1px solid transparent;
     outline: none;
@@ -285,7 +301,7 @@
 .social-list {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 15px;
 }
 
 .social-list div {
@@ -305,6 +321,24 @@
 .social-list div:hover {
     background: rgba(255, 255, 255, 0.8);
     transform: translateY(-3px);
+}
+
+/* Labeled social buttons (with text) */
+.social-btn-labeled {
+    width: auto !important;
+    min-width: 130px;
+    padding: 0 20px;
+    gap: 10px;
+}
+
+.social-btn-labeled span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.social-btn-labeled svg {
+    flex-shrink: 0;
 }
 
 /* Responsive */

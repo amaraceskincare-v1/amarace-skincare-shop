@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import { toast } from 'react-toastify';
 import { FiUser, FiLock, FiMail, FiEye, FiEyeOff } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
@@ -14,6 +15,7 @@ const AuthPage = () => {
     const [clouds, setClouds] = useState([]);
 
     const { login, register } = useAuth();
+    const { settings } = useSettings();
     const navigate = useNavigate();
     const location = useLocation();
     const [searchParams] = useSearchParams();
@@ -93,7 +95,14 @@ const AuthPage = () => {
     };
 
     return (
-        <div className="auth-page-wrapper">
+        <div
+            className="auth-page-wrapper"
+            style={settings?.loginBackground ? {
+                background: `linear-gradient(135deg, rgba(253,252,251,0.85) 0%, rgba(226,209,195,0.85) 100%), url(${settings.loginBackground})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+            } : {}}
+        >
             {/* BACKGROUND SCENE */}
             <div className="scene-container">
                 <div className="clouds-container">
@@ -201,8 +210,14 @@ const AuthPage = () => {
 
                 <div className="social-divider"><span>Or continue with</span></div>
                 <div className="social-list">
-                    <div onClick={() => toast.info('Google Sign In coming soon!')}><FcGoogle /></div>
-                    <div onClick={() => toast.info('Facebook Sign In coming soon!')}><FaFacebook /></div>
+                    <div className="social-btn-labeled" onClick={() => toast.info('Google Sign In coming soon!')}>
+                        <FcGoogle />
+                        <span>Google</span>
+                    </div>
+                    <div className="social-btn-labeled" onClick={() => toast.info('Facebook Sign In coming soon!')}>
+                        <FaFacebook />
+                        <span>Facebook</span>
+                    </div>
                 </div>
             </div>
         </div>

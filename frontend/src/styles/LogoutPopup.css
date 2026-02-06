@@ -1,0 +1,171 @@
+/* Logout Popup Styles */
+
+.logout-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9998;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.logout-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    text-align: center;
+    min-width: 320px;
+    max-width: 400px;
+    animation: fadeInScale 0.3s ease-out;
+}
+
+.logout-popup-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    animation: scaleIn 0.4s ease-out 0.2s both;
+}
+
+.logout-popup-icon svg {
+    font-size: 32px;
+    color: white;
+}
+
+.logout-popup h3 {
+    color: #333;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.logout-popup p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.logout-popup-countdown {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.logout-popup-countdown .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e5e7eb;
+    border-top-color: #ff9a9e;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Fade out for closing */
+.logout-popup-overlay.closing {
+    animation: fadeOut 0.3s ease-in forwards;
+}
+
+.logout-popup.closing {
+    animation: fadeOutScale 0.3s ease-in forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeOutScale {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .logout-popup {
+        min-width: 280px;
+        padding: 30px 25px;
+        margin: 0 20px;
+        max-width: calc(100vw - 40px);
+    }
+
+    .logout-popup-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .logout-popup-icon svg {
+        font-size: 28px;
+    }
+
+    .logout-popup h3 {
+        font-size: 1.2rem;
+    }
+}

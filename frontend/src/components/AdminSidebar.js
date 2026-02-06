@@ -11,6 +11,7 @@ const AdminSidebar = () => {
         { path: '/admin/payments', name: 'GCash Payments', icon: <FiCreditCard /> },
         { path: '/admin/reviews', name: 'Reviews', icon: <FiStar /> },
         { path: '/admin/users', name: 'Users', icon: <FiUsers /> },
+        { path: '/admin/settings', name: 'Settings', icon: <FiSettings /> },
     ];
 
     return (

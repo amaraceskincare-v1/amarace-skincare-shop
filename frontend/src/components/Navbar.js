@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useSettings } from '../context/SettingsContext';
 import { optimizeImage } from '../utils/imageOptimizer';
+import LogoutPopup from './LogoutPopup';
 import '../styles/Navbar.css';
 
 const Navbar = () => {
@@ -15,6 +16,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [time, setTime] = useState(new Date());
   const [userDropdown, setUserDropdown] = useState(false);
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const userRef = useRef(null);
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
@@ -49,9 +51,14 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
     setMenuOpen(false);
     setUserDropdown(false);
+    setShowLogoutPopup(true);
+  };
+
+  const handleLogoutPopupClose = () => {
+    setShowLogoutPopup(false);
+    navigate('/');
   };
 
   const handleSearch = (e) => {
@@ -255,6 +262,9 @@ const Navbar = () => {
       </div>
 
       {menuOpen && <div className="mobile-overlay" onClick={() => setMenuOpen(false)} />}
+
+      {/* Logout Confirmation Popup */}
+      <LogoutPopup isOpen={showLogoutPopup} onClose={handleLogoutPopupClose} />
     </header>
   );
 };
