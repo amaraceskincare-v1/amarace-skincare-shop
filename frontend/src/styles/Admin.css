@@ -1012,10 +1012,18 @@
     overflow: hidden;
 }
 
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 .data-table-premium {
     width: 100%;
+    min-width: 1200px;
     border-collapse: separate;
     border-spacing: 0;
+    table-layout: auto;
 }
 
 .data-table-premium thead th {
@@ -1112,9 +1120,10 @@
 }
 
 .total-amount-premium {
-    font-weight: 600;
-    color: var(--primary);
-    font-size: 15px;
+    font-weight: 700;
+    color: #ef4444;
+    /* Premium Red */
+    font-size: 16px;
     white-space: nowrap;
 }
 
