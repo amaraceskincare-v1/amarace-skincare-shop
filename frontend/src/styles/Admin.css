@@ -156,18 +156,18 @@
 }
 
 .stat-icon-wrapper.products {
-    background: #e0f2fe;
-    color: #0369a1;
+    background: rgba(201, 165, 123, 0.1);
+    color: var(--secondary);
 }
 
 .stat-icon-wrapper.orders {
-    background: #dcfce7;
-    color: #15803d;
+    background: rgba(30, 41, 59, 0.05);
+    color: var(--primary);
 }
 
 .stat-icon-wrapper.revenue {
-    background: #fef9c3;
-    color: #a16207;
+    background: rgba(233, 30, 99, 0.05);
+    color: #e91e63;
 }
 
 .stat-info p {
@@ -287,8 +287,8 @@
 .settings-grid-v2 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-    margin-bottom: 40px;
+    gap: 30px;
+    margin-bottom: 50px;
 }
 
 .settings-card {
@@ -322,9 +322,10 @@
 }
 
 .settings-card-subtitle {
-    font-size: 12px;
-    color: #999;
-    font-weight: 400;
+    font-size: 11px;
+    color: #a1a1aa;
+    font-weight: 500;
+    text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 

@@ -324,9 +324,9 @@ const Dashboard = () => {
         )}
 
         <div className="admin-header">
-          <h1>Dashboard Overview</h1>
-          <p style={{ fontSize: '14px', color: '#666', fontWeight: 300, letterSpacing: '0.5px' }}>
-            Manage your site's media and content with elegance
+          <h1>Admin Command Center</h1>
+          <p className="subtitle-premium">
+            Configure your brand identity and monitor shop performance
           </p>
         </div>
 
