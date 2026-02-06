@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import { FiEye, FiEyeOff, FiLock, FiShield } from 'react-icons/fi';
 import '../styles/Auth.css';
 
 const ResetPassword = () => {
@@ -33,45 +34,64 @@ const ResetPassword = () => {
     };
 
     return (
-        <div className="auth-page">
-            <div className="auth-card">
-                <h1>Reset Password</h1>
-                <p>Enter your new password below</p>
+        <div className="auth-page-v2">
+            {/* Ambience Background Overlay */}
+            <div className="ecommerce-vibes-bg"></div>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group password-group">
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="New Password"
-                            minLength={6}
-                            required
-                        />
-                        <button
-                            type="button"
-                            className="password-toggle"
-                            onClick={() => setShowPassword(!showPassword)}
-                        >
-                            {showPassword ? <FiEyeOff /> : <FiEye />}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="auth-container-v2"
+            >
+                <div className="auth-card-v2">
+                    <div className="auth-header-v2">
+                        <h1>New Password</h1>
+                        <p>Secure your account with a strong new password</p>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="auth-form-v2">
+                        <div className="input-group-v2">
+                            <label>New Password</label>
+                            <div className="input-field">
+                                <FiLock />
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    minLength={6}
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    className="eye-toggle"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="input-group-v2">
+                            <label>Confirm New Password</label>
+                            <div className="input-field">
+                                <FiShield />
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <button type="submit" className="login-submit-btn" disabled={loading}>
+                            {loading ? 'Updating Password...' : 'Reset Password'}
                         </button>
-                    </div>
-
-                    <div className="form-group">
-                        <input
-                            type="password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            placeholder="Confirm New Password"
-                            required
-                        />
-                    </div>
-
-                    <button type="submit" className="auth-btn" disabled={loading}>
-                        {loading ? 'Resetting...' : 'Reset Password'}
-                    </button>
-                </form>
-            </div>
+                    </form>
+                </div>
+            </motion.div>
         </div>
     );
 };
