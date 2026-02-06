@@ -54,12 +54,6 @@ const allowedOrigins = [
   'http://127.0.0.1:3000',
   'https://amaracéskincare.store',
   'https://www.amaracéskincare.store',
-  'https://xn--amaracskincare-fva.store',
-  'https://www.xn--amaracskincare-fva.store',
-  'https://xn--amaracskincare-gkb.store',
-  'https://www.xn--amaracskincare-gkb.store',
-  'https://xn--amaracskincare-klb.store',
-  'https://www.xn--amaracskincare-klb.store',
   'https://xn--amaracskincare-gkb.store',
   'https://www.xn--amaracskincare-gkb.store',
   process.env.CLIENT_URL
