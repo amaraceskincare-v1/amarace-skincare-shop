@@ -360,6 +360,14 @@
     }
 }
 
+.social-btn-labeled.facebook {
+    border-color: #1877f2;
+}
+
+.social-btn-labeled.facebook:hover {
+    background: rgba(24, 119, 242, 0.1);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .auth-page-wrapper {

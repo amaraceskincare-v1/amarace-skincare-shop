@@ -83,4 +83,75 @@ router.post('/google', async (req, res) => {
     }
 });
 
+// Facebook OAuth Login/Register
+router.post('/facebook', async (req, res) => {
+    try {
+        const { email, name, picture, facebookId } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ message: 'Email is required' });
+        }
+
+        const { firstName, lastName } = splitName(name);
+
+        // Check if user exists
+        let user = await User.findOne({ email });
+
+        if (user) {
+            // User exists - update Facebook ID and profile data if not set
+            if (!user.facebookId) {
+                user.facebookId = facebookId;
+            }
+            if (!user.profilePicture && picture) {
+                user.profilePicture = picture;
+            }
+            if (!user.firstName && firstName) {
+                user.firstName = firstName;
+            }
+            if (!user.lastName && lastName) {
+                user.lastName = lastName;
+            }
+            await user.save();
+        } else {
+            // Create new user
+            user = new User({
+                name,
+                firstName,
+                lastName,
+                email,
+                facebookId,
+                profilePicture: picture,
+                authProvider: 'facebook',
+                isVerified: true,
+                password: require('crypto').randomBytes(32).toString('hex'),
+            });
+            await user.save();
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.json({
+            _id: user._id,
+            name: user.name,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            profilePicture: user.profilePicture,
+            authProvider: user.authProvider || 'facebook',
+            address: user.address,
+            token,
+        });
+    } catch (error) {
+        console.error('Facebook auth error:', error);
+        res.status(500).json({ message: 'Facebook authentication failed' });
+    }
+});
+
 module.exports = router;

@@ -14,6 +14,7 @@ const AuthPage = () => {
     const [isSignIn, setIsSignIn] = useState(true);
     const [loading, setLoading] = useState(false);
     const [socialLoading, setSocialLoading] = useState(false);
+    const [facebookLoading, setFacebookLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [clouds, setClouds] = useState([]);
 
@@ -53,6 +54,27 @@ const AuthPage = () => {
             opacity: Math.random() * 0.4 + 0.3
         }));
         setClouds(newClouds);
+    }, []);
+
+    // Initialize Facebook SDK
+    useEffect(() => {
+        window.fbAsyncInit = function () {
+            window.FB.init({
+                appId: '1128721929252065',
+                cookie: true,
+                xfbml: true,
+                version: 'v18.0'
+            });
+        };
+
+        // Load Facebook SDK
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
     }, []);
 
     const handleLogin = async (e) => {
@@ -134,6 +156,53 @@ const AuthPage = () => {
         onSuccess: handleGoogleSuccess,
         onError: () => toast.error('Google login failed'),
     });
+
+    // Facebook Login Handler
+    const handleFacebookLogin = () => {
+        if (!window.FB) {
+            toast.error('Facebook SDK not loaded. Please try again.');
+            return;
+        }
+
+        setFacebookLoading(true);
+        window.FB.login(function (response) {
+            if (response.authResponse) {
+                // Get user info from Facebook
+                window.FB.api('/me', { fields: 'id,name,email,picture.type(large)' }, async function (userInfo) {
+                    if (!userInfo.email) {
+                        toast.error('Email permission is required. Please try again.');
+                        setFacebookLoading(false);
+                        return;
+                    }
+
+                    try {
+                        // Send to our backend
+                        const { data } = await api.post('/social-auth/facebook', {
+                            email: userInfo.email,
+                            name: userInfo.name,
+                            picture: userInfo.picture?.data?.url,
+                            facebookId: userInfo.id
+                        });
+
+                        // Store auth data
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data));
+
+                        toast.success(`Welcome, ${data.name}!`);
+                        window.location.href = redirect;
+                    } catch (error) {
+                        console.error('Facebook login error:', error);
+                        toast.error(error.response?.data?.message || 'Facebook login failed');
+                    } finally {
+                        setFacebookLoading(false);
+                    }
+                });
+            } else {
+                setFacebookLoading(false);
+                toast.error('Facebook login cancelled');
+            }
+        }, { scope: 'public_profile,email' });
+    };
 
     return (
         <div
@@ -258,9 +327,12 @@ const AuthPage = () => {
                         {socialLoading ? <FiLoader className="spin" /> : <FcGoogle />}
                         <span>{socialLoading ? 'Signing in...' : 'Google'}</span>
                     </div>
-                    <div className="social-btn-labeled" onClick={() => toast.info('Facebook Sign In coming soon!')}>
-                        <FaFacebook />
-                        <span>Facebook</span>
+                    <div
+                        className={`social-btn-labeled facebook ${facebookLoading ? 'loading' : ''}`}
+                        onClick={() => !facebookLoading && handleFacebookLogin()}
+                    >
+                        {facebookLoading ? <FiLoader className="spin" /> : <FaFacebook />}
+                        <span>{facebookLoading ? 'Signing in...' : 'Facebook'}</span>
                     </div>
                 </div>
             </div>
