@@ -1053,7 +1053,7 @@
 /* Items */
 .data-table-premium th:nth-child(3),
 .data-table-premium td:nth-child(3) {
-    width: 200px;
+    width: 160px;
     /* Reduced from 280px to fix gap */
 }
 
