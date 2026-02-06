@@ -8,22 +8,16 @@ import '../../styles/Admin.css';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
-  const [expandedCustomer, setExpandedCustomer] = useState(null);
-  const [trackingInputs, setTrackingInputs] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // Merged Payment Verification States
-  const [selectedOrderForPayment, setSelectedOrderForPayment] = useState(null);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [zoom, setZoom] = useState(1);
-  const [rotation, setRotation] = useState(0);
-  const [verificationNotes, setVerificationNotes] = useState('');
-  const [checklist, setChecklist] = useState({
-    amountMatch: false,
-    refVisible: false,
-    screenshotClear: false,
-    noTampering: false
-  });
+  // Modal States
+  const [showCustomerModal, setShowCustomerModal] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [showProofModal, setShowProofModal] = useState(false);
+  const [selectedProof, setSelectedProof] = useState(null);
+  const [selectedOrderForAction, setSelectedOrderForAction] = useState(null);
+
+  const [trackingInputs, setTrackingInputs] = useState({});
 
   useEffect(() => { fetchOrders(); }, []);
 
@@ -52,9 +46,8 @@ const AdminOrders = () => {
 
   const saveTracking = async (orderId) => {
     const trackingNumber = trackingInputs[orderId] || '';
-    const isValid = /^[A-Za-z0-9]{10,20}$/.test(trackingNumber);
-    if (!isValid) {
-      toast.error('Invalid tracking number. Must be 10-20 alphanumeric characters.');
+    if (!trackingNumber) {
+      toast.error('Please enter a tracking number.');
       return;
     }
 
@@ -97,210 +90,193 @@ const AdminOrders = () => {
     });
   };
 
-  const canEditTracking = (status) => ['shipped', 'delivered'].includes(status);
-
-  // Payment Verification Logic
-  const handleOpenPaymentModal = (order) => {
-    setSelectedOrderForPayment(order);
-    setVerificationNotes('');
-    setChecklist({
-      amountMatch: false,
-      refVisible: false,
-      screenshotClear: false,
-      noTampering: false
+  const handleOpenCustomerDetails = (order) => {
+    setSelectedCustomer({
+      name: order.contactDetails?.fullName || order.user?.name || 'N/A',
+      email: order.contactDetails?.email || order.user?.email || 'N/A',
+      phone: order.contactDetails?.phone || order.shippingAddress?.phone || 'N/A',
+      address: `${order.shippingAddress?.street || ''}, ${order.shippingAddress?.city || ''}, ${order.shippingAddress?.province || ''}, ${order.shippingAddress?.country || ''}`.replace(/^, |, $/, ''),
+      date: formatDate(order.createdAt)
     });
-    setZoom(1);
-    setRotation(0);
-    setShowPaymentModal(true);
+    setShowCustomerModal(true);
   };
 
-  const handleApprovePayment = async () => {
-    if (!window.confirm("Approve Payment? This will mark the order as 'processing'.")) return;
+  const handleOpenProof = (imageUrl, order) => {
+    setSelectedProof(imageUrl);
+    setSelectedOrderForAction(order);
+    setShowProofModal(true);
+  };
+
+  const handleApprovePaymentFromProof = async () => {
+    if (!selectedOrderForAction) return;
     try {
-      await api.put(`/orders/${selectedOrderForPayment._id}/status`, {
-        status: 'processing',
-        verificationNotes
-      });
-      toast.success('Payment approved!');
-      setShowPaymentModal(false);
+      await api.put(`/orders/${selectedOrderForAction._id}/status`, { status: 'processing' });
+      toast.success('Payment approved and order move to Processing');
+      setShowProofModal(false);
       fetchOrders();
     } catch (error) {
-      toast.error('Approval failed');
+      toast.error('Failed to approve payment');
     }
   };
 
   return (
-    <div className="admin-layout">
+    <div className="admin-wrapper">
       <AdminSidebar />
 
-      <main className="admin-main">
-        <div className="admin-header-v2">
-          <h1>Master Order Management</h1>
-          <p>Processing & Verified GCash transactions in one view</p>
+      <main className="main-content">
+        {/* Centered Page Header */}
+        <div className="page-header">
+          <h1 className="page-title">Master Order Management</h1>
+          <p className="page-subtitle">Processing & Verified GCash transactions in one view</p>
         </div>
 
-        <div className="orders-table-container-premium">
-          <table className="admin-table-premium">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Customer Details</th>
-                <th>Items</th>
-                <th>Total</th>
-                <th>Payment & Proof</th>
-                <th>Status</th>
-                <th>Tracking</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order, index) => (
-                <tr key={order._id}>
-                  <td className="id-cell">#{formatOrderId(order.createdAt)}</td>
-
-                  <td className="customer-cell-premium">
-                    <div className="cust-wrap">
-                      <span className="cust-name">{order.user?.name || 'Guest'}</span>
-                      <button
-                        className="cust-info-btn"
-                        onClick={() => setExpandedCustomer(expandedCustomer === order._id ? null : order._id)}
-                      >
-                        {expandedCustomer === order._id ? <FiX /> : <FiInfo />}
-                      </button>
-                    </div>
-
-                    <AnimatePresence>
-                      {expandedCustomer === order._id && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          className="customer-details-popover"
-                        >
-                          <div className="popover-header">Customer Profile</div>
-                          <div className="popover-row"><span>Email:</span> {order.user?.email || 'N/A'}</div>
-                          <div className="popover-row"><span>Phone:</span> {order.shippingAddress?.phone || 'N/A'}</div>
-                          <div className="popover-row address">
-                            <span>Address:</span>
-                            <p>{order.shippingAddress?.street}, {order.shippingAddress?.city}, {order.shippingAddress?.province}</p>
-                          </div>
-                          <div className="popover-footer">Joined: {new Date(order.user?.createdAt).toLocaleDateString()}</div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </td>
-
-                  <td className="items-list-cell">
-                    {order.items?.slice(0, 2).map((item, i) => (
-                      <div key={i} className="mini-item">
-                        {item.product?.name} (x{item.quantity})
-                      </div>
-                    ))}
-                    {order.items?.length > 2 && <small>+{order.items.length - 2} more...</small>}
-                  </td>
-
-                  <td className="total-cell-premium">₱{order.total.toFixed(2)}</td>
-
-                  <td className="payment-cell-v2">
-                    <div className="pay-method">{order.paymentMethod?.toUpperCase()}</div>
-                    {order.paymentProof ? (
-                      <button onClick={() => handleOpenPaymentModal(order)} className="verify-pay-btn">
-                        <FiEye /> Verify Proof
-                      </button>
-                    ) : (
-                      <span className="no-proof">No Proof Attached</span>
-                    )}
-                  </td>
-
-                  <td>
-                    <span className={`status-pill-premium ${order.status}`}>
-                      {order.status}
-                    </span>
-                  </td>
-
-                  <td className="tracking-cell-premium">
-                    {canEditTracking(order.status) ? (
-                      order.trackingNumber ? (
-                        <div className="track-saved">
-                          <span>{order.trackingNumber}</span>
-                          <FiExternalLink />
-                        </div>
-                      ) : (
-                        <div className="track-input-wrap">
-                          <input
-                            placeholder="J&T #"
-                            onChange={(e) => setTrackingInputs({ ...trackingInputs, [order._id]: e.target.value.toUpperCase() })}
-                            value={trackingInputs[order._id] || ''}
-                          />
-                          <button onClick={() => saveTracking(order._id)}><FiSave /></button>
-                        </div>
-                      )
-                    ) : <span className="na">—</span>}
-                  </td>
-
-                  <td className="actions-cell-premium">
-                    <select value={order.status} onChange={(e) => updateStatus(order._id, e.target.value)}>
-                      <option value="pending">Pending</option>
-                      <option value="processing">Processing</option>
-                      <option value="shipped">Shipped</option>
-                      <option value="delivered">Delivered</option>
-                      <option value="cancelled">Cancelled</option>
-                    </select>
-                    <button onClick={() => deleteOrder(order._id)} className="del-btn-v2"><FiTrash2 /></button>
-                  </td>
+        {/* Table Card */}
+        <div className="table-card">
+          <div className="table-wrapper">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer Details</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th>Payment & Proof</th>
+                  <th>Status</th>
+                  <th>Tracking</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {orders.map((order) => (
+                  <tr key={order._id}>
+                    <td>
+                      <div className="order-id">#{formatOrderId(order.createdAt)}</div>
+                    </td>
+                    <td className="customer-cell">
+                      <div className="customer-name">
+                        {order.contactDetails?.fullName || order.user?.name || 'Guest'}
+                        <span className="info-icon" onClick={() => handleOpenCustomerDetails(order)}>i</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="items-column">
+                        {order.items?.map((item, i) => (
+                          <div key={i} className="product-item">
+                            <img
+                              src={item.product?.images?.[0] || 'https://via.placeholder.com/48?text=No+Img'}
+                              alt={item.product?.name}
+                              className="product-image"
+                            />
+                            <div className="product-info">
+                              <div className="product-name">{item.product?.name || 'Deleted Product'}</div>
+                              <div className="product-quantity">(x{item.quantity})</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="total-amount">₱{order.total.toFixed(2)}</div>
+                    </td>
+                    <td className="payment-cell">
+                      <div className="payment-method">{order.paymentMethod?.toUpperCase()}</div>
+                      {order.paymentProof ? (
+                        <button className="verify-proof-btn" onClick={() => handleOpenProof(order.paymentProof, order)}>Verify Proof</button>
+                      ) : (
+                        <span style={{ fontSize: '11px', color: '#999' }}>No Proof</span>
+                      )}
+                    </td>
+                    <td>
+                      <span className={`status-badge status-${order.status}`}>
+                        {order.status}
+                      </span>
+                    </td>
+                    <td>
+                      {order.trackingNumber ? (
+                        <div className="tracking-display">{order.trackingNumber}</div>
+                      ) : (
+                        <div className="tracking-input-wrapper">
+                          <input
+                            type="text"
+                            className="tracking-input"
+                            placeholder="Enter J&T #"
+                            value={trackingInputs[order._id] || ''}
+                            onChange={(e) => setTrackingInputs({ ...trackingInputs, [order._id]: e.target.value.toUpperCase() })}
+                          />
+                          <button className="save-tracking-btn" onClick={() => saveTracking(order._id)}>💾</button>
+                        </div>
+                      )}
+                    </td>
+                    <td>
+                      <div className="action-cell">
+                        <select
+                          className="action-select"
+                          value={order.status}
+                          onChange={(e) => updateStatus(order._id, e.target.value)}
+                        >
+                          <option value="pending">Pending</option>
+                          <option value="processing">Processing</option>
+                          <option value="shipped">Shipped</option>
+                          <option value="delivered">Delivered</option>
+                          <option value="cancelled">Cancelled</option>
+                        </select>
+                        <button className="delete-btn" onClick={() => deleteOrder(order._id)}>🗑️</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        {/* Integrated Payment Modal */}
-        {showPaymentModal && selectedOrderForPayment && (
-          <div className="payment-verify-modal-overlay">
-            <div className="payment-verify-modal">
-              <div className="modal-header-v2">
-                <h3>Payment Verification</h3>
-                <button onClick={() => setShowPaymentModal(false)}><FiX /></button>
+        {/* Customer Details Modal */}
+        {showCustomerModal && selectedCustomer && (
+          <div className="modal-overlay show" onClick={() => setShowCustomerModal(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2 className="modal-title">Customer Details</h2>
+                <button className="modal-close" onClick={() => setShowCustomerModal(false)}>×</button>
               </div>
-              <div className="modal-content-v2">
-                <div className="proof-viewer-v2">
-                  <div className="img-container" style={{ transform: `scale(${zoom}) rotate(${rotation}deg)` }}>
-                    <img src={selectedOrderForPayment.paymentProof} alt="GCash Proof" />
-                  </div>
-                  <div className="controls-v2">
-                    <button onClick={() => setZoom(z => Math.min(z + 0.2, 3))}><FiZoomIn /></button>
-                    <button onClick={() => setZoom(z => Math.max(z - 0.2, 0.5))}><FiZoomOut /></button>
-                    <button onClick={() => setRotation(r => r + 90)}><FiRotateCw /></button>
-                    <a href={selectedOrderForPayment.paymentProof} download><FiDownload /></a>
-                  </div>
+              <div className="modal-body">
+                <div className="detail-row">
+                  <div className="detail-label">Full Name</div>
+                  <div className="detail-value">{selectedCustomer.name}</div>
                 </div>
-                <div className="verification-sidebar-v2">
-                  <div className="info-block-v2">
-                    <label>Amount Due</label>
-                    <div className="amount-label">₱{selectedOrderForPayment.total.toFixed(2)}</div>
-                  </div>
-                  <div className="info-block-v2">
-                    <label>GCash Reference</label>
-                    <div className="ref-label">{selectedOrderForPayment.gcashRef || 'NOT PROVIDED'}</div>
-                  </div>
-                  <div className="checklist-v2">
-                    {Object.keys(checklist).map(key => (
-                      <label key={key} className="check-item">
-                        <input type="checkbox" checked={checklist[key]} onChange={() => setChecklist({ ...checklist, [key]: !checklist[key] })} />
-                        {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                      </label>
-                    ))}
-                  </div>
-                  <textarea
-                    placeholder="Add verification notes..."
-                    value={verificationNotes}
-                    onChange={(e) => setVerificationNotes(e.target.value)}
-                  />
-                  <div className="modal-actions-v2">
-                    <button className="approve-btn-v2" onClick={handleApprovePayment}>Approve Payment</button>
-                    <button className="reject-btn-v2" onClick={() => setShowPaymentModal(false)}>Cancel</button>
-                  </div>
+                <div className="detail-divider"></div>
+                <div className="detail-row">
+                  <div className="detail-label">Email Address</div>
+                  <div className="detail-value">{selectedCustomer.email}</div>
                 </div>
+                <div className="detail-divider"></div>
+                <div className="detail-row">
+                  <div className="detail-label">Phone Number</div>
+                  <div className="detail-value">{selectedCustomer.phone}</div>
+                </div>
+                <div className="detail-divider"></div>
+                <div className="detail-row">
+                  <div className="detail-label">Shipping Address</div>
+                  <div className="detail-value">{selectedCustomer.address}</div>
+                </div>
+                <div className="detail-divider"></div>
+                <div className="detail-row">
+                  <div className="detail-label">Order Date</div>
+                  <div className="detail-value">{selectedCustomer.date}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Proof Image Modal */}
+        {showProofModal && selectedProof && (
+          <div className="proof-modal show" onClick={() => setShowProofModal(false)}>
+            <div className="proof-image-container" onClick={(e) => e.stopPropagation()}>
+              <button className="proof-close" onClick={() => setShowProofModal(false)}>×</button>
+              <img src={selectedProof} alt="Payment Proof" className="proof-image-large" />
+              <div className="proof-actions-v2">
+                <button className="proof-approve-btn" onClick={handleApprovePaymentFromProof}>Approve & Process</button>
+                <button className="proof-reject-btn" onClick={() => setShowProofModal(false)}>Close View</button>
               </div>
             </div>
           </div>

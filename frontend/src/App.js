@@ -23,7 +23,6 @@ import AdminDashboard from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/Products';
 import AdminOrders from './pages/admin/Orders';
 import AdminReviews from './pages/admin/Reviews';
-import AdminPayments from './pages/admin/Payments';
 import AdminUsers from './pages/admin/Users';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -149,14 +148,6 @@ const App = () => {
             element={
               <ProtectedRoute adminOnly>
                 <AdminReviews />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/payments"
-            element={
-              <ProtectedRoute adminOnly>
-                <AdminPayments />
               </ProtectedRoute>
             }
           />
