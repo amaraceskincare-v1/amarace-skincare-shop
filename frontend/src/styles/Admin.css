@@ -5,6 +5,9 @@
     --light: #f8f6f3;
     --white: #ffffff;
     --border: #e8e4df;
+    --dark: #121212;
+    --gray: #e2e8f0;
+    --radius: 12px;
     --shadow: rgba(0, 0, 0, 0.08);
     --shadow-hover: rgba(0, 0, 0, 0.15);
     --gradient: linear-gradient(135deg, #c9a57b 0%, #a88f6f 100%);
@@ -648,68 +651,7 @@
     transform: translateY(1px);
 }
 
-.media-preview-mini {
-    border: 1px dashed #ddd;
-    background: #fdfdfd;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    height: 140px;
-    /* Default height for larger previews */
-}
-
-/* Status and Success Overlays */
-.admin-status-overlay,
-.admin-success-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(4px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.success-box-transparent {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 2rem 4rem;
-    border-radius: 16px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #e91e63;
-    /* AmaraCe Primary Color */
-    letter-spacing: 0.05em;
-    text-align: center;
-}
-
-.loading-spinner-v2 {
-    width: 50px;
-    height: 50px;
-    border: 3px solid rgba(233, 30, 99, 0.1);
-    border-top: 3px solid #e91e63;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
+/* Fulfillment Box */
 .admin-fulfillment-box {
     margin-top: 10px;
     padding: 8px;
