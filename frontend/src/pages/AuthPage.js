@@ -3,14 +3,17 @@ import { useNavigate, useLocation, useSearchParams, Link } from 'react-router-do
 import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
 import { toast } from 'react-toastify';
-import { FiUser, FiLock, FiMail, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiUser, FiLock, FiMail, FiEye, FiEyeOff, FiLoader } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook } from 'react-icons/fa';
+import { useGoogleLogin } from '@react-oauth/google';
+import api from '../utils/api';
 import '../styles/Auth.css';
 
 const AuthPage = () => {
     const [isSignIn, setIsSignIn] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [socialLoading, setSocialLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [clouds, setClouds] = useState([]);
 
@@ -93,6 +96,44 @@ const AuthPage = () => {
         setIsSignIn(!isSignIn);
         window.history.pushState({}, '', isSignIn ? '/register' : '/login');
     };
+
+    // Google Sign-In Handler
+    const handleGoogleSuccess = async (tokenResponse) => {
+        setSocialLoading(true);
+        try {
+            // Get user info from Google
+            const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+            });
+            const userInfo = await userInfoResponse.json();
+
+            // Send to our backend for verification/registration
+            const { data } = await api.post('/social-auth/google', {
+                credential: tokenResponse.access_token,
+                email: userInfo.email,
+                name: userInfo.name,
+                picture: userInfo.picture,
+                googleId: userInfo.sub
+            });
+
+            // Store auth data
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data));
+
+            toast.success(`Welcome, ${data.name}!`);
+            window.location.href = redirect;
+        } catch (error) {
+            console.error('Google login error:', error);
+            toast.error(error.response?.data?.message || 'Google login failed');
+        } finally {
+            setSocialLoading(false);
+        }
+    };
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: handleGoogleSuccess,
+        onError: () => toast.error('Google login failed'),
+    });
 
     return (
         <div
@@ -210,9 +251,12 @@ const AuthPage = () => {
 
                 <div className="social-divider"><span>Or continue with</span></div>
                 <div className="social-list">
-                    <div className="social-btn-labeled" onClick={() => toast.info('Google Sign In coming soon!')}>
-                        <FcGoogle />
-                        <span>Google</span>
+                    <div
+                        className={`social-btn-labeled ${socialLoading ? 'loading' : ''}`}
+                        onClick={() => !socialLoading && googleLogin()}
+                    >
+                        {socialLoading ? <FiLoader className="spin" /> : <FcGoogle />}
+                        <span>{socialLoading ? 'Signing in...' : 'Google'}</span>
                     </div>
                     <div className="social-btn-labeled" onClick={() => toast.info('Facebook Sign In coming soon!')}>
                         <FaFacebook />

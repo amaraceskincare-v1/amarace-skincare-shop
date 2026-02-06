@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true, minlength: 6 },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   isVerified: { type: Boolean, default: false },
+  googleId: { type: String, sparse: true },
+  profilePicture: { type: String },
   otp: String,
   otpExpire: Date,
   resetPasswordToken: String,
