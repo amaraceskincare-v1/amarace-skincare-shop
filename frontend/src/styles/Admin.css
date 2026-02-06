@@ -978,8 +978,9 @@
    ========================================= */
 
 .admin-main.orders-page {
-    padding: 40px;
+    padding: 60px 40px;
     background: var(--light);
+    min-height: 100vh;
 }
 
 .page-header-centered {
@@ -999,9 +1000,10 @@
 }
 
 .page-subtitle-premium {
-    font-size: 15px;
+    font-size: 16px;
     color: #666;
     font-weight: 400;
+    margin-top: 8px;
 }
 
 .table-card-premium {
@@ -1012,96 +1014,93 @@
     overflow: hidden;
 }
 
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
 .data-table-premium {
     width: 100%;
-    min-width: 1100px;
     border-collapse: separate;
     border-spacing: 0;
-    table-layout: fixed;
 }
 
 .data-table-premium thead th {
     text-align: left;
     padding: 20px 16px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #666;
+    font-size: 11px;
+    font-weight: 700;
+    color: #444;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
     background: #fafaf9;
     border-bottom: 2px solid var(--border);
-    white-space: nowrap;
-}
-
-/* Vertical Alignment & Column Widths */
-.data-table-premium th:nth-child(1) {
-    width: 10%;
-}
-
-/* Order ID */
-.data-table-premium th:nth-child(2) {
-    width: 12%;
-}
-
-/* Customer */
-.data-table-premium th:nth-child(3) {
-    width: 26%;
-}
-
-/* Items */
-.data-table-premium th:nth-child(4) {
-    width: 10%;
-}
-
-/* Total */
-.data-table-premium th:nth-child(5) {
-    width: 12%;
-}
-
-/* Payment */
-.data-table-premium th:nth-child(6) {
-    width: 8%;
-}
-
-/* Status */
-.data-table-premium th:nth-child(7) {
-    width: 14%;
-}
-
-/* Tracking */
-.data-table-premium th:nth-child(8) {
-    width: 8%;
-}
-
-/* Action */
-
-.data-table-premium th:nth-child(n+4),
-.data-table-premium td:nth-child(n+4) {
-    text-align: center;
+    white-space: normal;
+    /* Allow minor wrapping if needed */
+    line-height: 1.4;
 }
 
 .data-table-premium tbody td {
-    padding: 24px 16px;
+    padding: 20px 16px;
     border-bottom: 1px solid var(--border);
     font-size: 14px;
     vertical-align: middle;
 }
+
+/* Specific Column Widths to prevent collisions */
+.data-table-premium th:nth-child(1),
+.data-table-premium td:nth-child(1) {
+    width: 140px;
+}
+
+/* Order ID */
+.data-table-premium th:nth-child(2),
+.data-table-premium td:nth-child(2) {
+    width: 180px;
+}
+
+/* Customer Details */
+.data-table-premium th:nth-child(3),
+.data-table-premium td:nth-child(3) {
+    min-width: 220px;
+}
+
+/* Items */
+.data-table-premium th:nth-child(4),
+.data-table-premium td:nth-child(4) {
+    width: 100px;
+}
+
+/* Total */
+.data-table-premium th:nth-child(5),
+.data-table-premium td:nth-child(5) {
+    width: 150px;
+}
+
+/* Payment & Proof */
+.data-table-premium th:nth-child(6),
+.data-table-premium td:nth-child(6) {
+    width: 120px;
+}
+
+/* Status */
+.data-table-premium th:nth-child(7),
+.data-table-premium td:nth-child(7) {
+    width: 220px;
+}
+
+/* Tracking */
+.data-table-premium th:nth-child(8),
+.data-table-premium td:nth-child(8) {
+    width: 180px;
+}
+
+/* Action */
 
 .data-table-premium tbody tr:hover {
     background: #fafaf9;
 }
 
 .order-id-premium {
-    font-weight: 600;
-    color: var(--primary);
-    font-family: 'Courier New', monospace;
-    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary) !important;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
     white-space: nowrap;
 }
 
@@ -1138,6 +1137,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    white-space: nowrap;
 }
 
 .product-image-premium {
@@ -1166,10 +1166,10 @@
 }
 
 .total-amount-premium {
-    font-weight: 700;
-    color: #ef4444;
-    /* Premium Red */
-    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 15px;
+    white-space: nowrap;
 }
 
 .payment-method-premium {

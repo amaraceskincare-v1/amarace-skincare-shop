@@ -69,7 +69,7 @@ const App = () => {
     <div className="app">
       <ScrollToTop />
       <LoadingScreen isLoading={isLoading} />
-      <Navbar />
+      {!location.pathname.startsWith('/admin') && <Navbar />}
       <CartDrawer isOpen={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
 
       <main className="main-content">
