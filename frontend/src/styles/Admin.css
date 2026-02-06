@@ -1086,7 +1086,7 @@
 /* Action */
 .data-table-premium th:nth-child(8),
 .data-table-premium td:nth-child(8) {
-    width: 180px;
+    width: 200px;
     /* Widened to ensure Delete button is visible */
 }
 
