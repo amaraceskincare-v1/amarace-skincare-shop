@@ -1010,6 +1010,8 @@
 
 .data-table-premium {
     width: 100%;
+    table-layout: fixed;
+    /* Lock columns to fixed widths */
     border-collapse: separate;
     border-spacing: 0;
 }
@@ -1036,25 +1038,26 @@
     vertical-align: middle;
 }
 
-/* Specific Column Widths to prevent collisions */
+/* Specific Column Widths to prevent collisions and gaps */
 .data-table-premium th:nth-child(1),
 .data-table-premium td:nth-child(1) {
-    width: 140px;
+    width: 130px;
 }
 
 /* Order ID */
 .data-table-premium th:nth-child(2),
 .data-table-premium td:nth-child(2) {
-    width: 180px;
-}
-
-/* Customer Details */
-.data-table-premium th:nth-child(3),
-.data-table-premium td:nth-child(3) {
-    min-width: 220px;
+    width: 170px;
 }
 
 /* Items */
+.data-table-premium th:nth-child(3),
+.data-table-premium td:nth-child(3) {
+    width: 200px;
+    /* Reduced from 280px to fix gap */
+}
+
+/* Total */
 .data-table-premium th:nth-child(4),
 .data-table-premium td:nth-child(4) {
     width: 100px;
@@ -1063,7 +1066,7 @@
 /* Total */
 .data-table-premium th:nth-child(5),
 .data-table-premium td:nth-child(5) {
-    width: 150px;
+    width: 160px;
 }
 
 /* Payment & Proof */
@@ -1075,14 +1078,16 @@
 /* Status */
 .data-table-premium th:nth-child(7),
 .data-table-premium td:nth-child(7) {
-    width: 220px;
+    width: 200px;
 }
 
 /* Tracking */
 .data-table-premium th:nth-child(8),
 .data-table-premium td:nth-child(8) {
-    width: 180px;
+    width: 160px;
 }
+
+/* Action */
 
 /* Action */
 .data-table-premium tbody tr:hover {
@@ -1151,6 +1156,11 @@
     font-weight: 500;
     color: var(--primary);
     font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+    /* Prevent long names from pushing Total away */
 }
 
 .product-quantity-premium {
