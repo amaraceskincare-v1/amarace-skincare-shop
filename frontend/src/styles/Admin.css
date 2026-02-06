@@ -1064,10 +1064,11 @@
     min-width: 180px;
 }
 
-padding: 24px 16px;
-border-bottom: 1px solid var(--border);
-font-size: 14px;
-vertical-align: middle;
+.data-table-premium tbody td {
+    padding: 24px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    vertical-align: middle;
 }
 
 .data-table-premium tbody tr:hover {
