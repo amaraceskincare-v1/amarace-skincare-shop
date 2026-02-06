@@ -60,6 +60,8 @@ const allowedOrigins = [
   'https://www.xn--amaracskincare-gkb.store',
   'https://xn--amaracskincare-klb.store',
   'https://www.xn--amaracskincare-klb.store',
+  'https://xn--amaracskincare-gkb.store',
+  'https://www.xn--amaracskincare-gkb.store',
   process.env.CLIENT_URL
 ].filter(Boolean);
 
