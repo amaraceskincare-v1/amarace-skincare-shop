@@ -108,6 +108,14 @@
     margin-bottom: 8px;
 }
 
+.subtitle-premium {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
 .section-title-premium {
     font-family: 'Cormorant Garamond', serif;
     font-size: 24px;
