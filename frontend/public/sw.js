@@ -16,22 +16,47 @@ async function fetchConfig() {
 // Helper to check if a URL matches patterns
 function matchesPattern(url, patterns) {
   if (!patterns) return false;
+  const urlObj = new URL(url, self.location.origin);
+  const path = urlObj.pathname;
+
   return patterns.some(pattern => {
-    // Basic glob-like matching
-    const regex = new RegExp('^' + pattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*') + '$');
-    const path = new URL(url, self.location.origin).pathname;
-    return regex.test(path) || url.includes(pattern);
+    // Check if it's a full URL (CDN resources)
+    if (pattern.startsWith('http')) {
+      return url.startsWith(pattern.replace(/\*\*/g, ''));
+    }
+
+    // Basic glob-like matching for internal paths
+    const regexSource = pattern
+      .replace(/[.+^${}()|[\]\\]/g, '\\$&') // Escape regex special chars
+      .replace(/\\\*\\\*/g, '.*')           // ** -> .*
+      .replace(/\\\*/g, '[^/]*');           // *  -> [^/]*
+
+    try {
+      const regex = new RegExp('^' + regexSource + '$');
+      return regex.test(path) || path === pattern;
+    } catch (e) {
+      return path.includes(pattern.replace(/\*/g, ''));
+    }
   });
 }
 
 // Lifecycle: Install
 self.addEventListener('install', event => {
+  console.log('[SW] Install event started');
   event.waitUntil(
     (async () => {
       const config = await fetchConfig();
       if (config && config.precache) {
+        console.log('[SW] Precaching files:', config.precache);
         const cache = await caches.open('precache-v1');
-        await cache.addAll(config.precache);
+        // Cache files one by one to avoid one failure breaking everything
+        for (const url of config.precache) {
+          try {
+            await cache.add(url);
+          } catch (e) {
+            console.warn(`[SW] Failed to cache ${url}:`, e);
+          }
+        }
       }
       if (config && config.skipWaiting) {
         self.skipWaiting();
@@ -42,8 +67,10 @@ self.addEventListener('install', event => {
 
 // Lifecycle: Activate
 self.addEventListener('activate', event => {
+  console.log('[SW] Activate event started');
   event.waitUntil(
     (async () => {
+      const config = await fetchConfig() || config;
       if (config && config.cleanupOnActivate) {
         const keys = await caches.keys();
         await Promise.all(
@@ -61,6 +88,9 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = request.url;
+
+  // Skip browser extensions and other non-http(s) requests
+  if (!url.startsWith('http')) return;
 
   if (!config) {
     event.respondWith(
@@ -84,17 +114,19 @@ async function handleRequest(request) {
   let cacheName = 'default-cache';
 
   // Check runtime caching first
-  for (const [key, settings] of Object.entries(config.runtimeCaching || {})) {
-    if (matchesPattern(url, settings.patterns)) {
-      strategy = settings.strategy;
-      cacheName = settings.cacheName;
-      break;
+  if (config.runtimeCaching) {
+    for (const [key, settings] of Object.entries(config.runtimeCaching)) {
+      if (matchesPattern(url, settings.patterns)) {
+        strategy = settings.strategy;
+        cacheName = settings.cacheName;
+        break;
+      }
     }
   }
 
   // Check defined strategies
-  if (!strategy) {
-    for (const [key, settings] of Object.entries(config.cacheStrategies || {})) {
+  if (!strategy && config.cacheStrategies) {
+    for (const [key, settings] of Object.entries(config.cacheStrategies)) {
       if (matchesPattern(url, settings.patterns)) {
         strategy = settings.strategy;
         cacheName = settings.cacheName;
@@ -109,6 +141,11 @@ async function handleRequest(request) {
     return networkFirst(request, cacheName);
   }
 
+  // Check precache as fallback
+  const precache = await caches.open('precache-v1');
+  const precachedResponse = await precache.match(request);
+  if (precachedResponse) return precachedResponse;
+
   return fetch(request);
 }
 
@@ -119,12 +156,11 @@ async function cacheFirst(request, cacheName) {
 
   try {
     const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
+    if (networkResponse && networkResponse.ok) {
       cache.put(request, networkResponse.clone());
     }
     return networkResponse;
   } catch (error) {
-    // If image fails, return offline placeholder if configured
     if (request.destination === 'image' && config.offlineFallback?.image) {
       return caches.match(config.offlineFallback.image);
     }
@@ -136,7 +172,7 @@ async function networkFirst(request, cacheName) {
   const cache = await caches.open(cacheName);
   try {
     const networkResponse = await fetch(request);
-    if (networkResponse.ok) {
+    if (networkResponse && networkResponse.ok) {
       cache.put(request, networkResponse.clone());
     }
     return networkResponse;
@@ -144,9 +180,9 @@ async function networkFirst(request, cacheName) {
     const cachedResponse = await cache.match(request);
     if (cachedResponse) return cachedResponse;
 
-    // If page fails, return offline fallback page if configured
     if (request.mode === 'navigate' && config.offlineFallback?.page) {
-      return caches.match(config.offlineFallback.page);
+      const fallback = await caches.match(config.offlineFallback.page);
+      if (fallback) return fallback;
     }
     throw error;
   }

@@ -89,10 +89,10 @@
   },
   "precache": [
     "/",
-    "/css/main.css",
-    "/js/app.js",
-    "/images/logo.png",
-    "/offline.html"
+    "/index.html",
+    "/logo.png",
+    "/offline.html",
+    "/favicon.ico"
   ],
   "runtimeCaching": {
     "googleFonts": {
