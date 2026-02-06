@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { FiInfo, FiX, FiExternalLink, FiSave, FiTrash2, FiEye, FiCheck, FiZoomIn, FiZoomOut, FiRotateCw, FiDownload } from 'react-icons/fi';
+import { useState, useEffect } from 'react';
+import { FiX, FiSave, FiTrash2, FiExternalLink } from 'react-icons/fi';
 import AdminSidebar from '../../components/AdminSidebar';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
@@ -9,14 +9,8 @@ import '../../styles/Admin.css';
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Modal States
-  const [showCustomerModal, setShowCustomerModal] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [showProofModal, setShowProofModal] = useState(false);
-  const [selectedProof, setSelectedProof] = useState(null);
-  const [selectedOrderForAction, setSelectedOrderForAction] = useState(null);
-
+  const [proofImage, setProofImage] = useState(null);
   const [trackingInputs, setTrackingInputs] = useState({});
 
   useEffect(() => { fetchOrders(); }, []);
@@ -45,18 +39,17 @@ const AdminOrders = () => {
   };
 
   const saveTracking = async (orderId) => {
-    const trackingNumber = trackingInputs[orderId] || '';
+    const trackingNumber = trackingInputs[orderId];
     if (!trackingNumber) {
-      toast.error('Please enter a tracking number.');
+      toast.warning('Please enter a tracking number');
       return;
     }
-
     try {
       await api.put(`/orders/${orderId}/tracking`, { trackingNumber });
       toast.success('Tracking number saved!');
       fetchOrders();
     } catch (err) {
-      toast.error('Failed to save tracking number');
+      toast.error('Failed to save tracking');
     }
   };
 
@@ -74,66 +67,23 @@ const AdminOrders = () => {
 
   const formatOrderId = (createdAt) => {
     const d = new Date(createdAt);
-    const year = d.getFullYear();
-    const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-    const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
-    return `${year}-${mmdd}-${hhmm}`;
-  };
-
-  const formatDate = (date) => {
-    return new Date(date).toLocaleString('en-PH', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  const handleOpenCustomerDetails = (order) => {
-    setSelectedCustomer({
-      name: order.contactDetails?.fullName || order.user?.name || 'N/A',
-      email: order.contactDetails?.email || order.user?.email || 'N/A',
-      phone: order.contactDetails?.phone || order.shippingAddress?.phone || 'N/A',
-      address: `${order.shippingAddress?.street || ''}, ${order.shippingAddress?.city || ''}, ${order.shippingAddress?.province || ''}, ${order.shippingAddress?.country || ''}`.replace(/^, |, $/, ''),
-      date: formatDate(order.createdAt)
-    });
-    setShowCustomerModal(true);
-  };
-
-  const handleOpenProof = (imageUrl, order) => {
-    setSelectedProof(imageUrl);
-    setSelectedOrderForAction(order);
-    setShowProofModal(true);
-  };
-
-  const handleApprovePaymentFromProof = async () => {
-    if (!selectedOrderForAction) return;
-    try {
-      await api.put(`/orders/${selectedOrderForAction._id}/status`, { status: 'processing' });
-      toast.success('Payment approved and order move to Processing');
-      setShowProofModal(false);
-      fetchOrders();
-    } catch (error) {
-      toast.error('Failed to approve payment');
-    }
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
   };
 
   return (
-    <div className="admin-wrapper">
+    <div className="admin-layout">
       <AdminSidebar />
-
-      <main className="main-content">
+      <main className="admin-main orders-page">
         {/* Centered Page Header */}
-        <div className="page-header">
-          <h1 className="page-title">Master Order Management</h1>
-          <p className="page-subtitle">Processing & Verified GCash transactions in one view</p>
+        <div className="page-header-centered">
+          <h1 className="page-title-premium">Master Order Management</h1>
+          <p className="page-subtitle-premium">Processing & Verified GCash transactions in one view</p>
         </div>
 
-        {/* Table Card */}
-        <div className="table-card">
+        {/* Orders Table */}
+        <div className="table-card-premium">
           <div className="table-wrapper">
-            <table className="data-table">
+            <table className="data-table-premium">
               <thead>
                 <tr>
                   <th>Order ID</th>
@@ -150,67 +100,88 @@ const AdminOrders = () => {
                 {orders.map((order) => (
                   <tr key={order._id}>
                     <td>
-                      <div className="order-id">#{formatOrderId(order.createdAt)}</div>
+                      <div className="order-id-premium">#{formatOrderId(order.createdAt)}</div>
                     </td>
-                    <td className="customer-cell">
-                      <div className="customer-name">
-                        {order.contactDetails?.fullName || order.user?.name || 'Guest'}
-                        <span className="info-icon" onClick={() => handleOpenCustomerDetails(order)}>i</span>
+                    <td>
+                      <div className="customer-name-premium">
+                        {order.user?.name || 'Guest'}
+                        <span
+                          className="info-icon-premium"
+                          onClick={() => setSelectedCustomer(order)}
+                        >
+                          i
+                        </span>
                       </div>
                     </td>
                     <td>
-                      <div className="items-column">
-                        {order.items?.map((item, i) => (
-                          <div key={i} className="product-item">
-                            <img
-                              src={item.product?.images?.[0] || 'https://via.placeholder.com/48?text=No+Img'}
-                              alt={item.product?.name}
-                              className="product-image"
-                            />
-                            <div className="product-info">
-                              <div className="product-name">{item.product?.name || 'Deleted Product'}</div>
-                              <div className="product-quantity">(x{item.quantity})</div>
-                            </div>
+                      {order.items?.map((item, i) => (
+                        <div key={i} className="product-item-premium">
+                          <img
+                            src={item.product?.images?.[0] || 'https://via.placeholder.com/48'}
+                            alt={item.product?.name}
+                            className="product-image-premium"
+                          />
+                          <div className="product-info-premium">
+                            <div className="product-name-premium">{item.product?.name}</div>
+                            <div className="product-quantity-premium">(x{item.quantity})</div>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </td>
                     <td>
-                      <div className="total-amount">₱{order.total.toFixed(2)}</div>
+                      <div className="total-amount-premium">₱{order.total.toFixed(2)}</div>
                     </td>
-                    <td className="payment-cell">
-                      <div className="payment-method">{order.paymentMethod?.toUpperCase()}</div>
-                      {order.paymentProof ? (
-                        <button className="verify-proof-btn" onClick={() => handleOpenProof(order.paymentProof, order)}>Verify Proof</button>
-                      ) : (
-                        <span style={{ fontSize: '11px', color: '#999' }}>No Proof</span>
+                    <td style={{ textAlign: 'center' }}>
+                      <div className="payment-method-premium">{order.paymentMethod?.toUpperCase()}</div>
+                      {order.paymentProof && (
+                        <button
+                          className="verify-proof-btn-premium"
+                          onClick={() => setProofImage(order.paymentProof)}
+                        >
+                          Verify Proof
+                        </button>
                       )}
                     </td>
                     <td>
-                      <span className={`status-badge status-${order.status}`}>
+                      <span className={`status-badge-premium ${order.status.toLowerCase()}`}>
                         {order.status}
                       </span>
                     </td>
                     <td>
                       {order.trackingNumber ? (
-                        <div className="tracking-display">{order.trackingNumber}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div className="order-id-premium">{order.trackingNumber}</div>
+                          <a
+                            href={`https://www.jtexpress.ph/index/query/gzquery.html?bills=${order.trackingNumber}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ color: 'var(--secondary)' }}
+                          >
+                            <FiExternalLink />
+                          </a>
+                        </div>
                       ) : (
-                        <div className="tracking-input-wrapper">
+                        <div className="tracking-input-wrapper-premium">
                           <input
                             type="text"
-                            className="tracking-input"
+                            className="tracking-input-premium"
                             placeholder="Enter J&T #"
                             value={trackingInputs[order._id] || ''}
                             onChange={(e) => setTrackingInputs({ ...trackingInputs, [order._id]: e.target.value.toUpperCase() })}
                           />
-                          <button className="save-tracking-btn" onClick={() => saveTracking(order._id)}>💾</button>
+                          <button
+                            className="save-tracking-btn-premium"
+                            onClick={() => saveTracking(order._id)}
+                          >
+                            <FiSave />
+                          </button>
                         </div>
                       )}
                     </td>
                     <td>
-                      <div className="action-cell">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <select
-                          className="action-select"
+                          className="action-select-premium"
                           value={order.status}
                           onChange={(e) => updateStatus(order._id, e.target.value)}
                         >
@@ -220,7 +191,12 @@ const AdminOrders = () => {
                           <option value="delivered">Delivered</option>
                           <option value="cancelled">Cancelled</option>
                         </select>
-                        <button className="delete-btn" onClick={() => deleteOrder(order._id)}>🗑️</button>
+                        <button
+                          className="delete-btn-premium"
+                          onClick={() => deleteOrder(order._id)}
+                        >
+                          <FiTrash2 />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -229,59 +205,79 @@ const AdminOrders = () => {
             </table>
           </div>
         </div>
-
-        {/* Customer Details Modal */}
-        {showCustomerModal && selectedCustomer && (
-          <div className="modal-overlay show" onClick={() => setShowCustomerModal(false)}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <h2 className="modal-title">Customer Details</h2>
-                <button className="modal-close" onClick={() => setShowCustomerModal(false)}>×</button>
-              </div>
-              <div className="modal-body">
-                <div className="detail-row">
-                  <div className="detail-label">Full Name</div>
-                  <div className="detail-value">{selectedCustomer.name}</div>
-                </div>
-                <div className="detail-divider"></div>
-                <div className="detail-row">
-                  <div className="detail-label">Email Address</div>
-                  <div className="detail-value">{selectedCustomer.email}</div>
-                </div>
-                <div className="detail-divider"></div>
-                <div className="detail-row">
-                  <div className="detail-label">Phone Number</div>
-                  <div className="detail-value">{selectedCustomer.phone}</div>
-                </div>
-                <div className="detail-divider"></div>
-                <div className="detail-row">
-                  <div className="detail-label">Shipping Address</div>
-                  <div className="detail-value">{selectedCustomer.address}</div>
-                </div>
-                <div className="detail-divider"></div>
-                <div className="detail-row">
-                  <div className="detail-label">Order Date</div>
-                  <div className="detail-value">{selectedCustomer.date}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Proof Image Modal */}
-        {showProofModal && selectedProof && (
-          <div className="proof-modal show" onClick={() => setShowProofModal(false)}>
-            <div className="proof-image-container" onClick={(e) => e.stopPropagation()}>
-              <button className="proof-close" onClick={() => setShowProofModal(false)}>×</button>
-              <img src={selectedProof} alt="Payment Proof" className="proof-image-large" />
-              <div className="proof-actions-v2">
-                <button className="proof-approve-btn" onClick={handleApprovePaymentFromProof}>Approve & Process</button>
-                <button className="proof-reject-btn" onClick={() => setShowProofModal(false)}>Close View</button>
-              </div>
-            </div>
-          </div>
-        )}
       </main>
+
+      {/* Customer Details Modal */}
+      <AnimatePresence>
+        {selectedCustomer && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="modal-overlay-premium"
+            onClick={() => setSelectedCustomer(null)}
+          >
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 20, opacity: 0 }}
+              className="modal-content-premium"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="modal-header-premium">
+                <h2 className="modal-title-premium">Customer Details</h2>
+                <button className="modal-close-premium" onClick={() => setSelectedCustomer(null)}><FiX /></button>
+              </div>
+              <div className="modal-body-premium">
+                <div className="detail-row-premium">
+                  <div className="detail-label-premium">Full Name</div>
+                  <div className="detail-value-premium">{selectedCustomer.user?.name || 'Guest'}</div>
+                </div>
+                <div className="detail-divider-premium"></div>
+                <div className="detail-row-premium">
+                  <div className="detail-label-premium">Email Address</div>
+                  <div className="detail-value-premium">{selectedCustomer.user?.email || selectedCustomer.contactDetails?.email || 'N/A'}</div>
+                </div>
+                <div className="detail-divider-premium"></div>
+                <div className="detail-row-premium">
+                  <div className="detail-label-premium">Phone Number</div>
+                  <div className="detail-value-premium">{selectedCustomer.shippingAddress?.phone || selectedCustomer.contactDetails?.phone || 'N/A'}</div>
+                </div>
+                <div className="detail-divider-premium"></div>
+                <div className="detail-row-premium">
+                  <div className="detail-label-premium">Shipping Address</div>
+                  <div className="detail-value-premium">
+                    {selectedCustomer.shippingAddress?.street}, {selectedCustomer.shippingAddress?.city}, {selectedCustomer.shippingAddress?.state} {selectedCustomer.shippingAddress?.zipCode}
+                  </div>
+                </div>
+                <div className="detail-divider-premium"></div>
+                <div className="detail-row-premium">
+                  <div className="detail-label-premium">Order Date</div>
+                  <div className="detail-value-premium">{new Date(selectedCustomer.createdAt).toLocaleString()}</div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Proof Image Modal */}
+      <AnimatePresence>
+        {proofImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="proof-modal-premium"
+            onClick={() => setProofImage(null)}
+          >
+            <div className="proof-image-container" onClick={e => e.stopPropagation()}>
+              <button className="proof-close" onClick={() => setProofImage(null)}><FiX /></button>
+              <img src={proofImage} alt="Payment Proof" className="proof-image-large-premium" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
