@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FiSearch, FiUser, FiShoppingBag, FiMenu, FiX, FiChevronDown, FiHeart } from 'react-icons/fi';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -29,6 +29,24 @@ const Navbar = () => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Memoize formatted time to prevent unnecessary re-renders
+  const formattedTime = useMemo(() => {
+    try {
+      return time.toLocaleString('en-PH', {
+        timeZone: 'Asia/Manila',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
+    } catch (e) {
+      return time.toLocaleString();
+    }
+  }, [time]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -87,22 +105,7 @@ const Navbar = () => {
         </div>
         <div className="announcement-right">
           <div className="philippines-clock-top">
-            {(() => {
-              try {
-                return time.toLocaleString('en-PH', {
-                  timeZone: 'Asia/Manila',
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                  hour12: true
-                });
-              } catch (e) {
-                return time.toLocaleString(); // Safe fallback
-              }
-            })()}
+            {formattedTime}
           </div>
           <Link to="/about">{t('about')}</Link>
           <Link to="/contact">{t('contact')}</Link>

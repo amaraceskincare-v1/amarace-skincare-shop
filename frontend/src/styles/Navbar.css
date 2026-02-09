@@ -50,6 +50,11 @@
   margin-right: 15px;
   padding-right: 15px;
   border-right: 1px solid rgba(255, 255, 255, 0.3);
+  font-variant-numeric: tabular-nums;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, monospace;
+  min-width: 210px;
+  text-align: center;
+  white-space: nowrap;
 }
 
 @media (max-width: 768px) {
