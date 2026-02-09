@@ -50,7 +50,7 @@ const About = () => {
                 <div className="story-content">
                     <div className="story-image">
                         <img
-                            src={settings?.ourStoryImage || "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80"}
+                            src={`${settings?.ourStoryImage || "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80"}?t=${Date.now()}`}
                             alt="AmaraCé Story"
                         />
                     </div>
@@ -121,7 +121,7 @@ const About = () => {
                             <div key={i} className="team-member-card">
                                 <div className="team-image-container">
                                     <img
-                                        src={img}
+                                        src={`${img}?t=${Date.now()}`}
                                         alt={`Team Member ${i + 1}`}
                                         className="team-member-image"
                                     />
