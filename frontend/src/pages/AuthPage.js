@@ -140,12 +140,14 @@ const AuthPage = () => {
                 googleId: userInfo.sub
             });
 
-            // Store auth data
+            // Store auth data using unified logic
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data));
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('user');
 
             toast.success(`Welcome, ${data.name}!`);
-            window.location.href = redirect;
+            navigate(redirect);
         } catch (error) {
             console.error('Google login error:', error);
             toast.error(error.response?.data?.message || 'Google login failed');
@@ -189,12 +191,14 @@ const AuthPage = () => {
                             facebookId: userInfo.id
                         });
 
-                        // Store auth data
+                        // Store auth data using unified logic
                         localStorage.setItem('token', data.token);
                         localStorage.setItem('user', JSON.stringify(data));
+                        sessionStorage.removeItem('token');
+                        sessionStorage.removeItem('user');
 
                         toast.success(`Welcome, ${data.name}!`);
-                        window.location.href = redirect;
+                        navigate(redirect);
                     } catch (error) {
                         console.error('Facebook login error:', error);
                         toast.error(error.response?.data?.message || 'Facebook login failed');

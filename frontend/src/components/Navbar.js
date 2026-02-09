@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FiSearch, FiUser, FiShoppingBag, FiMenu, FiX, FiChevronDown, FiHeart } from 'react-icons/fi';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -56,10 +56,10 @@ const Navbar = () => {
     setShowLogoutPopup(true);
   };
 
-  const handleLogoutPopupClose = () => {
+  const handleLogoutPopupClose = useCallback(() => {
     setShowLogoutPopup(false);
     navigate('/');
-  };
+  }, [navigate]);
 
   const handleSearch = (e) => {
     e.preventDefault();
