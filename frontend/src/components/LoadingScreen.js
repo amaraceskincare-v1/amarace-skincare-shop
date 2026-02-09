@@ -1,7 +1,11 @@
 import { useEffect } from 'react';
+import { useSettings } from '../context/SettingsContext';
+import { optimizeImage } from '../utils/imageOptimizer';
 import '../styles/LoadingScreen.css';
 
 const LoadingScreen = ({ isLoading }) => {
+    const { settings } = useSettings();
+
     useEffect(() => {
         if (isLoading) {
             document.body.style.overflow = 'hidden';
@@ -18,7 +22,14 @@ const LoadingScreen = ({ isLoading }) => {
     return (
         <div className="loading-screen">
             <div className="loading-content">
-                <div className="loading-logo">AmaraCé</div>
+                <div className="loading-logo-wrapper">
+                    <img
+                        src={optimizeImage(settings?.navbarLogo || '/logo.png', 200)}
+                        alt="AmaraCé Logo"
+                        className="loading-logo-img"
+                        onError={(e) => { e.target.src = '/logo.png'; }}
+                    />
+                </div>
                 <div className="loading-spinner">
                     <div className="spinner-ring"></div>
                 </div>
