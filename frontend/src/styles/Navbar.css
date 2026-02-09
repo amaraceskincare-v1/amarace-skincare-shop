@@ -38,7 +38,24 @@
 
 .announcement-right {
   display: flex;
+  align-items: center;
   gap: 20px;
+}
+
+.philippines-clock-top {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #fff;
+  opacity: 0.9;
+  margin-right: 15px;
+  padding-right: 15px;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .philippines-clock-top {
+    display: none;
+  }
 }
 
 .announcement-right a {

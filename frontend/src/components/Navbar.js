@@ -86,6 +86,24 @@ const Navbar = () => {
           <FiShoppingBag /> <span>{t('free_shipping')}</span>
         </div>
         <div className="announcement-right">
+          <div className="philippines-clock-top">
+            {(() => {
+              try {
+                return time.toLocaleString('en-PH', {
+                  timeZone: 'Asia/Manila',
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  hour12: true
+                });
+              } catch (e) {
+                return time.toLocaleString(); // Safe fallback
+              }
+            })()}
+          </div>
           <Link to="/about">{t('about')}</Link>
           <Link to="/contact">{t('contact')}</Link>
           <a href="tel:+639152662648">Call Us: +639152662648</a>
@@ -133,26 +151,6 @@ const Navbar = () => {
           <div className="logo-spacer"></div>
 
           <div className="nav-actions">
-            <div className="philippines-clock">
-              <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>
-                {(() => {
-                  try {
-                    return time.toLocaleString('en-PH', {
-                      timeZone: 'Asia/Manila',
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: '2-digit',
-                      hour12: true
-                    });
-                  } catch (e) {
-                    return time.toLocaleString(); // Safe fallback
-                  }
-                })()}
-              </span>
-            </div>
             <button className="nav-action-btn search-btn" onClick={() => setSearchOpen(!searchOpen)}>
               <FiSearch />
             </button>
