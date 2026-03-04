@@ -122,23 +122,6 @@ router.post('/cod', protect, async (req, res) => {
       status: 'processing' // COD starts at processing since no verification needed
     });
 
-    // ✅ SEND EMAIL — COD order received
-    Order.findById(order._id).populate('items.product').then(populatedOrder => {
-      sendEmail({
-        to: contactDetails.email,
-        subject: 'AmaraCé Order Received (COD)',
-        html: orderEmailTemplate(populatedOrder, 'COD Order Received'),
-      }).catch(err => console.error('Email sending failed:', err));
-    });
-
-    // List items for Telegram
-    const itemList = cart.items.map(item => `• ${item.product.name} (x${item.quantity})`).join('\n');
-    const firstItemImage = cart.items.length > 0 && cart.items[0].product.images ? cart.items[0].product.images[0] : null;
-
-    // ✅ SEND TELEGRAM
-    const telegramMsg = `<b>New COD Order!</b> 🚚\n\nOrder ID: <code>${formatOrderId(order.createdAt)}</code>\nTotal: <b>₱${total.toFixed(2)}</b>\nCustomer: ${contactDetails.fullName}\n\n<b>Items:</b>\n${itemList}\n\nPayment will be collected on delivery.`;
-    sendTelegram(telegramMsg, firstItemImage);
-
     // Update product stock
     for (const item of cart.items) {
       await Product.findByIdAndUpdate(item.product._id, {
@@ -151,8 +134,29 @@ router.post('/cod', protect, async (req, res) => {
     await cart.save();
 
     res.status(201).json(order);
+
+    // --- BACKGROUND PROCESSES ---
+
+    Order.findById(order._id).populate('items.product').then(populatedOrder => {
+      // 1. Email Notification
+      sendEmail({
+        to: contactDetails.email,
+        subject: 'AmaraCé Order Received (COD)',
+        html: orderEmailTemplate(populatedOrder, 'COD Order Received'),
+      }).catch(err => console.error('Email sending failed:', err));
+
+      // 2. Telegram Notification
+      const fullItemList = populatedOrder.items.map(i => `• ${i.product.name} (x${i.quantity})`).join('\n');
+      const firstItemImage = populatedOrder.items.length > 0 && populatedOrder.items[0].product.images ? populatedOrder.items[0].product.images[0] : null;
+
+      const telegramMsg = `<b>New COD Order!</b> 🚚\n\nOrder ID: <code>${formatOrderId(order.createdAt)}</code>\nTotal: <b>₱${total.toFixed(2)}</b>\nCustomer: ${contactDetails.fullName}\n\n<b>Items:</b>\n${fullItemList}\n\nPayment will be collected on delivery.`;
+      sendTelegram(telegramMsg, firstItemImage);
+    }).catch(err => console.error('Background fetch failed:', err));
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    if (!res.headersSent) {
+      res.status(500).json({ message: error.message });
+    }
   }
 });
 
@@ -172,11 +176,7 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
       return res.status(400).json({ message: 'Payment proof is required' });
     }
 
-    // Extract data from GCash receipt using OCR
-    console.log('Extracting GCash data from:', req.file.path);
-    const extractedData = await extractGCashData(req.file.path);
-    console.log('Extracted Data:', extractedData);
-
+    // Setup items
     const items = cart.items.map(item => ({
       product: item.product._id,
       quantity: item.quantity,
@@ -198,32 +198,13 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
       paymentMethod: 'gcash',
       shippingMethod,
       paymentProof: req.file.path,
-      paymentData: extractedData,
+      paymentData: null, // Will extract in background to speed up checkout
       subtotal,
       shippingCost,
       total,
       tax: 0,
       status: 'awaiting_payment_verification'
     });
-
-    // ✅ SEND EMAIL — GCash order received
-    // Background Process: Do not await to speed up checkout response
-    // Fetch populated order to ensure product details are available for email
-    Order.findById(order._id).populate('items.product').then(populatedOrder => {
-      sendEmail({
-        to: parsedContact.email,
-        subject: 'AmaraCé Order Received (GCash)',
-        html: orderEmailTemplate(populatedOrder, 'GCash Order Received'),
-      }).catch(err => console.error('Email sending failed:', err));
-    });
-
-    // List items for Telegram
-    const itemList = cart.items.map(item => `• ${item.product.name} (x${item.quantity})`).join('\n');
-    const firstItemImage = cart.items.length > 0 && cart.items[0].product.images ? cart.items[0].product.images[0] : null;
-
-    // ✅ SEND TELEGRAM
-    const telegramMsg = `<b>New GCash Order!</b> 🛍️\n\nOrder ID: <code>${formatOrderId(order.createdAt)}</code>\nTotal: <b>₱${total.toFixed(2)}</b>\nCustomer: ${parsedContact.fullName}\n\n<b>Items:</b>\n${itemList}\n\nPlease verify payment proof.`;
-    sendTelegram(telegramMsg, firstItemImage);
 
     // Update product stock
     for (const item of cart.items) {
@@ -237,8 +218,44 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
     await cart.save();
 
     res.status(201).json(order);
+
+    // --- BACKGROUND PROCESSES ---
+
+    // 1. OCR Extraction (Takes a long time, done in the background)
+    (async () => {
+      try {
+        console.log('Background: Extracting GCash data from:', req.file.path);
+        const extractedData = await extractGCashData(req.file.path);
+        console.log('Background: Extracted Data:', extractedData);
+        await Order.findByIdAndUpdate(order._id, { paymentData: extractedData });
+      } catch (err) {
+        console.error('OCR Error in background:', err.message);
+      }
+    })();
+
+    // 2. Email Notification
+    Order.findById(order._id).populate('items.product').then(populatedOrder => {
+      sendEmail({
+        to: parsedContact.email,
+        subject: 'AmaraCé Order Received (GCash)',
+        html: orderEmailTemplate(populatedOrder, 'GCash Order Received'),
+      }).catch(err => console.error('Email sending failed:', err));
+    });
+
+    // 3. Telegram Notification
+    const itemList = items.map(item => `• Product (x${item.quantity})`).join('\n'); // Quick formatting
+    Order.findById(order._id).populate('items.product').then(populatedOrder => {
+      const fullItemList = populatedOrder.items.map(i => `• ${i.product.name} (x${i.quantity})`).join('\n');
+      const firstItemImage = populatedOrder.items.length > 0 && populatedOrder.items[0].product.images ? populatedOrder.items[0].product.images[0] : null;
+
+      const telegramMsg = `<b>New GCash Order!</b> 🛍️\n\nOrder ID: <code>${formatOrderId(order.createdAt)}</code>\nTotal: <b>₱${total.toFixed(2)}</b>\nCustomer: ${parsedContact.fullName}\n\n<b>Items:</b>\n${fullItemList}\n\nPlease verify payment proof.`;
+      sendTelegram(telegramMsg, firstItemImage);
+    });
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    if (!res.headersSent) {
+      res.status(500).json({ message: error.message });
+    }
   }
 });
 
