@@ -16,7 +16,7 @@ const sendTelegram = async (message, imageUrl = null) => {
     try {
         if (imageUrl) {
             const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
-            await fetch(url, {
+            const res = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -26,9 +26,15 @@ const sendTelegram = async (message, imageUrl = null) => {
                     parse_mode: 'HTML'
                 })
             });
+            if (!res.ok) {
+                const errData = await res.json();
+                console.error('Telegram API Error [sendPhoto]:', errData);
+            } else {
+                console.log('Telegram sent successfully (Photo)');
+            }
         } else {
             const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-            await fetch(url, {
+            const res = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -37,9 +43,13 @@ const sendTelegram = async (message, imageUrl = null) => {
                     parse_mode: 'HTML' // Allows bolding like <b>text</b>
                 })
             });
+            if (!res.ok) {
+                const errData = await res.json();
+                console.error('Telegram API Error [sendMessage]:', errData);
+            } else {
+                console.log('Telegram sent successfully (Message)');
+            }
         }
-
-        console.log('Telegram sent successfully');
     } catch (error) {
         console.error('Telegram Send Failed:', error.message);
     }

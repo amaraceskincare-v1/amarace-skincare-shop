@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { FiCamera, FiCheckCircle, FiPackage, FiMapPin, FiUser, FiPhone } from 'react-icons/fi';
+import { FiCamera, FiCheckCircle, FiPackage, FiMapPin, FiUser, FiPhone, FiImage } from 'react-icons/fi';
 import './RiderOrder.css'; // We will create this
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -137,9 +137,21 @@ const RiderOrder = () => {
                                 style={{ display: 'none' }}
                                 id="camera-upload"
                             />
-                            <label htmlFor="camera-upload" className={`upload-btn ${uploading ? 'uploading' : ''}`}>
-                                <FiCamera /> {uploading ? 'Uploading...' : 'Open Camera & Upload'}
-                            </label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleFileUpload}
+                                style={{ display: 'none' }}
+                                id="gallery-upload"
+                            />
+                            <div className="upload-options">
+                                <label htmlFor="camera-upload" className={`upload-btn ${uploading ? 'uploading' : ''}`}>
+                                    <FiCamera /> {uploading ? 'Uploading...' : 'Open Camera'}
+                                </label>
+                                <label htmlFor="gallery-upload" className={`upload-btn outline-btn ${uploading ? 'uploading' : ''}`}>
+                                    <FiImage /> {uploading ? 'Wait...' : 'Gallery / Media'}
+                                </label>
+                            </div>
                         </div>
                     )}
                 </section>
