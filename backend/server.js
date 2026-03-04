@@ -56,12 +56,27 @@ const allowedOrigins = [
   'https://www.amaracéskincare.store',
   'https://xn--amaracskincare-gkb.store',
   'https://www.xn--amaracskincare-gkb.store',
+  'https://xn--amaracskincare-pkb.store',
+  'https://www.xn--amaracskincare-pkb.store',
   process.env.CLIENT_URL
 ].filter(Boolean);
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // Allow any potential punycode variant of the domain just to be safe
+      if (/^https:\/\/(www\.)?xn--amaracskincare-[a-z0-9]+\.store$/.test(origin)) {
+        return callback(null, true);
+      }
+
+      callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
   })
 );
