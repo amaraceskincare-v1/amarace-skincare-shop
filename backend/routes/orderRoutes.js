@@ -53,7 +53,6 @@ const extractGCashData = async (imagePath) => {
 
 const router = express.Router();
 
-// Helper to format Order ID (YEAR-MMDD-HHMM)
 const formatOrderId = (date) => {
   const d = new Date(date);
   const year = d.getFullYear();
@@ -61,6 +60,39 @@ const formatOrderId = (date) => {
   const hhmm = `${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}`;
   return `${year}-${mmdd}-${hhmm}`;
 };
+
+// --- TEMP DEBUG ROUTE ---
+router.get('/test-telegram', async (req, res) => {
+  try {
+    const telegramMsg = `<b>AmaraCé Test Debug</b> 🛠️\n\nTesting live server Telegram connection.`;
+    const imageUrl = "https://res.cloudinary.com/drpkxjhhi/image/upload/v1727833096/products/amara_fierce.png"; // Live product image
+
+    // Call the same logic
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+
+    if (!botToken || !chatId) {
+      return res.json({ success: false, error: 'Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID on this server environments' });
+    }
+
+    const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        photo: imageUrl,
+        caption: telegramMsg,
+        parse_mode: 'HTML'
+      })
+    });
+
+    const data = await response.json();
+    res.json({ success: response.ok, data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 
 // Cloudinary storage for payment proofs
