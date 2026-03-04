@@ -19,6 +19,7 @@ const orderSchema = new mongoose.Schema({
     landmark: String,
     zipCode: String
   },
+  shippingMethod: { type: String, default: 'jnt', enum: ['jnt', 'inhouse'] }, // J&T or In-House Delivery
   paymentMethod: { type: String, required: true, enum: ['gcash', 'cod'] },
   paymentResult: {
     id: String,

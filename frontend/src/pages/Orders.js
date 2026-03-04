@@ -47,9 +47,16 @@ const Orders = () => {
 
                 <div className="order-items">
                   {order.items?.map((item, idx) => (
-                    <div key={idx} className="order-item">
-                      <span className="item-name">{item.product?.name || 'Product'}</span>
-                      <span className="item-qty">x{item.quantity}</span>
+                    <div key={idx} className="order-item-with-img">
+                      <img
+                        src={item.product?.images?.[0] || '/placeholder.jpg'}
+                        alt={item.product?.name || 'Product'}
+                        className="order-item-img"
+                      />
+                      <div className="order-item-details">
+                        <span className="item-name">{item.product?.name || 'Product'}</span>
+                        <span className="item-qty">x{item.quantity}</span>
+                      </div>
                     </div>
                   ))}
                 </div>

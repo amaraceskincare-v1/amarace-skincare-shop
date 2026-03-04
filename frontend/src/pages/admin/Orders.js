@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { FiInfo, FiX, FiExternalLink, FiSave, FiTrash2 } from 'react-icons/fi';
+import { FiInfo, FiX, FiExternalLink, FiSave, FiTrash2, FiCamera } from 'react-icons/fi';
+import { QRCodeSVG } from 'qrcode.react';
 import AdminSidebar from '../../components/AdminSidebar';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
@@ -9,6 +10,7 @@ const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [expandedCustomer, setExpandedCustomer] = useState(null);
   const [trackingInputs, setTrackingInputs] = useState({});
+  const [qrModalOrder, setQrModalOrder] = useState(null); // The order ID to show QR for
 
   useEffect(() => { fetchOrders(); }, []);
 
@@ -211,43 +213,61 @@ const AdminOrders = () => {
                     </span>
                   </td>
 
-                  {/* Tracking Number - Dedicated Column */}
+                  {/* Tracking Number / Delivery - Dedicated Column */}
                   <td className="tracking-cell">
-                    {canEditTracking(order.status) ? (
-                      order.trackingNumber ? (
-                        <a
-                          href={`https://www.jntexpress.ph/tracking?tracking_number=${order.trackingNumber}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="tracking-link"
+                    {order.shippingMethod === 'inhouse' ? (
+                      <div className="inhouse-delivery-actions">
+                        <span className="shipping-badge inhouse">In-House</span>
+                        <button
+                          className="generate-qr-btn"
+                          onClick={() => setQrModalOrder(order)}
+                          title="Generate Rider QR Code"
                         >
-                          {order.trackingNumber}
-                          <FiExternalLink />
-                        </a>
-                      ) : (
-                        <div className="tracking-input-group">
-                          <input
-                            type="text"
-                            className="tracking-input"
-                            placeholder="Enter J&T tracking #"
-                            value={trackingInputs[order._id] || ''}
-                            onChange={(e) => setTrackingInputs(prev => ({
-                              ...prev,
-                              [order._id]: e.target.value.toUpperCase()
-                            }))}
-                            maxLength={20}
-                          />
-                          <button
-                            className="save-tracking-btn"
-                            onClick={() => saveTracking(order._id)}
-                            title="Save Tracking"
-                          >
-                            <FiSave />
-                          </button>
-                        </div>
-                      )
+                          Show Rider QR
+                        </button>
+                        {order.deliveryProof && (
+                          <a href={order.deliveryProof} target="_blank" rel="noopener noreferrer" className="view-proof-link" style={{ display: 'block', marginTop: '5px' }}>
+                            View Delivery Photo
+                          </a>
+                        )}
+                      </div>
                     ) : (
-                      <span className="tracking-na">—</span>
+                      canEditTracking(order.status) ? (
+                        order.trackingNumber ? (
+                          <a
+                            href={`https://www.jntexpress.ph/tracking?tracking_number=${order.trackingNumber}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="tracking-link"
+                          >
+                            {order.trackingNumber}
+                            <FiExternalLink />
+                          </a>
+                        ) : (
+                          <div className="tracking-input-group">
+                            <input
+                              type="text"
+                              className="tracking-input"
+                              placeholder="Enter J&T tracking #"
+                              value={trackingInputs[order._id] || ''}
+                              onChange={(e) => setTrackingInputs(prev => ({
+                                ...prev,
+                                [order._id]: e.target.value.toUpperCase()
+                              }))}
+                              maxLength={20}
+                            />
+                            <button
+                              className="save-tracking-btn"
+                              onClick={() => saveTracking(order._id)}
+                              title="Save Tracking"
+                            >
+                              <FiSave />
+                            </button>
+                          </div>
+                        )
+                      ) : (
+                        <span className="tracking-na">—</span>
+                      )
                     )}
                   </td>
 
@@ -282,6 +302,34 @@ const AdminOrders = () => {
         {orders.length === 0 && (
           <div className="no-orders-message">
             <p>No orders found.</p>
+          </div>
+        )}
+
+        {/* QR Code Modal for Riders */}
+        {qrModalOrder && (
+          <div className="qr-modal-overlay" onClick={() => setQrModalOrder(null)}>
+            <div className="qr-modal-content" onClick={e => e.stopPropagation()}>
+              <button className="close-modal-btn" onClick={() => setQrModalOrder(null)}>
+                <FiX />
+              </button>
+              <h2>In-House Delivery QR Code</h2>
+              <p>Scan this code with a mobile phone to view delivery details and upload a photo.</p>
+
+              <div className="qr-wrapper">
+                <QRCodeSVG
+                  value={`${window.location.origin}/rider/order/${qrModalOrder._id}`}
+                  size={256}
+                  level={"H"}
+                  includeMargin={true}
+                />
+              </div>
+
+              <div className="qr-modal-details">
+                <p><strong>Order ID:</strong> #{formatOrderId(qrModalOrder.createdAt)}</p>
+                <p><strong>Customer:</strong> {qrModalOrder.shippingAddress?.fullName || 'N/A'}</p>
+                <p><strong>COD Amount:</strong> {qrModalOrder.paymentMethod === 'cod' ? `₱${qrModalOrder.total?.toFixed(2)}` : 'PAID (GCash)'}</p>
+              </div>
+            </div>
           </div>
         )}
       </main>

@@ -1,0 +1,275 @@
+.rider-container {
+    min-height: 100vh;
+    background-color: #f4f6f8;
+    font-family: 'Inter', sans-serif;
+    padding-bottom: 2rem;
+}
+
+.rider-loading,
+.rider-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    padding: 2rem;
+    color: #333;
+}
+
+.rider-header {
+    background: white;
+    padding: 1.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eaeaea;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.rider-header h1 {
+    font-size: 1.25rem;
+    margin: 0;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.status-badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.processing {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.shipped {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.status-badge.delivered {
+    background: #d4edda;
+    color: #155724;
+}
+
+.rider-main {
+    padding: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.rider-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.rider-card h2 {
+    font-size: 1rem;
+    color: #666;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 0.5rem;
+}
+
+.customer-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.phone-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f0f7ff;
+    color: #0066cc;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.address-info p {
+    margin: 0.25rem 0;
+    color: #333;
+    line-height: 1.5;
+    font-size: 1rem;
+}
+
+.landmark {
+    font-style: italic;
+    color: #666 !important;
+    margin-top: 0.5rem !important;
+}
+
+.payment-info {
+    border: 2px solid #e1e8ed;
+}
+
+.collect-cash,
+.paid-online {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.collect-cash {
+    color: #d32f2f;
+}
+
+.paid-online {
+    color: #2e7d32;
+}
+
+.collect-cash span,
+.paid-online span {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.amount {
+    font-size: 1.5rem;
+}
+
+.rider-item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.rider-item-list li {
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    align-items: center;
+}
+
+.rider-item-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.rider-item-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #eaeaea;
+}
+
+.rider-item-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.qty {
+    font-weight: 700;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.name {
+    color: #333;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.rider-action-area {
+    margin-top: 2rem;
+}
+
+.upload-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.upload-section h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #1a1a1a;
+}
+
+.upload-section p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+}
+
+.upload-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background: #1a1a1a;
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.upload-btn:hover {
+    background: #333;
+}
+
+.upload-btn.uploading {
+    background: #666;
+    cursor: wait;
+}
+
+.delivery-success {
+    background: #d4edda;
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    color: #155724;
+}
+
+.success-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.delivery-success h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+.proof-img {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 8px;
+    border: 4px solid white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    display: block;
+}

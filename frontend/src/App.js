@@ -35,6 +35,7 @@ import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
+import RiderOrder from './pages/RiderOrder';
 
 const App = () => {
   const location = useLocation();
@@ -178,6 +179,7 @@ const App = () => {
             }
           />
           <Route path="/order-success/:id" element={<OrderSuccess />} />
+          <Route path="/rider/order/:id" element={<RiderOrder />} />
         </Routes>
       </main>
 

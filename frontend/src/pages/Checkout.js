@@ -62,10 +62,17 @@ const Checkout = () => {
   });
 
   const [paymentMethod, setPaymentMethod] = useState('gcash');
+  const [shippingMethod, setShippingMethod] = useState('jnt'); // 'jnt' or 'inhouse'
   const [requestChange, setRequestChange] = useState(false);
   const [changeAmount, setChangeAmount] = useState('');
 
-  const shipping = cartTotal >= 500 ? 0 : 85;
+  // Calculate shipping cost
+  let shipping = 0;
+  if (shippingMethod === 'inhouse') {
+    shipping = 50; // Flat rate for in-house delivery
+  } else {
+    shipping = cartTotal >= 500 ? 0 : 85; // J&T Logic
+  }
   const total = cartTotal + shipping;
 
   const handleSubmit = async (e) => {
@@ -89,6 +96,7 @@ const Checkout = () => {
         formData.append('shippingAddress', JSON.stringify(address));
         formData.append('contactDetails', JSON.stringify(contact));
         formData.append('paymentMethod', 'gcash');
+        formData.append('shippingMethod', shippingMethod); // Add shippingMethod
         formData.append('paymentProof', proofImage);
         formData.append('totalAmount', total);
         formData.append('shippingCost', shipping);
@@ -105,6 +113,7 @@ const Checkout = () => {
             note: requestChange ? `Request for change from ₱${changeAmount}` : ''
           },
           paymentMethod: 'cod',
+          shippingMethod: shippingMethod, // Add shippingMethod
           shippingCost: shipping,
           totalAmount: total
         };
@@ -218,6 +227,38 @@ const Checkout = () => {
                   value={address.landmark}
                   onChange={(e) => setAddress({ ...address, landmark: e.target.value })}
                 />
+              </div>
+            </section>
+
+            {/* Shipping Method Selection */}
+            <section className="form-section">
+              <h2>Shipping Method</h2>
+              <div className="payment-options-v2">
+                <div
+                  className={`payment-card-v2 ${shippingMethod === 'jnt' ? 'selected' : ''}`}
+                  onClick={() => setShippingMethod('jnt')}
+                >
+                  <div className="payment-card-v2-header">
+                    <div className="payment-radio">
+                      <div className="radio-circle"></div>
+                    </div>
+                    <span>J&T Express 🚚</span>
+                    <strong style={{ marginLeft: 'auto' }}>{cartTotal >= 500 ? 'FREE' : '₱85.00'}</strong>
+                  </div>
+                </div>
+
+                <div
+                  className={`payment-card-v2 ${shippingMethod === 'inhouse' ? 'selected' : ''}`}
+                  onClick={() => setShippingMethod('inhouse')}
+                >
+                  <div className="payment-card-v2-header">
+                    <div className="payment-radio">
+                      <div className="radio-circle"></div>
+                    </div>
+                    <span>In-House Delivery (Rider) 🛵</span>
+                    <strong style={{ marginLeft: 'auto' }}>₱50.00</strong>
+                  </div>
+                </div>
               </div>
             </section>
 

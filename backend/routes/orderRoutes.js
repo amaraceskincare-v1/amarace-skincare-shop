@@ -88,7 +88,7 @@ const upload = multer({
 // Create order with COD payment
 router.post('/cod', protect, async (req, res) => {
   try {
-    const { shippingAddress, contactDetails, shippingCost } = req.body;
+    const { shippingAddress, contactDetails, shippingCost, shippingMethod } = req.body;
     const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
 
     if (!cart || cart.items.length === 0) {
@@ -114,6 +114,7 @@ router.post('/cod', protect, async (req, res) => {
       contactDetails,
       shippingAddress,
       paymentMethod: 'cod',
+      shippingMethod,
       subtotal,
       shippingCost: finalShippingCost,
       total,
@@ -132,10 +133,11 @@ router.post('/cod', protect, async (req, res) => {
 
     // List items for Telegram
     const itemList = cart.items.map(item => `• ${item.product.name} (x${item.quantity})`).join('\n');
+    const firstItemImage = cart.items.length > 0 && cart.items[0].product.images ? cart.items[0].product.images[0] : null;
 
     // ✅ SEND TELEGRAM
     const telegramMsg = `<b>New COD Order!</b> 🚚\n\nOrder ID: <code>${formatOrderId(order.createdAt)}</code>\nTotal: <b>₱${total.toFixed(2)}</b>\nCustomer: ${contactDetails.fullName}\n\n<b>Items:</b>\n${itemList}\n\nPayment will be collected on delivery.`;
-    sendTelegram(telegramMsg);
+    sendTelegram(telegramMsg, firstItemImage);
 
     // Update product stock
     for (const item of cart.items) {
@@ -157,7 +159,7 @@ router.post('/cod', protect, async (req, res) => {
 // Create order with GCash payment
 router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) => {
   try {
-    const { shippingAddress, contactDetails } = req.body;
+    const { shippingAddress, contactDetails, shippingMethod } = req.body;
     const parsedAddress = typeof shippingAddress === 'string' ? JSON.parse(shippingAddress) : shippingAddress;
     const parsedContact = typeof contactDetails === 'string' ? JSON.parse(contactDetails) : contactDetails;
     const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
@@ -194,6 +196,7 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
       contactDetails: parsedContact,
       shippingAddress: parsedAddress,
       paymentMethod: 'gcash',
+      shippingMethod,
       paymentProof: req.file.path,
       paymentData: extractedData,
       subtotal,
@@ -216,10 +219,11 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
 
     // List items for Telegram
     const itemList = cart.items.map(item => `• ${item.product.name} (x${item.quantity})`).join('\n');
+    const firstItemImage = cart.items.length > 0 && cart.items[0].product.images ? cart.items[0].product.images[0] : null;
 
     // ✅ SEND TELEGRAM
     const telegramMsg = `<b>New GCash Order!</b> 🛍️\n\nOrder ID: <code>${formatOrderId(order.createdAt)}</code>\nTotal: <b>₱${total.toFixed(2)}</b>\nCustomer: ${parsedContact.fullName}\n\n<b>Items:</b>\n${itemList}\n\nPlease verify payment proof.`;
-    sendTelegram(telegramMsg);
+    sendTelegram(telegramMsg, firstItemImage);
 
     // Update product stock
     for (const item of cart.items) {
@@ -322,7 +326,8 @@ router.put('/:id/status', protect, admin, async (req, res) => {
         `<b>Items:</b>\n${itemList}\n\n` +
         `New Status: <b>${req.body.status.toUpperCase()}</b>`;
 
-      sendTelegram(telegramMsg);
+      const firstItemImage = order.items.length > 0 && order.items[0].product?.images ? order.items[0].product.images[0] : null;
+      sendTelegram(telegramMsg, firstItemImage);
 
       res.json(updatedOrder);
     } else {
@@ -363,7 +368,8 @@ router.put('/:id/verify-payment', protect, admin, async (req, res) => {
         `<b>Items:</b>\n${itemList}\n\n` +
         `New Status: <b>PROCESSING</b>`;
 
-      sendTelegram(telegramMsg);
+      const firstItemImage = order.items.length > 0 && order.items[0].product?.images ? order.items[0].product.images[0] : null;
+      sendTelegram(telegramMsg, firstItemImage);
 
       res.json(updatedOrder);
     } else {
@@ -421,6 +427,73 @@ router.put('/:id/remove-delivery-proof', protect, admin, async (req, res) => {
     } else {
       res.status(404).json({ message: 'Order not found' });
     }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+// --- RIDER SPECIFIC UNPROTECTED ROUTES ---
+
+// Get basic order details for Rider (Unauthenticated, via QR)
+router.get('/rider/:id', async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id).populate('items.product');
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    // Only return non-sensitive info needed for delivery
+    res.json({
+      _id: order._id,
+      contactDetails: order.contactDetails,
+      shippingAddress: order.shippingAddress,
+      items: order.items.map(item => ({
+        name: item.product?.name,
+        image: item.product?.images?.[0], // include image for rider
+        quantity: item.quantity,
+        price: item.price
+      })),
+      total: order.total,
+      paymentMethod: order.paymentMethod,
+      shippingMethod: order.shippingMethod,
+      status: order.status,
+      deliveryProof: order.deliveryProof
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Upload delivery proof by Rider (Unauthenticated, via QR)
+router.put('/rider/:id/delivery-proof', upload.single('deliveryProof'), async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id).populate('items.product');
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    if (!req.file) {
+      return res.status(400).json({ message: 'Please upload an image' });
+    }
+
+    order.deliveryProof = req.file.path;
+    order.status = 'delivered';
+    order.deliveredAt = Date.now();
+    const updatedOrder = await order.save();
+
+    // Construct item list for Telegram
+    const itemList = order.items.map(item => `• ${item.product?.name || 'Product'} (x${item.quantity})`).join('\n');
+
+    // SEND TELEGRAM notification that rider delivered it
+    const emoji = '✅';
+    const telegramMsg = `<b>Order Delivered (In-House Rider)</b> ${emoji}\n\n` +
+      `Order ID: ${formatOrderId(order.createdAt)}\n` +
+      `Total: ₱${order.total.toFixed(2)}\n` +
+      `Customer: ${order.contactDetails?.fullName || 'Customer'}\n\n` +
+      `<b>Items:</b>\n${itemList}\n\n` +
+      `Delivery Proof uploaded successfully.`;
+
+    const firstItemImage = order.items.length > 0 && order.items[0].product?.images ? order.items[0].product.images[0] : null;
+    sendTelegram(telegramMsg, firstItemImage);
+
+    res.json({ message: 'Delivery Proof Uploaded', deliveryProof: updatedOrder.deliveryProof });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
