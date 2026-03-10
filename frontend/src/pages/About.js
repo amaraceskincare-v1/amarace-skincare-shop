@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FiAward, FiHeart, FiShield, FiUsers } from 'react-icons/fi';
 import api from '../utils/api';
+import { optimizeImage } from '../utils/imageOptimizer';
 import '../styles/About.css';
 
 const About = () => {
@@ -49,10 +50,12 @@ const About = () => {
             <section className="story-section">
                 <div className="story-content">
                     <div className="story-image">
-                        <img
-                            src={`${settings?.ourStoryImage || "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80"}?t=${Date.now()}`}
-                            alt="AmaraCé Story"
-                        />
+                        {settings?.ourStoryImage ? (
+                            <img
+                                src={optimizeImage(settings.ourStoryImage, 800)}
+                                alt="AmaraCé Story"
+                            />
+                        ) : null}
                     </div>
                     <div className="story-text">
                         <h2>Our Story</h2>
