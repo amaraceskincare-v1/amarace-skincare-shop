@@ -79,10 +79,10 @@ router.put('/', protect, admin, upload.fields([
             }
         });
 
-        // Special handling for multiple hero images (Append)
+        // Special handling for multiple hero images (REPLACE, not append)
         if (req.files && req.files['heroImages']) {
             const newImages = req.files['heroImages'].map(f => f.path);
-            settings.heroImages = [...settings.heroImages, ...newImages].slice(0, 5);
+            settings.heroImages = newImages.slice(0, 5);
         } else if (req.body['heroImages'] === 'remove') {
             settings.heroImages = [];
         } else if (Array.isArray(req.body['heroImages'])) {
