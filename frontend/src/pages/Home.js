@@ -178,25 +178,25 @@ const Home = () => {
     {
       name: 'Lip Tints',
       count: `${categoryCounts['Lip Tint']} items`,
-      image: optimizeImage(settings?.lipTintImage || '/src/assets/backgrounds/lip_tint.png', 600),
+      image: settings?.lipTintImage ? optimizeImage(settings.lipTintImage, 600) : null,
       path: '/products?category=Lip%20Tint'
     },
     {
       name: 'Fragrances',
       count: `${categoryCounts['Perfume'] || 0} items`,
-      image: optimizeImage(settings?.perfumeImage || '/src/assets/backgrounds/perfume.png', 600),
+      image: settings?.perfumeImage ? optimizeImage(settings.perfumeImage, 600) : null,
       path: '/products?category=Perfume'
     },
     {
       name: 'Artisan Soaps',
       count: `${categoryCounts['Beauty Soap'] || 0} items`,
-      image: optimizeImage(settings?.beautySoapImage || '/src/assets/backgrounds/soap.png', 600),
+      image: settings?.beautySoapImage ? optimizeImage(settings.beautySoapImage, 600) : null,
       path: '/products?category=Beauty%20Soap'
     },
     {
       name: 'All Best Sellers',
       count: `${categoryCounts['All']} items`,
-      image: optimizeImage(settings?.allBestSellersImage || '/src/assets/backgrounds/lip_tint.png', 600),
+      image: settings?.allBestSellersImage ? optimizeImage(settings.allBestSellersImage, 600) : null,
       path: '/products'
     }
   ];
@@ -282,14 +282,17 @@ const Home = () => {
             <Link to={cat.path} key={index} className={`category-card-v2 cat-${index}`}>
               <div className="category-visual">
                 <div className="category-bg-gradient"></div>
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  className="category-img-v2"
-                  loading="lazy"
-                  width="200"
-                  height="200"
-                />
+                {cat.image && (
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="category-img-v2"
+                    loading="lazy"
+                    width="200"
+                    height="200"
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                  />
+                )}
                 <div className="category-overlay-v2">
                   <span className="view-btn">Discover →</span>
                 </div>
