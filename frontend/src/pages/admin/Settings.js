@@ -236,7 +236,6 @@ const AdminSettings = () => {
                             <div className="settings-section-title">Branding</div>
                             <p className="settings-section-desc">Your store's logos and visual identity.</p>
                             <div className="settings-image-grid">
-                                <ImageCard label="Store Logo" field="logo" hint="Transparent PNG, min 200×200px" icon={FiImage} />
                                 <ImageCard label="Navbar Logo" field="navbarLogo" hint="Logo shown in the navigation bar" icon={FiImage} />
                                 <ImageCard label="Footer Icon" field="footerSmallIcon" hint="Small icon in the footer" icon={FiImage} />
                             </div>

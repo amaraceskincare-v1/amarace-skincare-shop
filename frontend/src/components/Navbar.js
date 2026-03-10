@@ -126,7 +126,7 @@ const Navbar = () => {
                 width: `${settings?.headerLogoSize || 60}px`
               }}>
                 <img
-                  src={optimizeImage(settings?.logo || settings?.navbarLogo || '/logo.png', 120)}
+                  src={optimizeImage(settings?.navbarLogo || '/logo.png', 120)}
                   alt={`${settings?.brandName || 'AmaraCé'} Logo`}
                   className="navbar-logo-img"
                   loading="eager"
