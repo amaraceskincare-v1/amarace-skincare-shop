@@ -314,14 +314,6 @@ const AdminSettings = () => {
 
                 </div>
 
-                {/* Floating Save */}
-                <div className="settings-float-save">
-                    <button className="settings-save-btn" onClick={handleSave} disabled={saving}>
-                        <FiSave size={16} />
-                        {saving ? 'Saving...' : 'Save All Changes'}
-                    </button>
-                </div>
-
             </main>
         </div>
     );

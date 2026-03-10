@@ -58,7 +58,10 @@ const allowedOrigins = [
   'https://www.xn--amaracskincare-gkb.store',
   'https://xn--amaracskincare-pkb.store',
   'https://www.xn--amaracskincare-pkb.store',
-  process.env.CLIENT_URL
+  'https://amaraceskincare.store',
+  'https://www.amaraceskincare.store',
+  process.env.CLIENT_URL,
+  process.env.RENDER_EXTERNAL_URL
 ].filter(Boolean);
 
 app.use(
@@ -70,8 +73,18 @@ app.use(
         return callback(null, true);
       }
 
-      // Allow any potential punycode variant of the domain just to be safe
-      if (/^https:\/\/(www\.)?xn--amaracskincare-[a-z0-9]+\.store$/.test(origin)) {
+      // Allow any punycode variant of the domain
+      if (/^https?:\/\/(www\.)?xn--amaracskincare-[a-z0-9]+\.store$/.test(origin)) {
+        return callback(null, true);
+      }
+
+      // Allow any amarace*.store or amaraceskincare*.store variant
+      if (/^https?:\/\/(www\.)?(amarace|xn--amarac[a-z]+)skincare\.[a-z]+$/.test(origin)) {
+        return callback(null, true);
+      }
+
+      // Allow Render preview URLs for this app
+      if (/^https:\/\/amarace[a-z0-9-]*\.onrender\.com$/.test(origin)) {
         return callback(null, true);
       }
 
