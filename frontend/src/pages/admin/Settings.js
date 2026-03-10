@@ -126,10 +126,15 @@ const AdminSettings = () => {
                 {settings[field] ? (
                     <div className="sic-img-wrapper">
                         {isVideoUrl(settings[field]) ? (
-                            <video src={settings[field]} className="sic-video-preview" muted />
+                            <video src={settings[field]} className="sic-video-preview" muted preload="metadata" />
                         ) : (
-                            <img src={settings[field]} alt={label} />
+                            <img
+                                src={settings[field]}
+                                alt={label}
+                                onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling && (e.target.nextSibling.style.display = 'flex'); }}
+                            />
                         )}
+                        <div className="sic-empty" style={{ display: 'none' }}>No image</div>
                         <button className="sic-remove-btn" onClick={() => handleRemoveField(field)} title="Remove"><FiTrash2 size={14} /></button>
                     </div>
                 ) : (

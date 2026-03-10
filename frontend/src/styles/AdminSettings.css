@@ -382,7 +382,16 @@
     cursor: pointer;
     font-size: 0.7rem;
     font-weight: 600;
+    text-align: center;
     transition: all 0.2s;
+}
+
+.footer-brand-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
+    border-radius: 50%;
 }
 
 .sas-add-card:hover {

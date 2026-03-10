@@ -12,8 +12,16 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorModal, setErrorModal] = useState({ show: false, message: '' });
+
+  // Load remembered credentials on mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('rem_email');
+    const savedPassword = localStorage.getItem('rem_password');
+    if (savedEmail) { setEmail(savedEmail); setPassword(savedPassword || ''); setRememberMe(true); }
+  }, []);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -25,6 +33,13 @@ const Login = () => {
     setLoading(true);
     try {
       await login(email, password);
+      if (rememberMe) {
+        localStorage.setItem('rem_email', email);
+        localStorage.setItem('rem_password', password);
+      } else {
+        localStorage.removeItem('rem_email');
+        localStorage.removeItem('rem_password');
+      }
       toast.success('Login successful!');
       const targetPath = redirect.startsWith('/') ? redirect : `/${redirect}`;
       navigate(targetPath);
@@ -130,7 +145,11 @@ const Login = () => {
 
             <div className="auth-options-v2">
               <label className="checkbox-container">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
                 <span className="checkmark"></span>
                 Remember me
               </label>
