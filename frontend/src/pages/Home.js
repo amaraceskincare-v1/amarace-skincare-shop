@@ -375,14 +375,14 @@ const Home = () => {
               playsInline
               className="full-panel-img"
             />
-          ) : (
+          ) : settings?.premiumBannerMedia ? (
             <img
-              src={settings?.premiumBannerMedia || "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=1000&q=80"}
+              src={settings.premiumBannerMedia}
               alt="Product Showcase"
               className="full-panel-img"
               loading="lazy"
             />
-          )}
+          ) : null}
         </div>
       </section>
 

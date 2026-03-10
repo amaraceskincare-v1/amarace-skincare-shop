@@ -3,6 +3,7 @@ import AdminSidebar from '../../components/AdminSidebar';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
 import { FiStar, FiTrash2, FiMessageSquare } from 'react-icons/fi';
+import { optimizeImage } from '../../utils/imageOptimizer';
 import '../../styles/Admin.css';
 
 const AdminReviews = () => {
@@ -106,11 +107,13 @@ const AdminReviews = () => {
                                         </td>
                                         <td>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                <img
-                                                    src={review.product?.image || 'https://via.placeholder.com/40'}
-                                                    alt=""
-                                                    style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '4px' }}
-                                                />
+                                                {review.product?.images?.[0] && (
+                                                    <img
+                                                        src={optimizeImage(review.product.images[0], 40)}
+                                                        alt=""
+                                                        style={{ width: '32px', height: '32px', objectFit: 'cover', borderRadius: '4px' }}
+                                                    />
+                                                )}
                                                 <span style={{ fontSize: '13px' }}>{review.product?.name}</span>
                                             </div>
                                         </td>
