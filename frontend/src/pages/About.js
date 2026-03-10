@@ -121,7 +121,7 @@ const About = () => {
                             <div key={i} className="team-member-card">
                                 <div className="team-image-container">
                                     <img
-                                        src={`${img}?t=${Date.now()}`}
+                                        src={optimizeImage(img, 400)}
                                         alt={`Team Member ${i + 1}`}
                                         className="team-member-image"
                                     />

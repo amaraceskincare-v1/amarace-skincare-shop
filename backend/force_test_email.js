@@ -12,7 +12,7 @@ const testEmail = async () => {
     try {
         await sendEmail({
             to: targetEmail,
-            subject: 'Test Email from AmaraCe Debugger',
+            subject: 'Test Email from amarace Debugger',
             html: '<h1>If you see this, email execution is working!</h1><p>The issue might be in how the email address is passed during checkout.</p>'
         });
         console.log('✅ Manual test finished. Check the logs above to see if it said "sent successfully".');

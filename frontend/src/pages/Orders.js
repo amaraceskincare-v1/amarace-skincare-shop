@@ -49,7 +49,7 @@ const Orders = () => {
                   {order.items?.map((item, idx) => (
                     <div key={idx} className="order-item-with-img">
                       <img
-                        src={item.product?.images?.[0] || '/placeholder.jpg'}
+                        src={optimizeImage(item.product?.images?.[0] || '/placeholder.jpg', 100)}
                         alt={item.product?.name || 'Product'}
                         className="order-item-img"
                       />

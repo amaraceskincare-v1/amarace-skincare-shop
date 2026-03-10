@@ -5,6 +5,7 @@ import api from '../utils/api';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
+import { optimizeImage } from '../utils/imageOptimizer';
 import '../styles/ProductDetail.css';
 
 import { useSettings } from '../context/SettingsContext';
@@ -102,7 +103,7 @@ const ProductDetail = () => {
         <div className="product-gallery-v2">
           <div className="main-image-container-v2">
             <img
-              src={product.images?.[selectedImage] || '/placeholder.jpg'}
+              src={optimizeImage(product.images?.[selectedImage] || '/placeholder.jpg', 800)}
               alt={product.name}
               className="main-view-v2"
             />
@@ -115,7 +116,7 @@ const ProductDetail = () => {
                   className={`thumb-item-v2 ${selectedImage === idx ? 'active' : ''}`}
                   onClick={() => setSelectedImage(idx)}
                 >
-                  <img src={img} alt={`${product.name} shadow ${idx + 1}`} />
+                  <img src={optimizeImage(img, 150)} alt={`${product.name} shadow ${idx + 1}`} />
                 </button>
               ))}
             </div>

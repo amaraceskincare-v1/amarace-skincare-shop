@@ -178,25 +178,25 @@ const Home = () => {
     {
       name: 'Lip Tints',
       count: `${categoryCounts['Lip Tint']} items`,
-      image: optimizeImage(settings?.lipTintImage || 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&q=80', 600),
+      image: optimizeImage(settings?.lipTintImage || '/src/assets/backgrounds/lip_tint.png', 600),
       path: '/products?category=Lip%20Tint'
     },
     {
       name: 'Fragrances',
       count: `${categoryCounts['Perfume'] || 0} items`,
-      image: optimizeImage(settings?.perfumeImage || 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80', 600),
+      image: optimizeImage(settings?.perfumeImage || '/src/assets/backgrounds/perfume.png', 600),
       path: '/products?category=Perfume'
     },
     {
       name: 'Artisan Soaps',
       count: `${categoryCounts['Beauty Soap'] || 0} items`,
-      image: optimizeImage(settings?.beautySoapImage || 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&q=80', 600),
+      image: optimizeImage(settings?.beautySoapImage || '/src/assets/backgrounds/soap.png', 600),
       path: '/products?category=Beauty%20Soap'
     },
     {
       name: 'All Best Sellers',
       count: `${categoryCounts['All']} items`,
-      image: optimizeImage(settings?.allBestSellersImage || 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&q=80', 600),
+      image: optimizeImage(settings?.allBestSellersImage || '/src/assets/backgrounds/lip_tint.png', 600),
       path: '/products'
     }
   ];
@@ -450,7 +450,7 @@ const Home = () => {
           {/* Facebook Icon */}
           <div className="instagram-social-link">
             <a
-              href="https://facebook.com/AmaraCeSkinCare"
+              href="https://facebook.com/amarace.skincare"
               target="_blank"
               rel="noopener noreferrer"
               className="facebook-link-circle"

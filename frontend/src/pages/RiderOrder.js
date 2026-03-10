@@ -102,7 +102,7 @@ const RiderOrder = () => {
                         {order.items?.map((item, idx) => (
                             <li key={idx} className="rider-item">
                                 <img
-                                    src={item.image || '/placeholder.jpg'}
+                                    src={optimizeImage(item.image || '/placeholder.jpg', 100)}
                                     alt={item.name}
                                     className="rider-item-img"
                                 />

@@ -65,7 +65,7 @@ const formatOrderId = (date) => {
 router.get('/test-telegram', async (req, res) => {
   try {
     const telegramMsg = `<b>AmaraCé Test Debug</b> 🛠️\n\nTesting live server Telegram connection.`;
-    const imageUrl = "https://res.cloudinary.com/drpkxjhhi/image/upload/v1727833096/products/amara_fierce.png"; // Live product image
+    const imageUrl = "https://res.cloudinary.com/amarace/image/upload/v1727833096/products/amara_fierce.png"; // Live product image
 
     // Call the same logic
     const botToken = process.env.TELEGRAM_BOT_TOKEN;

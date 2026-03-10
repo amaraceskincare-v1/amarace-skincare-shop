@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FiX, FiMinus, FiPlus, FiTrash2 } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
+import { optimizeImage } from '../utils/imageOptimizer';
 import '../styles/CartDrawer.css';
 
 const CartDrawer = ({ isOpen, onClose }) => {
@@ -52,7 +53,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
                         items.map((item) => (
                             <div key={item.product?._id || item.productId} className="drawer-item">
                                 <div className="item-image">
-                                    <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt={item.product?.name} />
+                                    <img src={optimizeImage(item.product?.images?.[0] || '/placeholder.jpg', 120)} alt={item.product?.name} />
                                 </div>
                                 <div className="item-details">
                                     <h4 className="item-name">{item.product?.name}</h4>

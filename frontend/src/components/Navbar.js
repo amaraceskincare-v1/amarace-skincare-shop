@@ -132,7 +132,7 @@ const Navbar = () => {
                   loading="eager"
                   fetchpriority="high"
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                  onError={(e) => { e.target.src = '/logo.png'; }}
+                  onError={(e) => { e.target.src = 'https://res.cloudinary.com/amarace/image/upload/v1/site-assets/logo.png'; }}
                 />
               </div>
 

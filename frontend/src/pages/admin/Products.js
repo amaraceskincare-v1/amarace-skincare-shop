@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
 import AdminSidebar from '../../components/AdminSidebar';
+import { optimizeImage } from '../../utils/imageOptimizer';
 import '../../styles/Admin.css';
 import '../../styles/AdminForms.css';
 
@@ -191,7 +192,7 @@ const AdminProducts = () => {
               <tr key={product._id}>
                 <td className="product-info-cell">
                   <img
-                    src={product.images?.[0] || '/placeholder.jpg'}
+                    src={optimizeImage(product.images?.[0] || '/placeholder.jpg', 60)}
                     alt=""
                     className="product-thumb-small"
                     style={{ width: '50px', height: '50px', objectFit: 'cover', minWidth: '50px' }}
@@ -280,7 +281,7 @@ const AdminProducts = () => {
                     <div className="image-preview-grid">
                       {productImages.map((image, index) => (
                         <div key={index} className="image-preview-item">
-                          <img src={image.url} alt={`Product ${index + 1}`} />
+                          <img src={optimizeImage(image.url, 200)} alt={`Product ${index + 1}`} />
                           <button
                             type="button"
                             className="remove-image-btn"

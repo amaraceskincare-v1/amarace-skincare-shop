@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FiMinus, FiPlus, FiX, FiArrowLeft } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
 import api from '../utils/api';
+import { optimizeImage } from '../utils/imageOptimizer';
 import '../styles/Cart.css';
 
 const Cart = () => {
@@ -78,7 +79,7 @@ const Cart = () => {
             {items.map((item) => (
               <div key={item.product?._id || item.productId} className="cart-item-v2">
                 <div className="item-img-v2">
-                  <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt={item.product?.name} />
+                  <img src={optimizeImage(item.product?.images?.[0] || '/placeholder.jpg', 100)} alt={item.product?.name} />
                 </div>
 
                 <div className="item-info-v2">
@@ -167,7 +168,7 @@ const Cart = () => {
                 {settings?.gcashQR && (
                   <div className="payment-icon-item">
                     <img
-                      src={settings.gcashQR}
+                      src={optimizeImage(settings.gcashQR, 100)}
                       alt="GCash"
                       className="payment-icon"
                     />
@@ -183,7 +184,7 @@ const Cart = () => {
                   ))
                 ) : (
                   <div className="payment-icon-item">
-                    <img src="/images/cod-icon.png" alt="Cash on Delivery" className="payment-icon" />
+                    <img src={optimizeImage("/images/payment/cod-icon.png", 50)} alt="Cash on Delivery" className="payment-icon" />
                   </div>
                 )}
               </div>

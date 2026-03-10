@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import { FiMinus, FiPlus, FiX } from 'react-icons/fi';
+import { optimizeImage } from '../utils/imageOptimizer';
 import '../styles/Checkout.css';
 
 // Davao Del Norte data
@@ -276,12 +277,12 @@ const Checkout = () => {
                     </div>
                     <span>GCash</span>
                     <img
-                      src="/images/payment/gcash-logo.png"
+                      src={optimizeImage("/images/payment/gcash-logo.png", 60)}
                       alt="GCash"
                       className="payment-icon-mini"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = 'https://raw.githubusercontent.com/amaraceskincare-v1/amarace-skincare-shop/main/frontend/public/images/gcash-logo.png';
+                        e.target.src = 'https://res.cloudinary.com/amarace/image/upload/v1/site-assets/gcash_logo.png';
                       }}
                     />
                   </div>
@@ -308,7 +309,7 @@ const Checkout = () => {
                     <p>Scan the QR code below and pay <strong>₱{total.toFixed(2)}</strong></p>
                     <div className="qr-container">
                       <img
-                        src={settings?.gcashQRCode || "/gcash-qr.png"}
+                        src={optimizeImage(settings?.gcashQRCode || "/gcash-qr.png", 300)}
                         alt="GCash QR"
                         className="qr-code"
                       />
@@ -389,7 +390,7 @@ const Checkout = () => {
             {items.map((item) => (
               <div key={item.product?._id || item.productId} className="summary-item-modern">
                 <div className="item-image">
-                  <img src={item.product?.images?.[0] || '/placeholder.jpg'} alt={item.product?.name} />
+                  <img src={optimizeImage(item.product?.images?.[0] || '/placeholder.jpg', 150)} alt={item.product?.name} />
                 </div>
 
                 <div className="item-details">
@@ -447,25 +448,25 @@ const Checkout = () => {
             <div className="payment-icons-row">
               <div className="payment-method-icon-card">
                 <img
-                  src="/images/payment/gcash-logo.png"
+                  src={optimizeImage("/images/payment/gcash-logo.png", 100)}
                   alt="GCash"
                   className="payment-method-icon"
                   title="GCash"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = 'https://raw.githubusercontent.com/amaraceskincare-v1/amarace-skincare-shop/main/frontend/public/images/gcash-logo.png';
+                    e.target.src = 'https://res.cloudinary.com/amarace/image/upload/v1/site-assets/gcash_logo.png';
                   }}
                 />
               </div>
               <div className="payment-method-icon-card">
                 <img
-                  src="/images/payment/cod-icon.png"
+                  src={optimizeImage("/images/payment/cod-icon.png", 100)}
                   alt="Cash on Delivery"
                   className="payment-method-icon"
                   title="Cash on Delivery"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = 'https://cdn-icons-png.flaticon.com/512/2311/2311531.png';
+                    e.target.src = 'https://res.cloudinary.com/amarace/image/upload/v1/site-assets/cod_icon.png';
                   }}
                 />
               </div>
