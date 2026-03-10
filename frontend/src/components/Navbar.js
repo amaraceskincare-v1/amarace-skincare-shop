@@ -126,13 +126,13 @@ const Navbar = () => {
                 width: `${settings?.headerLogoSize || 60}px`
               }}>
                 <img
-                  src={optimizeImage(settings?.navbarLogo || '/logo.png', 120)}
+                  src={optimizeImage(settings?.logo || settings?.navbarLogo || '/logo.png', 120)}
                   alt={`${settings?.brandName || 'AmaraCé'} Logo`}
                   className="navbar-logo-img"
                   loading="eager"
                   fetchpriority="high"
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                  onError={(e) => { e.target.src = 'https://res.cloudinary.com/amarace/image/upload/v1/site-assets/logo.png'; }}
+                  onError={(e) => { e.target.src = '/logo.png'; }}
                 />
               </div>
 

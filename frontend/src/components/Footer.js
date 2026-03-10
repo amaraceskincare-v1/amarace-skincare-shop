@@ -69,10 +69,12 @@ const Footer = () => {
       <div className="footer-nav-container-v2">
         <div className="footer-nav-grid-v2">
           <div className="nav-col-v2 branding">
-            {settings?.footerSmallIcon && (
-              <img src={settings.footerSmallIcon} alt="AmaraCé" className="footer-brand-icon" />
-            )}
-            <h4 className="footer-logo-v2">AmaraCé</h4>
+            <div className="footer-brand-row">
+              {settings?.footerSmallIcon && (
+                <img src={settings.footerSmallIcon} alt="AmaraCé" className="footer-brand-icon" />
+              )}
+              <h4 className="footer-logo-v2">AmaraCé</h4>
+            </div>
             <p className="footer-motto-v2">Reveal Your Natural Radiance.</p>
           </div>
 
