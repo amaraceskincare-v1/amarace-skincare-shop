@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FiMail, FiPhone, FiMapPin, FiSend, FiClock } from 'react-icons/fi';
 import { toast } from 'react-toastify';
+import api from '../utils/api';
 import '../styles/Contact.css';
 
 const Contact = () => {
@@ -23,20 +24,22 @@ const Contact = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
-        // Simulate form submission
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        toast.success('Message sent successfully! We\'ll get back to you soon.');
-        setFormData({ name: '', email: '', subject: '', message: '' });
-        setLoading(false);
+        try {
+            await api.post('/contact', formData);
+            toast.success("Message sent! We'll get back to you soon. Check your email for confirmation.");
+            setFormData({ name: '', email: '', subject: '', message: '' });
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Failed to send message. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const contactInfo = [
         {
             icon: FiMapPin,
             title: 'Address',
-            content: 'Metro Manila, Philippines',
+            content: 'Canocotan, Tagum City, Davao del Norte, 8100',
         },
         {
             icon: FiMail,

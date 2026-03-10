@@ -22,6 +22,7 @@ const AdminSettings = () => {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [files, setFiles] = useState({});
+    const [removedFields, setRemovedFields] = useState([]);
     const [activeTab, setActiveTab] = useState('branding');
 
     useEffect(() => {
@@ -57,6 +58,7 @@ const AdminSettings = () => {
     const handleRemoveField = (field) => {
         setSettings(prev => ({ ...prev, [field]: '' }));
         setFiles(prev => { const next = { ...prev }; delete next[field]; return next; });
+        setRemovedFields(prev => prev.includes(field) ? prev : [...prev, field]);
     };
 
     const handleRemoveArrayItem = (field, index) => {
@@ -82,6 +84,11 @@ const AdminSettings = () => {
             if (settings[field] !== undefined) formData.append(field, settings[field]);
         });
 
+        // Send 'remove' for deleted single image fields
+        removedFields.forEach(field => {
+            if (!files[field]) formData.append(field, 'remove');
+        });
+
         // Send removed array fields
         ['heroImages', 'teamImages', 'galleryImages'].forEach(field => {
             if (settings[field].length === 0) formData.append(field, 'remove');
@@ -91,6 +98,7 @@ const AdminSettings = () => {
             const { data } = await api.put('/settings', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
             setSettings({ ...data, heroImages: data.heroImages || [], teamImages: data.teamImages || [], galleryImages: data.galleryImages || [] });
             setFiles({});
+            setRemovedFields([]);
             await refreshSettings();
             toast.success('Settings saved successfully! ✨');
         } catch (error) {
@@ -102,6 +110,8 @@ const AdminSettings = () => {
     };
 
     // ─── Sub-components ──────────────────────────────────────────────────────────
+
+    const isVideoUrl = (url) => url && /\.(mp4|mov|webm|avi)$/i.test(url.split('?')[0]);
 
     const ImageCard = ({ label, field, hint, icon: Icon = FiImage }) => (
         <div className="settings-image-card">
@@ -115,7 +125,11 @@ const AdminSettings = () => {
             <div className="sic-preview">
                 {settings[field] ? (
                     <div className="sic-img-wrapper">
-                        <img src={settings[field]} alt={label} />
+                        {isVideoUrl(settings[field]) ? (
+                            <video src={settings[field]} className="sic-video-preview" muted />
+                        ) : (
+                            <img src={settings[field]} alt={label} />
+                        )}
                         <button className="sic-remove-btn" onClick={() => handleRemoveField(field)} title="Remove"><FiTrash2 size={14} /></button>
                     </div>
                 ) : (
@@ -138,7 +152,11 @@ const AdminSettings = () => {
             <div className="sas-grid">
                 {(settings[field] || []).map((url, i) => (
                     <div key={i} className="sas-item">
-                        <img src={url} alt={`${label} ${i + 1}`} />
+                        {isVideoUrl(url) ? (
+                            <div className="sas-video-thumb">🎬<span>Video</span></div>
+                        ) : (
+                            <img src={url} alt={`${label} ${i + 1}`} />
+                        )}
                         <button className="sas-remove" onClick={() => handleRemoveArrayItem(field, i)}><FiTrash2 size={12} /></button>
                         {i === 0 && <span className="sas-primary-badge">Primary</span>}
                     </div>

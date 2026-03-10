@@ -101,11 +101,11 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/cart', require('./routes/cartRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
-
 app.use('/api/settings', require('./routes/settingRoutes'));
 app.use('/api/reviews', require('./routes/reviewRoutes'));
 app.use('/api/newsletter', require('./routes/newsletterRoutes'));
 app.use('/api/social-auth', require('./routes/socialAuthRoutes'));
+app.use('/api/contact', require('./routes/contactRoutes'));
 
 // Global Error Handler
 app.use((err, req, res, next) => {

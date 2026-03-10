@@ -70,7 +70,7 @@ const Footer = () => {
         <div className="footer-nav-grid-v2">
           <div className="nav-col-v2 branding">
             <h4 className="footer-logo-v2">AmaraCé</h4>
-            <p className="footer-motto-v2">Celebrating your natural radiance with dermatologist-tested, luxury skincare solutions.</p>
+            <p className="footer-motto-v2">Reveal Your Natural Radiance.</p>
           </div>
 
           <div className="nav-col-v2">
@@ -95,8 +95,8 @@ const Footer = () => {
           <div className="nav-col-v2">
             <h4>STORE LOCATION</h4>
             <ul>
-              <li>Salvacion, Panabo City</li>
-              <li>Davao del Norte, 8105</li>
+              <li>Canocotan, Tagum City</li>
+              <li>Davao del Norte, 8100</li>
             </ul>
           </div>
         </div>
@@ -106,7 +106,7 @@ const Footer = () => {
       <div className="footer-bottom-v2">
         <div className="bottom-content-v2">
           {/* removed payment stack to cleanup footer per user request */}
-          <p className="copyright-text-v2">© 2025 AmaraCé Skin Care. Crafted for Radiance. All Rights Reserved.</p>
+          <p className="copyright-text-v2">© 2025 AmaraCé Skin Care. All Rights Reserved.</p>
           <div className="legal-links-v2">
             <Link to="/policies/terms">Terms</Link>
             <Link to="/policies/privacy">Privacy</Link>
