@@ -158,7 +158,13 @@ const AdminSettings = () => {
                 {(settings[field] || []).map((url, i) => (
                     <div key={i} className="sas-item">
                         {isVideoUrl(url) ? (
-                            <div className="sas-video-thumb">🎬<span>Video</span></div>
+                            <video
+                                src={url}
+                                className="sic-video-preview"
+                                preload="metadata"
+                                muted
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
                         ) : (
                             <img src={url} alt={`${label} ${i + 1}`} />
                         )}
@@ -277,7 +283,6 @@ const AdminSettings = () => {
 
                             <div className="settings-section-title" style={{ marginTop: '2rem' }}>Layout Images</div>
                             <div className="settings-image-grid">
-                                <ImageCard label="Header Background" field="headerBackground" hint="Background behind the top nav bar" icon={FiLayout} />
                                 <ImageCard label="Product Hero Media" field="productHeroMedia" hint="Banner shown on the Products page" icon={FiImage} />
                                 <ImageCard label="Premium Banner" field="premiumBannerMedia" hint="Right panel of the Beauty Essentials banner" icon={FiImage} />
                             </div>

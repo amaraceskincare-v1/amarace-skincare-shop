@@ -240,6 +240,26 @@
   transform: translateY(-2px);
 }
 
+/* Side Ad Banner (from Settings > Marketing) */
+.sidebar-ad-banner {
+  margin-top: 30px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.sidebar-ad-banner img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.sidebar-ad-banner:hover img {
+  transform: scale(1.02);
+}
+
 /* Main Shop Area */
 .shop-main-v2 {
   flex: 1;

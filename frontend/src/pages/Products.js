@@ -218,6 +218,13 @@ const Products = () => {
                 Reset All Filters
               </button>
             )}
+
+            {/* Side Ad Banner */}
+            {settings?.sideAd && (
+              <div className="sidebar-ad-banner">
+                <img src={settings.sideAd} alt="Promotion" />
+              </div>
+            )}
           </div>
         </aside>
 

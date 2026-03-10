@@ -152,13 +152,13 @@
 .footer-brand-row {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 0;
+    gap: 10px;
+    margin-bottom: 16px;
 }
 
 .footer-brand-icon {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 2.5rem;
+    height: 2.5rem;
     object-fit: contain;
     border-radius: 50%;
     flex-shrink: 0;
@@ -168,7 +168,8 @@
     font-family: 'Playfair Display', serif;
     font-size: 2.5rem;
     font-weight: 800;
-    margin-bottom: 25px;
+    margin-bottom: 0;
+    line-height: 1;
 }
 
 .footer-motto-v2 {
