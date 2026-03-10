@@ -4,6 +4,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import AdminSidebar from '../../components/AdminSidebar';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
+import { optimizeImage } from '../../utils/imageOptimizer';
 import '../../styles/Admin.css';
 
 const AdminOrders = () => {
