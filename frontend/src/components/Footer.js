@@ -13,10 +13,8 @@ const Footer = () => {
   const { t } = useLanguage();
   const location = useLocation();
 
-  // Hide footer on admin pages
-  if (location.pathname.startsWith('/admin')) return null;
-
   useEffect(() => {
+    if (location.pathname.startsWith('/admin')) return;
     const fetchSettings = async () => {
       try {
         const { data } = await api.get('/settings');
@@ -26,7 +24,10 @@ const Footer = () => {
       }
     };
     fetchSettings();
-  }, []);
+  }, [location.pathname]);
+
+  // Hide footer on admin pages (must be after all hooks)
+  if (location.pathname.startsWith('/admin')) return null;
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
