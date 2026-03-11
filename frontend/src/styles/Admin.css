@@ -2216,7 +2216,9 @@
         width: 100vw;
     }
     .admin-main {
-        max-width: calc(100vw - 240px);
+        flex: 1;
+        min-width: 0;
+        padding: 2.5rem 4rem;
         overflow-x: auto;
     }
 }
