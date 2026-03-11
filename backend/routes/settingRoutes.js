@@ -89,14 +89,22 @@ router.put('/', protect, admin, upload.fields([
             settings.heroImages = req.body['heroImages'];
         }
 
-        // Special handling for multiple payment logos (Append)
+        // Special handling for multiple payment logos (REPLACE with existing + new)
         if (req.files && req.files['paymentLogos']) {
             const newLogos = req.files['paymentLogos'].map(f => f.path);
-            settings.paymentLogos = [...settings.paymentLogos, ...newLogos].slice(0, 3);
+            // Get existing kept URLs from frontend (sent as paymentLogos_existing[])
+            const existingLogos = req.body['paymentLogos_existing']
+                ? (Array.isArray(req.body['paymentLogos_existing']) ? req.body['paymentLogos_existing'] : [req.body['paymentLogos_existing']])
+                : [];
+            settings.paymentLogos = [...existingLogos, ...newLogos].slice(0, 3);
         } else if (req.body['paymentLogos'] === 'remove') {
             settings.paymentLogos = [];
-        } else if (Array.isArray(req.body['paymentLogos'])) {
-            settings.paymentLogos = req.body['paymentLogos'];
+        } else if (req.body['paymentLogos_existing']) {
+            // Only existing items sent, no new upload - use as the current array (handles deletions)
+            const existingLogos = Array.isArray(req.body['paymentLogos_existing'])
+                ? req.body['paymentLogos_existing']
+                : [req.body['paymentLogos_existing']];
+            settings.paymentLogos = existingLogos;
         }
 
         // Special handling for Team images (Append)

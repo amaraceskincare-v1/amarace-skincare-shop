@@ -15,6 +15,7 @@ const AdminSettings = () => {
         lipTintImage: '', perfumeImage: '', beautySoapImage: '',
         allBestSellersImage: '', ourStoryImage: '', productHeroMedia: '',
         premiumBannerMedia: '', teamImages: [], galleryImages: [],
+        paymentLogos: [],
         brandName: '', showBrandName: true, brandNamePosition: 'right',
         brandNameColor: '#2D2D2D', brandNameFontSize: 'medium',
         brandNameFontWeight: 'bold', headerLogoSize: 60
@@ -29,7 +30,14 @@ const AdminSettings = () => {
         const fetchSettings = async () => {
             try {
                 const { data } = await api.get('/settings');
-                setSettings({ ...settings, ...data, heroImages: data.heroImages || [], teamImages: data.teamImages || [], galleryImages: data.galleryImages || [] });
+                setSettings(prev => ({
+                    ...prev,
+                    ...data,
+                    heroImages: data.heroImages || [],
+                    teamImages: data.teamImages || [],
+                    galleryImages: data.galleryImages || [],
+                    paymentLogos: data.paymentLogos || [],
+                }));
             } catch (error) {
                 toast.error('Failed to load settings');
             } finally {
