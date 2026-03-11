@@ -25,9 +25,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Hide navbar entirely on admin pages
-  if (location.pathname.startsWith('/admin')) return null;
-
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
@@ -95,6 +92,9 @@ const Navbar = () => {
     if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
   };
+
+  // Hide navbar on admin pages (must be after all hooks)
+  if (location.pathname.startsWith('/admin')) return null;
 
   return (
     <header

@@ -97,14 +97,18 @@ const AdminSettings = () => {
             if (!files[field]) formData.append(field, 'remove');
         });
 
-        // Send removed array fields
-        ['heroImages', 'teamImages', 'galleryImages', 'paymentLogos'].forEach(field => {
+        // Send removed array fields (heroImages, teamImages, galleryImages)
+        ['heroImages', 'teamImages', 'galleryImages'].forEach(field => {
             if (settings[field] && settings[field].length === 0) formData.append(field, 'remove');
-            else if (settings[field] && settings[field].length > 0 && !files[field]) {
-                // Send existing URLs so they aren't lost on save
-                settings[field].forEach(url => formData.append(field + '_existing', url));
-            }
         });
+
+        // paymentLogos: always send existing URLs so backend knows what to keep
+        if (settings.paymentLogos && settings.paymentLogos.length === 0) {
+            formData.append('paymentLogos', 'remove');
+        } else if (settings.paymentLogos && settings.paymentLogos.length > 0) {
+            // Always send current saved URLs - backend will combine these with any new uploads
+            settings.paymentLogos.forEach(url => formData.append('paymentLogos_existing', url));
+        }
 
         try {
             const { data } = await api.put('/settings', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
