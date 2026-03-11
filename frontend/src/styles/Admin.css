@@ -1761,7 +1761,6 @@
 }
 
 /* =========================================
-   /* =========================================
    ADMIN MOBILE RESPONSIVE
    ========================================= */
 
@@ -1788,6 +1787,7 @@
         min-height: 100dvh;
         overflow-x: hidden;
         width: 100%;
+        position: relative;
     }
 
     /* ── Mobile Top Bar ── */
@@ -1838,7 +1838,7 @@
         position: fixed;
         top: 0;
         left: 0;
-        height: 100dvh;         /* uses dvh so it accounts for browser chrome */
+        height: 100dvh;
         width: 240px;
         min-height: 100dvh;
         z-index: 1200;
@@ -1847,6 +1847,7 @@
         box-shadow: 6px 0 30px rgba(0,0,0,0.15);
         overflow-y: auto;
         padding-bottom: 2rem;
+        border-right: none;
     }
 
     .admin-sidebar.mobile-open {
@@ -1871,6 +1872,8 @@
     .sidebar-logo {
         display: flex;
         align-items: center;
+        padding: 0 1.5rem;
+        margin-bottom: 1rem;
     }
 
     /* ── Overlay ── */
@@ -1900,11 +1903,12 @@
         align-items: flex-start !important;
         gap: 10px;
         flex-wrap: wrap;
+        margin-bottom: 1.5rem;
     }
 
     .page-header h1,
     .page-header h2 {
-        font-size: 1.2rem;
+        font-size: 1.25rem;
     }
 
     /* ── Dashboard Stats ── */
@@ -1913,26 +1917,114 @@
         gap: 10px !important;
     }
 
-    /* ── All Tables: Horizontally Scrollable ── */
-    .admin-table-container,
-    .table-responsive,
-    .orders-table-wrapper,
-    .gcash-table-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+    /* ── Card-based Table Layout ── */
+    .admin-table.orders-table {
+        display: block;
+        border: none;
+        background: transparent;
+    }
+
+    .admin-table.orders-table thead {
+        display: none; /* Hide headers on mobile */
+    }
+
+    .admin-table.orders-table tbody,
+    .admin-table.orders-table tr,
+    .admin-table.orders-table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .admin-table.orders-table tr {
+        background: #fff;
+        margin-bottom: 1rem;
+        border-radius: 12px;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border: 1px solid #f0f0f0;
+        position: relative;
+    }
+
+    .admin-table.orders-table td {
+        padding: 8px 0;
+        border: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        text-align: right;
+        min-height: 40px;
+        border-bottom: 1px solid #f8fafc;
+    }
+
+    .admin-table.orders-table td:last-child {
+        border-bottom: none;
+        padding-top: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .admin-table.orders-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        color: #64748b;
+        text-align: left;
+        margin-right: 15px;
+        flex-shrink: 0;
+        padding-top: 2px;
+    }
+
+    /* Specific cell adjustments for mobile cards */
+    .order-id-cell {
+        background: #fdf2f8;
+        margin: -1rem -1rem 1rem -1rem;
+        padding: 0.8rem 1rem !important;
+        border-radius: 12px 12px 0 0;
+        border-bottom: 1px solid #fbcfe8 !important;
+        font-weight: 700;
+        color: var(--primary);
+    }
+    
+    .order-id-cell::before {
+        color: var(--primary) !important;
+    }
+
+    .customer-summary {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px;
+    }
+
+    .items-list {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
         width: 100%;
     }
 
-    /* Wrap raw tables not already in a container */
-    .admin-main table {
-        min-width: 600px;
-        font-size: 0.78rem;
+    .item-row {
+        justify-content: flex-end;
+        width: 100%;
+        margin-bottom: 4px;
     }
 
-    .admin-main table th,
-    .admin-main table td {
-        padding: 8px 8px;
-        white-space: nowrap;
+    .inhouse-delivery-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+    }
+
+    .shipping-badge {
+        margin-bottom: 4px;
+    }
+
+    .action-cell {
+        margin-top: 10px;
+        border-top: 2px solid #f1f5f9 !important;
     }
 
     /* ── Settings Page ── */
@@ -1968,20 +2060,16 @@
     .settings-section {
         padding: 1rem !important;
     }
-
-    /* ── Orders expanded card ── */
-    .order-expanded-card,
-    .expanded-order {
-        word-break: break-word;
-        overflow-wrap: break-word;
-        font-size: 0.82rem;
-    }
-
-    /* ── GCash Payments page ── */
-    .gcash-header,
-    .admin-page-header {
-        flex-direction: column;
-        align-items: flex-start !important;
-        gap: 10px;
-    }
 }
+
+/* Fix for "Desktop site" view on mobile where overflow might happen */
+@media screen and (min-width: 901px) {
+    .admin-layout {
+        overflow-x: hidden;
+        width: 100vw;
+    }
+    .admin-main {
+        max-width: calc(100vw - 240px);
+        overflow-x: auto;
+    }
+}

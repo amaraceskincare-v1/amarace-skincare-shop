@@ -116,12 +116,12 @@ const AdminOrders = () => {
               {orders.map((order, index) => (
                 <tr key={order._id} className={index % 2 === 0 ? 'row-even' : 'row-odd'}>
                   {/* Order ID - No Wrap */}
-                  <td className="order-id-cell">
+                  <td className="order-id-cell" data-label="Order ID">
                     #{formatOrderId(order.createdAt)}
                   </td>
 
                   {/* Customer Details - Expandable */}
-                  <td className="customer-cell">
+                  <td className="customer-cell" data-label="Customer">
                     <div className="customer-summary">
                       <strong>{order.user?.name || order.shippingAddress?.fullName || 'Guest'}</strong>
                       <small>{order.user?.email || 'N/A'}</small>
@@ -172,7 +172,7 @@ const AdminOrders = () => {
                   </td>
 
                   {/* Items */}
-                  <td className="items-cell">
+                  <td className="items-cell" data-label="Items">
                     <div className="items-list">
                       {(order.items || []).map((item, idx) => (
                         <div key={idx} className="item-row">
@@ -188,12 +188,12 @@ const AdminOrders = () => {
                   </td>
 
                   {/* Total */}
-                  <td className="total-cell">
+                  <td className="total-cell" data-label="Total">
                     ₱{(order.total || 0).toFixed(2)}
                   </td>
 
                   {/* Payment */}
-                  <td className="payment-cell">
+                  <td className="payment-cell" data-label="Payment">
                     <span className="payment-method">{order.paymentMethod?.toUpperCase()}</span>
                     {order.paymentProof && (
                       <a
@@ -208,14 +208,14 @@ const AdminOrders = () => {
                   </td>
 
                   {/* Status */}
-                  <td className="status-cell">
+                  <td className="status-cell" data-label="Status">
                     <span className={`status-badge-orders ${order.status}`}>
                       {order.status}
                     </span>
                   </td>
 
                   {/* Tracking Number / Delivery - Dedicated Column */}
-                  <td className="tracking-cell">
+                  <td className="tracking-cell" data-label="Tracking">
                     {order.shippingMethod === 'inhouse' ? (
                       <div className="inhouse-delivery-actions">
                         <span className="shipping-badge inhouse">In-House</span>
@@ -232,7 +232,7 @@ const AdminOrders = () => {
                           </a>
                         )}
                       </div>
-                    ) : (
+                    ) : ( 
                       canEditTracking(order.status) ? (
                         order.trackingNumber ? (
                           <a
@@ -273,7 +273,7 @@ const AdminOrders = () => {
                   </td>
 
                   {/* Action */}
-                  <td className="action-cell">
+                  <td className="action-cell" data-label="Action">
                     <select
                       value={order.status}
                       onChange={(e) => updateStatus(order._id, e.target.value)}
