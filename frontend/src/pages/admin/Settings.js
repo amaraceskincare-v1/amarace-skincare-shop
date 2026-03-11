@@ -90,8 +90,12 @@ const AdminSettings = () => {
         });
 
         // Send removed array fields
-        ['heroImages', 'teamImages', 'galleryImages'].forEach(field => {
-            if (settings[field].length === 0) formData.append(field, 'remove');
+        ['heroImages', 'teamImages', 'galleryImages', 'paymentLogos'].forEach(field => {
+            if (settings[field] && settings[field].length === 0) formData.append(field, 'remove');
+            else if (settings[field] && settings[field].length > 0 && !files[field]) {
+                // Send existing URLs so they aren't lost on save
+                settings[field].forEach(url => formData.append(field + '_existing', url));
+            }
         });
 
         try {
