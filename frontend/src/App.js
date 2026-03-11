@@ -179,7 +179,7 @@ const App = () => {
             }
           />
           <Route path="/order-success/:id" element={<OrderSuccess />} />
-          <Route path="/rider/order/:id" element={<RiderOrder />} />
+          <Route path="/rider/order/*" element={<RiderOrder />} />
         </Routes>
       </main>
 
