@@ -164,28 +164,14 @@ const Cart = () => {
             {/* Payment Methods - Centered */}
             <div className="payment-methods-container">
               <div className="payment-icons">
-                {/* Payment Logos (GCash/COD/Cards) - Centered and 50px */}
-                {settings?.gcashQR && (
-                  <div className="payment-icon-item">
-                    <img
-                      src={optimizeImage(settings.gcashQR, 100)}
-                      alt="GCash"
-                      className="payment-icon"
-                    />
-                  </div>
-                )}
-
-                {/* Payment Logos (COD/Cards) - Dynamic with Fallback */}
                 {settings?.paymentLogos && settings.paymentLogos.length > 0 ? (
                   settings.paymentLogos.map((logo, idx) => (
                     <div key={idx} className="payment-icon-item">
-                      <img src={logo} alt="Payment Method" className="payment-icon" />
+                      <img src={logo} alt="Payment Method" className="payment-icon" onError={(e) => { e.target.style.display='none'; }} />
                     </div>
                   ))
                 ) : (
-                  <div className="payment-icon-item">
-                    <img src={optimizeImage("/images/payment/cod-icon.png", 50)} alt="Cash on Delivery" className="payment-icon" />
-                  </div>
+                  <span style={{ fontSize: '0.8rem', color: '#999' }}>GCash &amp; COD accepted</span>
                 )}
               </div>
               <p className="payment-methods-text">Secure payment methods available</p>

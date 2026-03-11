@@ -323,6 +323,10 @@ const AdminSettings = () => {
                             <div className="settings-image-grid">
                                 <ImageCard label="GCash QR Code" field="gcashQRCode" hint="QR code image for GCash payments" icon={FiCreditCard} />
                             </div>
+
+                            <div className="settings-section-title" style={{ marginTop: '2rem' }}>Payment Method Icons</div>
+                            <p className="settings-section-desc">Icons shown in the Cart and Checkout "We Accept" section (max 3). Upload your GCash logo, COD icon, etc.</p>
+                            <ArrayImageSection label="Payment Icons" field="paymentLogos" maxCount={3} hint="Square icons recommended. PNG with transparent background." icon={FiCreditCard} />
                         </div>
                     )}
 

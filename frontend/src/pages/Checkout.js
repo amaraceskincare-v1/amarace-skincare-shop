@@ -305,23 +305,26 @@ const Checkout = () => {
               {/* Conditional Payment Details */}
               <div className="payment-details-v2">
                 {paymentMethod === 'gcash' ? (
-                  <div className="payment-instruction-box gcash-box">
-                    <p>Scan the QR code below and pay <strong>₱{total.toFixed(2)}</strong></p>
-                    <div className="qr-container">
+                  <div className="payment-instruction-box gcash-box" style={{ textAlign: 'center' }}>
+                    <p style={{ textAlign: 'center' }}>Scan the QR code below and pay <strong>₱{total.toFixed(2)}</strong></p>
+                    <div className="qr-container" style={{ display: 'flex', justifyContent: 'center', margin: '16px 0' }}>
                       <img
                         src={optimizeImage(settings?.gcashQRCode || "/gcash-qr.png", 300)}
                         alt="GCash QR"
                         className="qr-code"
+                        style={{ maxWidth: '260px', width: '100%', borderRadius: '12px' }}
                       />
                     </div>
-                    <p className="upload-label">Upload payment screenshot:</p>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => setProofImage(e.target.files[0])}
-                      required={paymentMethod === 'gcash'}
-                    />
-                    {proofImage && <p className="file-name">✓ {proofImage.name}</p>}
+                    <p className="upload-label" style={{ textAlign: 'center' }}>Upload payment screenshot:</p>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setProofImage(e.target.files[0])}
+                        required={paymentMethod === 'gcash'}
+                      />
+                    </div>
+                    {proofImage && <p className="file-name" style={{ textAlign: 'center' }}>✓ {proofImage.name}</p>}
                   </div>
                 ) : (
                   <div className="payment-instruction-box cod-box">
@@ -446,30 +449,20 @@ const Checkout = () => {
           <div className="accepted-payment-methods">
             <p className="payment-methods-title">WE ACCEPT:</p>
             <div className="payment-icons-row">
-              <div className="payment-method-icon-card">
-                <img
-                  src={optimizeImage("/images/payment/gcash-logo.png", 100)}
-                  alt="GCash"
-                  className="payment-method-icon"
-                  title="GCash"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://res.cloudinary.com/amarace/image/upload/v1/site-assets/gcash_logo.png';
-                  }}
-                />
-              </div>
-              <div className="payment-method-icon-card">
-                <img
-                  src={optimizeImage("/images/payment/cod-icon.png", 100)}
-                  alt="Cash on Delivery"
-                  className="payment-method-icon"
-                  title="Cash on Delivery"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://res.cloudinary.com/amarace/image/upload/v1/site-assets/cod_icon.png';
-                  }}
-                />
-              </div>
+              {settings?.paymentLogos && settings.paymentLogos.length > 0 ? (
+                settings.paymentLogos.map((logo, idx) => (
+                  <div key={idx} className="payment-method-icon-card">
+                    <img
+                      src={logo}
+                      alt="Payment Method"
+                      className="payment-method-icon"
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                  </div>
+                ))
+              ) : (
+                <span style={{ fontSize: '0.8rem', color: '#999' }}>GCash &amp; COD</span>
+              )}
             </div>
           </div>
         </div>
