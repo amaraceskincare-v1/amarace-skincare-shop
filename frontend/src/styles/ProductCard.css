@@ -191,11 +191,24 @@
   }
 
   .product-image-v2 {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+    height: auto; /* Allow natural height if needed */
   }
 
   .product-name-v2 {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 2.6em; /* Fixed height for 2 lines to keep alignment */
+  }
+
+  .product-price-v2 {
+    font-size: 1rem;
+    margin-top: 4px;
   }
 }
 

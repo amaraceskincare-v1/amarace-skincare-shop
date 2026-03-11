@@ -1899,16 +1899,35 @@
 
     /* ── Page Header ── */
     .page-header {
-        flex-direction: column;
-        align-items: flex-start !important;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-bottom: 1.5rem;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 15px;
+        margin-bottom: 2rem;
+        width: 100%;
     }
 
-    .page-header h1,
-    .page-header h2 {
-        font-size: 1.25rem;
+    /* Standard Admin Header for consistency */
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #eef2f6;
+        width: 100%;
+        gap: 20px;
+    }
+
+    .admin-header h1 {
+        font-size: 1.5rem;
+        margin: 0;
+        color: var(--dark);
+        font-weight: 800;
+    }
+
+    .admin-header .edit-btn-v2 {
+        flex-shrink: 0;
     }
 
     /* ── Dashboard Stats ── */
