@@ -1922,6 +1922,7 @@
         display: block;
         border: none;
         background: transparent;
+        width: 100%;
     }
 
     .admin-table.orders-table thead {
@@ -1938,79 +1939,124 @@
 
     .admin-table.orders-table tr {
         background: #fff;
-        margin-bottom: 1rem;
-        border-radius: 12px;
-        padding: 1rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+        border-radius: 16px;
+        padding: 0; 
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
         border: 1px solid #f0f0f0;
         position: relative;
+        overflow: hidden;
     }
 
     .admin-table.orders-table td {
-        padding: 8px 0;
+        padding: 12px 1.5rem;
         border: none;
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
         text-align: right;
-        min-height: 40px;
-        border-bottom: 1px solid #f8fafc;
-    }
-
-    .admin-table.orders-table td:last-child {
-        border-bottom: none;
-        padding-top: 12px;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
+        min-height: 52px;
+        border-bottom: 1px solid #f1f5f9;
+        width: 100% !important;
     }
 
     .admin-table.orders-table td::before {
         content: attr(data-label);
         font-weight: 700;
         text-transform: uppercase;
-        font-size: 0.7rem;
-        color: #64748b;
+        font-size: 0.75rem;
+        color: #94a3b8;
         text-align: left;
         margin-right: 15px;
         flex-shrink: 0;
-        padding-top: 2px;
     }
 
-    /* Specific cell adjustments for mobile cards */
+    /* Order ID Cell (The Highlighter) */
     .order-id-cell {
-        background: #fdf2f8;
-        margin: -1rem -1rem 1rem -1rem;
-        padding: 0.8rem 1rem !important;
-        border-radius: 12px 12px 0 0;
-        border-bottom: 1px solid #fbcfe8 !important;
-        font-weight: 700;
-        color: var(--primary);
+        background: #fff0f6 !important; 
+        margin: 0 !important;
+        padding: 15px 1.5rem !important;
+        border-bottom: 2px solid #ffdeeb !important;
+        font-weight: 900 !important;
+        color: var(--primary) !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
     }
     
     .order-id-cell::before {
         color: var(--primary) !important;
+        font-size: 0.8rem !important;
+        opacity: 0.8;
     }
 
+    /* Customer Cell & Info Button */
     .customer-summary {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 2px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        justify-content: flex-end;
     }
 
-    .items-list {
+    .customer-name-group {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
+        text-align: right;
+    }
+
+    .info-toggle-btn {
+        background: #fff;
+        color: var(--primary);
+        border: 1.5px solid #ffdeeb;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        flex-shrink: 0;
+        box-shadow: 0 2px 6px rgba(131, 24, 67, 0.1);
+    }
+
+    .info-toggle-btn:hover {
+        background: var(--primary);
+        color: #fff;
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 4px 12px rgba(131, 24, 67, 0.2);
+    }
+
+    /* Items visualization on mobile */
+    .items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
         width: 100%;
+        align-items: flex-end;
     }
 
     .item-row {
-        justify-content: flex-end;
-        width: 100%;
-        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.9rem;
+        font-weight: 500;
     }
 
+    .item-thumb {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        object-fit: cover;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Tracking & Actions */
     .inhouse-delivery-actions {
         display: flex;
         flex-direction: column;
@@ -2018,13 +2064,95 @@
         gap: 8px;
     }
 
-    .shipping-badge {
-        margin-bottom: 4px;
+    .action-cell {
+        background: #f8fafc;
+        padding: 20px 1.5rem !important;
+        border-top: 1px solid #e2e8f0;
+        justify-content: center !important;
+        gap: 15px;
+        margin-top: 5px;
+        border-bottom: none !important;
     }
 
-    .action-cell {
-        margin-top: 10px;
-        border-top: 2px solid #f1f5f9 !important;
+    .action-cell::before {
+        display: none; 
+    }
+
+    /* Status badge sizing */
+    .status-badge-orders {
+        padding: 6px 14px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+
+    /* Modal Styling - Clean Pop-up */
+    .qr-modal-overlay {
+        background: rgba(15, 23, 42, 0.8) !important;
+        backdrop-filter: blur(8px);
+        z-index: 3000 !important; /* Extremely high to stay top */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+    }
+
+    .qr-modal-content {
+        width: 90% !important;
+        max-width: 480px !important;
+        border-radius: 24px !important;
+        padding: 2.5rem !important;
+        background: #fff !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+        animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    @keyframes modalPop {
+        from { transform: scale(0.9) translateY(20px); opacity: 0; }
+        to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .customer-modal h2 {
+        margin-bottom: 2rem;
+        color: var(--dark);
+        font-weight: 900;
+        text-align: center;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .customer-details-card.modal-view {
+        background: #fff;
+        border: 2px solid #f1f5f9;
+        padding: 1.5rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+    }
+
+    .modal-close-action-btn {
+        width: 100%;
+        padding: 14px;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(131, 24, 67, 0.3);
+    }
+
+    .modal-close-action-btn:hover {
+        background: var(--dark);
+        transform: translateY(-2px);
     }
 
     /* ── Settings Page ── */

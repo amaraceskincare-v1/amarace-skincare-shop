@@ -10,6 +10,7 @@ import '../../styles/Admin.css';
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [expandedCustomer, setExpandedCustomer] = useState(null);
+  const [customerModalOrder, setCustomerModalOrder] = useState(null);
   const [trackingInputs, setTrackingInputs] = useState({});
   const [qrModalOrder, setQrModalOrder] = useState(null); // The order ID to show QR for
 
@@ -123,52 +124,19 @@ const AdminOrders = () => {
                   {/* Customer Details - Expandable */}
                   <td className="customer-cell" data-label="Customer">
                     <div className="customer-summary">
-                      <strong>{order.user?.name || order.shippingAddress?.fullName || 'Guest'}</strong>
-                      <small>{order.user?.email || 'N/A'}</small>
+                      <div className="customer-name-group">
+                        <strong>{order.user?.name || order.shippingAddress?.fullName || 'Guest'}</strong>
+                        <small>{order.user?.email || 'N/A'}</small>
+                      </div>
                       <button
-                        className="info-toggle-btn"
-                        onClick={() => setExpandedCustomer(expandedCustomer === order._id ? null : order._id)}
-                        aria-label="Toggle customer details"
+                        className="info-toggle-btn mobile-icon-only"
+                        onClick={() => setCustomerModalOrder(order)}
+                        aria-label="View customer details"
+                        title="View Full Details"
                       >
-                        {expandedCustomer === order._id ? <FiX /> : <FiInfo />}
+                        <FiInfo />
                       </button>
                     </div>
-
-                    {/* Expandable Customer Details Card */}
-                    {expandedCustomer === order._id && (
-                      <div className="customer-details-card">
-                        <div className="details-grid">
-                          <div className="detail-row">
-                            <span className="detail-label">Full Name:</span>
-                            <span>{order.shippingAddress?.fullName || order.user?.name || 'N/A'}</span>
-                          </div>
-                          <div className="detail-row">
-                            <span className="detail-label">Email:</span>
-                            <span>{order.user?.email || 'N/A'}</span>
-                          </div>
-                          <div className="detail-row">
-                            <span className="detail-label">Phone:</span>
-                            <span>{order.shippingAddress?.phone || 'N/A'}</span>
-                          </div>
-                          <div className="detail-row">
-                            <span className="detail-label">Shipping Address:</span>
-                            <span>
-                              {order.shippingAddress ? (
-                                <>
-                                  {order.shippingAddress.street}, {order.shippingAddress.city}<br />
-                                  {order.shippingAddress.province}, {order.shippingAddress.postalCode}<br />
-                                  {order.shippingAddress.country || 'Philippines'}
-                                </>
-                              ) : 'N/A'}
-                            </span>
-                          </div>
-                          <div className="detail-row">
-                            <span className="detail-label">Order Date:</span>
-                            <span>{formatDate(order.createdAt)}</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
                   </td>
 
                   {/* Items */}
@@ -303,6 +271,53 @@ const AdminOrders = () => {
         {orders.length === 0 && (
           <div className="no-orders-message">
             <p>No orders found.</p>
+          </div>
+        )}
+
+        {/* Customer Details Modal */}
+        {customerModalOrder && (
+          <div className="qr-modal-overlay" onClick={() => setCustomerModalOrder(null)}>
+            <div className="qr-modal-content customer-modal" onClick={e => e.stopPropagation()}>
+              <button className="close-modal-btn" onClick={() => setCustomerModalOrder(null)}>
+                <FiX />
+              </button>
+              <h2>Customer Details</h2>
+              <div className="customer-details-card modal-view">
+                <div className="details-grid">
+                  <div className="detail-row">
+                    <span className="detail-label">Full Name:</span>
+                    <span>{customerModalOrder.shippingAddress?.fullName || customerModalOrder.user?.name || 'N/A'}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="detail-label">Email:</span>
+                    <span>{customerModalOrder.user?.email || 'N/A'}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="detail-label">Phone:</span>
+                    <span>{customerModalOrder.shippingAddress?.phone || 'N/A'}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="detail-label">Shipping Address:</span>
+                    <span>
+                      {customerModalOrder.shippingAddress ? (
+                        <>
+                          {customerModalOrder.shippingAddress.street}, {customerModalOrder.shippingAddress.city}<br />
+                          {customerModalOrder.shippingAddress.province}, {customerModalOrder.shippingAddress.postalCode}<br />
+                          {customerModalOrder.shippingAddress.country || 'Philippines'}
+                        </>
+                      ) : 'N/A'}
+                    </span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="detail-label">Order Date:</span>
+                    <span>{formatDate(customerModalOrder.createdAt)}</span>
+                  </div>
+                </div>
+              </div>
+              <button className="modal-close-action-btn" onClick={() => setCustomerModalOrder(null)}>
+                Close
+              </button>
+            </div>
           </div>
         )}
 

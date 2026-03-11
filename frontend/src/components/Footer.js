@@ -75,12 +75,23 @@ const Footer = () => {
         <div className="footer-nav-grid-v2">
           <div className="nav-col-v2 branding">
             <div className="footer-brand-row">
-              {settings?.footerSmallIcon && (
-                <img src={settings.footerSmallIcon} alt="AmaraCé" className="footer-brand-icon" />
-              )}
-              <h4 className="footer-logo-v2">AmaraCé</h4>
+              <div className="footer-logo-container">
+                <img 
+                  src={optimizeImage(settings?.navbarLogo || '/logo.png', 120)} 
+                  alt={`${settings?.brandName || 'AmaraCé'} Logo`} 
+                  className="footer-brand-img" 
+                />
+              </div>
+              <div className="footer-brand-info">
+                <h4 className="footer-brand-name" style={{
+                  color: settings?.brandNameColor || 'inherit',
+                  fontWeight: settings?.brandNameFontWeight === 'regular' ? '500' : '700'
+                }}>
+                  {settings?.brandName || 'AmaraCé'}
+                </h4>
+              </div>
             </div>
-            <p className="footer-motto-v2">Reveal Your Natural Radiance.</p>
+            <p className="footer-motto-v2">{settings?.footerMotto || 'Reveal Your Natural Radiance.'}</p>
           </div>
 
           <div className="nav-col-v2">
