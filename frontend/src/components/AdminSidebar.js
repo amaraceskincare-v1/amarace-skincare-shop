@@ -57,7 +57,7 @@ const AdminSidebar = () => {
 
                 <div className="sidebar-footer">
                     <Link to="/" className="nav-item return-site" onClick={closeSidebar}>
-                        <FiArrowLeft /> Return to Site
+                        <FiArrowLeft /> Return Home
                     </Link>
                 </div>
             </aside>

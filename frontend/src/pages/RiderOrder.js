@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FiCamera, FiCheckCircle, FiPackage, FiMapPin, FiUser, FiPhone, FiImage } from 'react-icons/fi';
+import { optimizeImage } from '../utils/imageOptimizer';
 import './RiderOrder.css'; // We will create this
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
