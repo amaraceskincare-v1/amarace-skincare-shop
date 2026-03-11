@@ -4,6 +4,7 @@ import api from '../utils/api';
 import { toast } from 'react-toastify';
 import { useLanguage } from '../context/LanguageContext';
 import { FaFacebook } from 'react-icons/fa';
+import { optimizeImage } from '../utils/imageOptimizer';
 import '../styles/Footer.css';
 
 const Footer = () => {
