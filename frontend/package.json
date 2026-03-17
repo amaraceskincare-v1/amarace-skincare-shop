@@ -9,6 +9,7 @@
     "@stripe/stripe-js": "^2.2.0",
     "axios": "^1.6.2",
     "framer-motion": "^12.26.2",
+    "jimp": "^0.22.10",
     "jspdf": "^4.0.0",
     "jspdf-autotable": "^5.0.7",
     "qrcode.react": "^4.2.0",
