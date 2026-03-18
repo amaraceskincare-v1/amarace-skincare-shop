@@ -30,6 +30,37 @@ const ProductDetail = () => {
     return videoExtensions.some(ext => url.toLowerCase().includes(ext));
   };
 
+  const renderTextWithBullets = (text) => {
+    if (!text) return null;
+    
+    // Check if the text contains common bullet characters or newlines that look like a list
+    const hasBullets = text.includes('•') || text.includes('- ') || text.includes('\n');
+    
+    if (!hasBullets) {
+      return <p>{text}</p>;
+    }
+
+    // Split by newlines, or split by bullet character if everything is on one line
+    let lines = [];
+    if (text.includes('\n')) {
+      lines = text.split('\n');
+    } else if (text.includes('•')) {
+      lines = text.split('•').filter(Boolean); // Filter out empty strings
+    } else {
+      lines = [text];
+    }
+
+    return (
+      <ul className="product-info-list" style={{ paddingLeft: '20px', listStyleType: 'disc', marginTop: '10px' }}>
+        {lines.map((line, idx) => {
+          const cleanLine = line.replace(/^[•\-\s]+/, '').trim(); // Remove leading bullets and spaces
+          if (!cleanLine) return null;
+          return <li key={idx} style={{ marginBottom: '8px', lineHeight: '1.5' }}>{cleanLine}</li>;
+        })}
+      </ul>
+    );
+  };
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -165,7 +196,7 @@ const ProductDetail = () => {
                 onClick={handleAddToCart}
                 disabled={product.stock === 0}
               >
-                {product.stock === 0 ? 'Out of Stock' : 'Add to Bag'}
+                {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
               </button>
               <button
                 className="btn-buy-now-v2"
@@ -213,13 +244,17 @@ const ProductDetail = () => {
             {(product.ingredients || product.description) && (
               <div className="tab-v2">
                 <div className="tab-header-v2">Ingredients</div>
-                <div className="tab-body-v2">{product.ingredients || 'Natural ingredients.'}</div>
+                <div className="tab-body-v2">
+                  {renderTextWithBullets(product.ingredients || 'Natural ingredients.')}
+                </div>
               </div>
             )}
             {(product.howToUse || product.description) && (
               <div className="tab-v2">
                 <div className="tab-header-v2">How to Use</div>
-                <div className="tab-body-v2">{product.howToUse || 'Apply as needed.'}</div>
+                <div className="tab-body-v2">
+                  {renderTextWithBullets(product.howToUse || 'Apply as needed.')}
+                </div>
               </div>
             )}
           </div>
