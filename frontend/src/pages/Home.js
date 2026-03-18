@@ -14,7 +14,7 @@ const Home = () => {
   const [categoryCounts, setCategoryCounts] = useState({
     'Lip Tint': 0,
     'Fragrance': 0,
-    'Artisan Soap': 0,
+    'Bath and Body': 0,
     'All': 0
   });
 
@@ -69,7 +69,7 @@ const Home = () => {
         const counts = {
           'Lip Tint': 0,
           'Perfume': 0,
-          'Beauty Soap': 0,
+          'Bath and Body': 0,
           'All': products.length
         };
         products.forEach(p => {
@@ -188,10 +188,10 @@ const Home = () => {
       path: '/products?category=Perfume'
     },
     {
-      name: 'Artisan Soaps',
-      count: `${categoryCounts['Beauty Soap'] || 0} items`,
+      name: 'Bath and Body',
+      count: `${categoryCounts['Bath and Body'] || categoryCounts['Beauty Soap'] || 0} items`,
       image: settings?.beautySoapImage ? optimizeImage(settings.beautySoapImage, 600) : null,
-      path: '/products?category=Beauty%20Soap'
+      path: '/products?category=Bath%20and%20Body'
     },
     {
       name: 'All Best Sellers',

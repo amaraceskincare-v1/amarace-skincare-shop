@@ -75,18 +75,19 @@ const Footer = () => {
       <div className="footer-nav-container-v2">
         <div className="footer-nav-grid-v2">
           <div className="nav-col-v2 branding">
-            <div className="footer-brand-row">
-              <div className="footer-logo-container">
+            <div className="footer-brand-row" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+              <div className="footer-logo-container" style={{ margin: 0 }}>
                 <img 
                   src={optimizeImage(settings?.navbarLogo || '/logo.png', 120)} 
                   alt={`${settings?.brandName || 'AmaraCé'} Logo`} 
                   className="footer-brand-img" 
                 />
               </div>
-              <div className="footer-brand-info">
+              <div className="footer-brand-info" style={{ margin: 0 }}>
                 <h4 className="footer-brand-name" style={{
                   color: settings?.brandNameColor || 'inherit',
-                  fontWeight: settings?.brandNameFontWeight === 'regular' ? '500' : '700'
+                  fontWeight: settings?.brandNameFontWeight === 'regular' ? '500' : '700',
+                  margin: 0
                 }}>
                   {settings?.brandName || 'AmaraCé'}
                 </h4>
@@ -101,7 +102,7 @@ const Footer = () => {
               <li><Link to="/products">Shop All</Link></li>
               <li><Link to="/products?category=Lip%20Tint">Lip Rituals</Link></li>
               <li><Link to="/products?category=Perfume">Fragrance</Link></li>
-              <li><Link to="/products?category=Beauty%20Soap">Artisan Soaps</Link></li>
+              <li><Link to="/products?category=Bath%20and%20Body">Bath and Body</Link></li>
             </ul>
           </div>
 

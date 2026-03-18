@@ -443,7 +443,7 @@ const AdminProducts = () => {
                       >
                         <option value="Lip Tint">Lip Tint</option>
                         <option value="Perfume">Perfume</option>
-                        <option value="Beauty Soap">Beauty Soap</option>
+                        <option value="Bath and Body">Bath and Body</option>
                       </select>
                     </div>
                   </div>

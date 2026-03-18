@@ -216,7 +216,7 @@ const Navbar = () => {
           <li><Link to="/products" className={location.pathname === '/products' && !location.search ? 'active' : ''}>{t('shop_all')}</Link></li>
           <li><Link to="/products?category=Lip%20Tint" className={location.search.includes('Lip%20Tint') ? 'active' : ''}>{t('lip rituals')}</Link></li>
           <li><Link to="/products?category=Perfume" className={location.search.includes('Perfume') ? 'active' : ''}>{t('fragrance')}</Link></li>
-          <li><Link to="/products?category=Beauty%20Soap" className={location.search.includes('Beauty%20Soap') ? 'active' : ''}>{t('artisan soaps')}</Link></li>
+          <li><Link to="/products?category=Bath%20and%20Body" className={location.search.includes('Bath%20and%20Body') ? 'active' : ''}>BATH AND BODY</Link></li>
         </ul>
       </nav>
 
@@ -249,7 +249,7 @@ const Navbar = () => {
           <li><Link to="/products" onClick={() => setMenuOpen(false)}>SHOP ALL</Link></li>
           <li><Link to="/products?category=Lip%20Tint" onClick={() => setMenuOpen(false)}>LIP RITUALS</Link></li>
           <li><Link to="/products?category=Perfume" onClick={() => setMenuOpen(false)}>FRAGRANCE</Link></li>
-          <li><Link to="/products?category=Beauty%20Soap" onClick={() => setMenuOpen(false)}>ARTISAN SOAPS</Link></li>
+          <li><Link to="/products?category=Bath%20and%20Body" onClick={() => setMenuOpen(false)}>BATH AND BODY</Link></li>
           <hr />
           <li><Link to="/about" onClick={() => setMenuOpen(false)}>About Us</Link></li>
           <li><Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link></li>
