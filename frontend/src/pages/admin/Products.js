@@ -335,10 +335,9 @@ const AdminProducts = () => {
                         type="text"
                         name="brand"
                         className="form-input"
-                        placeholder="AmaraCé"
+                        placeholder="e.g., AmaraCé"
                         value={formData.brand}
                         onChange={handleInputChange}
-                        readOnly
                       />
                     </div>
                     <div className="form-group">
