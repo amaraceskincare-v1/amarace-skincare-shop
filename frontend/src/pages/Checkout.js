@@ -36,6 +36,7 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [proofImage, setProofImage] = useState(null);
   const [settings, setSettings] = useState(null);
+  const [isFirstOrder, setIsFirstOrder] = useState(false);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -47,7 +48,20 @@ const Checkout = () => {
       }
     };
     fetchSettings();
-  }, []);
+
+    const checkFirstOrder = async () => {
+      try {
+        const { data } = await api.get('/orders/check-first-order');
+        setIsFirstOrder(data.isFirstOrder);
+      } catch (err) {
+        console.error('Check first order failed');
+      }
+    };
+
+    if (user) {
+        checkFirstOrder();
+    }
+  }, [user]);
 
   // Get items array safely
   const items = cart?.items || [];
@@ -68,13 +82,16 @@ const Checkout = () => {
   const [changeAmount, setChangeAmount] = useState('');
 
   // Calculate shipping cost
+  const discount = isFirstOrder ? cartTotal * 0.10 : 0;
+  const subtotalAfterDiscount = cartTotal - discount;
+
   let shipping = 0;
   if (shippingMethod === 'inhouse') {
     shipping = 50; // Flat rate for in-house delivery
   } else {
-    shipping = cartTotal >= 500 ? 0 : 85; // J&T Logic
+    shipping = subtotalAfterDiscount >= 500 ? 0 : 85; // J&T Logic
   }
-  const total = cartTotal + shipping;
+  const total = subtotalAfterDiscount + shipping;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -436,6 +453,12 @@ const Checkout = () => {
               <span>Subtotal</span>
               <span>₱{cartTotal.toFixed(2)}</span>
             </div>
+            {discount > 0 && (
+              <div className="summary-row" style={{ color: '#ff6b6b' }}>
+                <span>First Order Discount (10%)</span>
+                <span>-₱{discount.toFixed(2)}</span>
+              </div>
+            )}
             <div className="summary-row">
               <span>Shipping</span>
               <span>{shipping === 0 ? 'FREE' : `₱${shipping.toFixed(2)}`}</span>

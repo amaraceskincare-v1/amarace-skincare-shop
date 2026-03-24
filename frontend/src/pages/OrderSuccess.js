@@ -64,9 +64,18 @@ const OrderSuccess = () => {
             const finalY = doc.lastAutoTable.finalY || 60;
 
             doc.text(`Subtotal: P${order.subtotal?.toFixed(2)}`, 14, finalY + 10);
-            doc.text(`Shipping: P${order.shippingCost?.toFixed(2)}`, 14, finalY + 16);
+            
+            let currentY = finalY + 16;
+            if (order.discount && order.discount > 0) {
+                doc.setTextColor(255, 107, 107);
+                doc.text(`Discount (10%): -P${order.discount.toFixed(2)}`, 14, currentY);
+                doc.setTextColor(0, 0, 0);
+                currentY += 6;
+            }
+
+            doc.text(`Shipping: P${order.shippingCost?.toFixed(2)}`, 14, currentY);
             doc.setFontSize(14);
-            doc.text(`Order Total: P${order.total?.toFixed(2)}`, 14, finalY + 24);
+            doc.text(`Order Total: P${order.total?.toFixed(2)}`, 14, currentY + 8);
 
             doc.save(`amarace-receipt-${order._id}.pdf`);
         };

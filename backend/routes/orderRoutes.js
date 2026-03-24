@@ -61,6 +61,16 @@ const formatOrderId = (date) => {
   return `${year}-${mmdd}-${hhmm}`;
 };
 
+// Check if user has zero previous orders
+router.get('/check-first-order', protect, async (req, res) => {
+  try {
+    const count = await Order.countDocuments({ user: req.user._id });
+    res.json({ isFirstOrder: count === 0 });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // --- TEMP DEBUG ROUTE ---
 router.get('/test-telegram', async (req, res) => {
   try {
@@ -134,11 +144,16 @@ router.post('/cod', protect, async (req, res) => {
     }));
 
     const subtotal = cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const orderCount = await Order.countDocuments({ user: req.user._id });
+    const isFirstOrder = orderCount === 0;
+    const discount = isFirstOrder ? subtotal * 0.10 : 0;
+    const subtotalAfterDiscount = subtotal - discount;
+
     let finalShippingCost = Number(shippingCost) || 0;
-    if (subtotal >= 500) {
+    if (subtotalAfterDiscount >= 500) {
       finalShippingCost = 0;
     }
-    const total = subtotal + finalShippingCost;
+    const total = subtotalAfterDiscount + finalShippingCost;
 
     const order = await Order.create({
       user: req.user._id,
@@ -148,6 +163,7 @@ router.post('/cod', protect, async (req, res) => {
       paymentMethod: 'cod',
       shippingMethod,
       subtotal,
+      discount,
       shippingCost: finalShippingCost,
       total,
       tax: 0,
@@ -227,11 +243,16 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
     }));
 
     const subtotal = cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    const orderCount = await Order.countDocuments({ user: req.user._id });
+    const isFirstOrder = orderCount === 0;
+    const discount = isFirstOrder ? subtotal * 0.10 : 0;
+    const subtotalAfterDiscount = subtotal - discount;
+
     let shippingCost = Number(req.body.shippingCost) || 0;
-    if (subtotal >= 500) {
+    if (subtotalAfterDiscount >= 500) {
       shippingCost = 0;
     }
-    const total = subtotal + shippingCost;
+    const total = subtotalAfterDiscount + shippingCost;
 
     const order = await Order.create({
       user: req.user._id,
@@ -243,6 +264,7 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
       paymentProof: req.file.path,
       paymentData: null, // Will extract in background to speed up checkout
       subtotal,
+      discount,
       shippingCost,
       total,
       tax: 0,

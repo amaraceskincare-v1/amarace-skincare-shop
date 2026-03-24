@@ -95,6 +95,11 @@ const orderEmailTemplate = (order, title = 'Order Summary') => {
                         <span>Subtotal</span>
                         <span>₱${order.subtotal.toFixed(2)}</span>
                     </div>
+                    ${order.discount && order.discount > 0 ? `
+                    <div class="total-row" style="color: #ff6b6b;">
+                        <span>First Order Discount (10%)</span>
+                        <span>-₱${order.discount.toFixed(2)}</span>
+                    </div>` : ''}
                     <!-- Tax Removed -->
                     <div class="total-row">
                         <span>Shipping</span>

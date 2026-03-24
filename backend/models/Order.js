@@ -34,6 +34,7 @@ const orderSchema = new mongoose.Schema({
     referenceNo: String,
     dateSent: String
   },
+  discount: { type: Number, default: 0 },
   subtotal: { type: Number, required: true },
   tax: { type: Number, default: 0 },
   shippingCost: { type: Number, required: true },
