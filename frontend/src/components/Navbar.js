@@ -214,7 +214,7 @@ const Navbar = () => {
         <ul className="nav-links-centered">
           <li><Link to="/" className={isActive('/') ? 'active' : ''}>{t('home')}</Link></li>
           <li><Link to="/products" className={location.pathname === '/products' && !location.search ? 'active' : ''}>{t('shop_all')}</Link></li>
-          <li><Link to="/products?category=Lip%20Tint" className={location.search.includes('Lip%20Tint') ? 'active' : ''}>{t('lip rituals')}</Link></li>
+          <li><Link to="/products?category=Lip%20Tint" className={location.search.includes('Lip%20Tint') ? 'active' : ''}>{t('lip_tints')}</Link></li>
           <li><Link to="/products?category=Perfume" className={location.search.includes('Perfume') ? 'active' : ''}>{t('fragrance')}</Link></li>
           <li><Link to="/products?category=Bath%20and%20Body" className={location.search.includes('Bath%20and%20Body') ? 'active' : ''}>BATH AND BODY</Link></li>
         </ul>
@@ -247,7 +247,7 @@ const Navbar = () => {
         <ul className="mobile-links">
           <li><Link to="/" onClick={() => setMenuOpen(false)}>HOME</Link></li>
           <li><Link to="/products" onClick={() => setMenuOpen(false)}>SHOP ALL</Link></li>
-          <li><Link to="/products?category=Lip%20Tint" onClick={() => setMenuOpen(false)}>LIP RITUALS</Link></li>
+          <li><Link to="/products?category=Lip%20Tint" onClick={() => setMenuOpen(false)}>LIP TINTS</Link></li>
           <li><Link to="/products?category=Perfume" onClick={() => setMenuOpen(false)}>FRAGRANCE</Link></li>
           <li><Link to="/products?category=Bath%20and%20Body" onClick={() => setMenuOpen(false)}>BATH AND BODY</Link></li>
           <hr />

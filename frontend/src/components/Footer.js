@@ -100,7 +100,7 @@ const Footer = () => {
             <h4>Boutique</h4>
             <ul>
               <li><Link to="/products">Shop All</Link></li>
-              <li><Link to="/products?category=Lip%20Tint">Lip Rituals</Link></li>
+              <li><Link to="/products?category=Lip%20Tint">Lip Tints</Link></li>
               <li><Link to="/products?category=Perfume">Fragrance</Link></li>
               <li><Link to="/products?category=Bath%20and%20Body">Bath and Body</Link></li>
             </ul>
