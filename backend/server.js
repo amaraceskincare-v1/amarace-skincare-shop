@@ -88,6 +88,11 @@ app.use(
         return callback(null, true);
       }
 
+      // Allow Vercel preview or production URLs for this app
+      if (/^https:\/\/.*\.vercel\.app$/.test(origin)) {
+        return callback(null, true);
+      }
+
       callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
