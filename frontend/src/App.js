@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -44,21 +44,21 @@ const App = () => {
 
   const { lang } = useLanguage();
 
+  const isFirstLoad = useRef(true);
+
   // Show loading screen on route change or language change
   useEffect(() => {
-    // Detect if this is the initial page load vs internal navigation
-    const entries = window.performance?.getEntriesByType('navigation');
-    const isRefresh = entries && entries.length > 0 && entries[0].type === 'reload';
-
-    // Skip loading for the very first mount on refresh to avoid a "white flash"
-    if (isRefresh) {
-      return;
-    }
-
     setIsLoading(true);
+    
+    // Set a longer delay (1.5s) for the very first visit or hard refresh to show off the neon logo
+    // Keep it extremely snappy (400ms) for subsequent page navigations
+    const delay = isFirstLoad.current ? 1500 : 400;
+    
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 400); // Slightly faster timeout for better feel
+      isFirstLoad.current = false;
+    }, delay);
+    
     return () => clearTimeout(timer);
   }, [location.pathname, lang, location.search]);
 
