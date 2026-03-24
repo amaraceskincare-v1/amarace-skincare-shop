@@ -31,16 +31,20 @@ router.post('/subscribe', async (req, res) => {
         console.log('Creating subscriber for:', email);
         subscriber = await Newsletter.create({ email });
 
-        // Send Welcome Email
-        console.log('Sending welcome email to:', email);
-        await sendEmail({
+        // Send instant response to frontend so UI doesn't hang
+        res.status(201).json({ message: 'Successfully subscribed!' });
+
+        // Send Welcome Email (Non-Blocking mode)
+        console.log('Sending welcome email in background to:', email);
+        sendEmail({
             to: subscriber.email,
             subject: 'Welcome to AmaraCé Newsletter! (10% OFF Inside)',
             html: welcomeNewsletter()
+        }).then(() => {
+            console.log('Welcome email sent successfully to:', email);
+        }).catch(err => {
+            console.error('Background welcome email failed:', err);
         });
-        console.log('Welcome email sent successfully');
-
-        res.status(201).json({ message: 'Successfully subscribed!' });
 
     } catch (error) {
         console.error('Newsletter Error:', error);
