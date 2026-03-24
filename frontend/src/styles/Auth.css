@@ -18,7 +18,7 @@
     justify-content: center;
     align-items: center;
     min-height: calc(100vh - 80px);
-    background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+    background: var(--brand-bg);
     overflow: hidden;
     position: relative;
     width: 100vw;

@@ -214,37 +214,7 @@ const AuthPage = () => {
     };
 
     return (
-        <div
-            className="auth-page-wrapper"
-            style={settings?.loginBackground ? {
-                background: `linear-gradient(135deg, rgba(253,252,251,0.85) 0%, rgba(226,209,195,0.85) 100%), url(${settings.loginBackground})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
-            } : {}}
-        >
-            {/* BACKGROUND SCENE */}
-            <div className="scene-container">
-                <div className="clouds-container">
-                    {clouds.map(cloud => (
-                        <div
-                            key={cloud.id}
-                            className="cloud"
-                            style={{
-                                width: cloud.width,
-                                height: cloud.height,
-                                top: `${cloud.top}%`,
-                                left: `${cloud.left}%`,
-                                animationDuration: `${cloud.duration}s`,
-                                animationDelay: `${cloud.delay}s`,
-                                opacity: cloud.opacity
-                            }}
-                        />
-                    ))}
-                </div>
-
-                <div className="ground-path"></div>
-            </div>
-
+        <div className="auth-page-wrapper">
             {/* FORM CARD */}
             <div className="auth-form-card">
                 <h2>{isSignIn ? 'Welcome Back' : 'Create Account'}</h2>

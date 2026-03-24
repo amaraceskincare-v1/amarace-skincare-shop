@@ -30,9 +30,6 @@ const LoadingScreen = ({ isLoading }) => {
                         onError={(e) => { e.target.src = 'https://res.cloudinary.com/amarace/image/upload/v1/site-assets/logo.png'; }}
                     />
                 </div>
-                <div className="loading-spinner">
-                    <div className="spinner-ring"></div>
-                </div>
             </div>
         </div>
     );
