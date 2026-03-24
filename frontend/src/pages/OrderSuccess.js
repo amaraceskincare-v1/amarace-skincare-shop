@@ -36,42 +36,56 @@ const OrderSuccess = () => {
     const generatePDF = () => {
         if (!order) return;
 
+        const renderPDF = (doc) => {
+            doc.setFontSize(12);
+            doc.text(`Order ID: ${formatOrderId(order.createdAt)}`, 14, 32);
+            doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`, 14, 38);
+            doc.text(`Status: ${order.status}`, 14, 44);
+
+            const tableColumn = ["Item", "Quantity", "Price", "Total"];
+            const tableRows = [];
+
+            order.items.forEach(item => {
+                const itemData = [
+                    item.product?.name || 'Product',
+                    item.quantity,
+                    `P${item.product?.price?.toFixed(2)}`,
+                    `P${(item.quantity * item.product?.price).toFixed(2)}`
+                ];
+                tableRows.push(itemData);
+            });
+
+            autoTable(doc, {
+                head: [tableColumn],
+                body: tableRows,
+                startY: 50,
+            });
+
+            const finalY = doc.lastAutoTable.finalY || 60;
+
+            doc.text(`Subtotal: P${order.subtotal?.toFixed(2)}`, 14, finalY + 10);
+            doc.text(`Shipping: P${order.shippingCost?.toFixed(2)}`, 14, finalY + 16);
+            doc.setFontSize(14);
+            doc.text(`Order Total: P${order.total?.toFixed(2)}`, 14, finalY + 24);
+
+            doc.save(`amarace-receipt-${order._id}.pdf`);
+        };
+
         const doc = new jsPDF();
-        doc.setFontSize(18);
-        doc.text('AmaraCé Skin Care - Order Receipt', 14, 22);
-
-        doc.setFontSize(12);
-        doc.text(`Order ID: ${formatOrderId(order.createdAt)}`, 14, 32);
-        doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`, 14, 38);
-        doc.text(`Status: ${order.status}`, 14, 44);
-
-        const tableColumn = ["Item", "Quantity", "Price", "Total"];
-        const tableRows = [];
-
-        order.items.forEach(item => {
-            const itemData = [
-                item.product?.name || 'Product',
-                item.quantity,
-                `P${item.product?.price?.toFixed(2)}`,
-                `P${(item.quantity * item.product?.price).toFixed(2)}`
-            ];
-            tableRows.push(itemData);
-        });
-
-        autoTable(doc, {
-            head: [tableColumn],
-            body: tableRows,
-            startY: 50,
-        });
-
-        const finalY = doc.lastAutoTable.finalY || 60;
-
-        doc.text(`Subtotal: P${order.subtotal?.toFixed(2)}`, 14, finalY + 10);
-        doc.text(`Shipping: P${order.shippingCost?.toFixed(2)}`, 14, finalY + 16);
-        doc.setFontSize(14);
-        doc.text(`Order Total: P${order.total?.toFixed(2)}`, 14, finalY + 24);
-
-        doc.save(`amarace-receipt-${order._id}.pdf`);
+        
+        const logoImg = new Image();
+        logoImg.src = '/logo.png';
+        logoImg.onload = () => {
+            doc.addImage(logoImg, 'PNG', 14, 12, 12, 12);
+            doc.setFontSize(18);
+            doc.text('AmaraCé Skin Care - Order Receipt', 30, 22);
+            renderPDF(doc);
+        };
+        logoImg.onerror = () => {
+            doc.setFontSize(18);
+            doc.text('AmaraCé Skin Care - Order Receipt', 14, 22);
+            renderPDF(doc);
+        };
     };
 
     if (loading) return <div className="loading">Loading order details...</div>;

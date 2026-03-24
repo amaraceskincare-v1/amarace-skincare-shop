@@ -72,16 +72,22 @@ const orderEmailTemplate = (order, title = 'Order Summary') => {
                 </table>
 
                 <!-- Items -->
-                ${order.items.map(item => `
+                ${order.items.map(item => {
+                    const product = item.product || {};
+                    const images = product.images || [];
+                    const name = product.name || 'Unknown Product';
+                    const imageUrl = images[0] ? images[0] : 'https://placehold.co/100x100?text=No+Image';
+                    return `
                     <div class="order-item">
-                        <img src="${item.product.images && item.product.images[0] ? item.product.images[0] : 'https://placehold.co/100x100?text=No+Image'}" alt="${item.product.name}" class="item-img" />
+                        <img src="${imageUrl}" alt="${name}" class="item-img" />
                         <div class="item-info">
-                            <h4 class="item-name">${item.product.name}</h4>
+                            <h4 class="item-name">${name}</h4>
                             <p class="item-meta">Qty: ${item.quantity}</p>
                         </div>
                         <div class="item-price">₱${(item.price * item.quantity).toFixed(2)}</div>
                     </div>
-                `).join('')}
+                    `;
+                }).join('')}
 
                 <!-- Totals -->
                 <div class="totals">

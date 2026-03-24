@@ -169,20 +169,31 @@ router.post('/cod', protect, async (req, res) => {
 
     // --- BACKGROUND PROCESSES ---
 
-    Order.findById(order._id).populate('items.product').then(populatedOrder => {
+    Order.findById(order._id).populate('items.product').then(async populatedOrder => {
       // 1. Email Notification
-      sendEmail({
-        to: contactDetails.email,
-        subject: 'AmaraCé Order Received (COD)',
-        html: orderEmailTemplate(populatedOrder, 'COD Order Received'),
-      }).catch(err => console.error('Email sending failed:', err));
+      try {
+        await sendEmail({
+          to: contactDetails.email,
+          subject: 'AmaraCé Order Received (COD)',
+          html: orderEmailTemplate(populatedOrder, 'COD Order Received'),
+        });
+      } catch (err) {
+        console.error('Email sending failed:', err);
+      }
 
       // 2. Telegram Notification
-      const fullItemList = populatedOrder.items.map(i => `• ${i.product.name} (x${i.quantity})`).join('\n');
-      const firstItemImage = populatedOrder.items.length > 0 && populatedOrder.items[0].product.images ? populatedOrder.items[0].product.images[0] : null;
+      try {
+        const fullItemList = populatedOrder.items.map(i => {
+           const productName = i.product ? i.product.name : 'Unknown Product';
+           return `• ${productName} (x${i.quantity})`;
+        }).join('\n');
+        const firstItemImage = populatedOrder.items.length > 0 && populatedOrder.items[0].product?.images ? populatedOrder.items[0].product.images[0] : null;
 
-      const telegramMsg = `<b>New COD Order!</b> 🚚\n\nOrder ID: <code>${formatOrderId(order.createdAt)}</code>\nTotal: <b>₱${total.toFixed(2)}</b>\nCustomer: ${contactDetails.fullName}\n\n<b>Items:</b>\n${fullItemList}\n\nPayment will be collected on delivery.`;
-      sendTelegram(telegramMsg, firstItemImage);
+        const telegramMsg = `<b>New COD Order!</b> 🚚\n\nOrder ID: <code>${formatOrderId(order.createdAt)}</code>\nTotal: <b>₱${total.toFixed(2)}</b>\nCustomer: ${contactDetails.fullName}\n\n<b>Items:</b>\n${fullItemList}\n\nPayment will be collected on delivery.`;
+        sendTelegram(telegramMsg, firstItemImage);
+      } catch (err) {
+        console.error('Telegram formatting/sending failed:', err);
+      }
     }).catch(err => console.error('Background fetch failed:', err));
 
   } catch (error) {
@@ -266,22 +277,33 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
     })();
 
     // 2. Email Notification
-    Order.findById(order._id).populate('items.product').then(populatedOrder => {
-      sendEmail({
-        to: parsedContact.email,
-        subject: 'AmaraCé Order Received (GCash)',
-        html: orderEmailTemplate(populatedOrder, 'GCash Order Received'),
-      }).catch(err => console.error('Email sending failed:', err));
+    Order.findById(order._id).populate('items.product').then(async populatedOrder => {
+      try {
+        await sendEmail({
+          to: parsedContact.email,
+          subject: 'AmaraCé Order Received (GCash)',
+          html: orderEmailTemplate(populatedOrder, 'GCash Order Received'),
+        });
+      } catch (err) {
+        console.error('Email sending failed:', err);
+      }
     });
 
     // 3. Telegram Notification
     const itemList = items.map(item => `• Product (x${item.quantity})`).join('\n'); // Quick formatting
-    Order.findById(order._id).populate('items.product').then(populatedOrder => {
-      const fullItemList = populatedOrder.items.map(i => `• ${i.product.name} (x${i.quantity})`).join('\n');
-      const firstItemImage = populatedOrder.items.length > 0 && populatedOrder.items[0].product.images ? populatedOrder.items[0].product.images[0] : null;
+    Order.findById(order._id).populate('items.product').then(async populatedOrder => {
+      try {
+        const fullItemList = populatedOrder.items.map(i => {
+           const productName = i.product ? i.product.name : 'Unknown Product';
+           return `• ${productName} (x${i.quantity})`;
+        }).join('\n');
+        const firstItemImage = populatedOrder.items.length > 0 && populatedOrder.items[0].product?.images ? populatedOrder.items[0].product.images[0] : null;
 
-      const telegramMsg = `<b>New GCash Order!</b> 🛍️\n\nOrder ID: <code>${formatOrderId(order.createdAt)}</code>\nTotal: <b>₱${total.toFixed(2)}</b>\nCustomer: ${parsedContact.fullName}\n\n<b>Items:</b>\n${fullItemList}\n\nPlease verify payment proof.`;
-      sendTelegram(telegramMsg, firstItemImage);
+        const telegramMsg = `<b>New GCash Order!</b> 🛍️\n\nOrder ID: <code>${formatOrderId(order.createdAt)}</code>\nTotal: <b>₱${total.toFixed(2)}</b>\nCustomer: ${parsedContact.fullName}\n\n<b>Items:</b>\n${fullItemList}\n\nPlease verify payment proof.`;
+        sendTelegram(telegramMsg, firstItemImage);
+      } catch (err) {
+        console.error('Telegram formatting/sending failed:', err);
+      }
     });
 
   } catch (error) {

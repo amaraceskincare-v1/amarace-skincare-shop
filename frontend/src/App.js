@@ -184,7 +184,7 @@ const App = () => {
       </main>
 
       <Footer />
-      <ToastContainer position="bottom-right" />
+      <ToastContainer position="top-right" />
     </div>
   );
 };

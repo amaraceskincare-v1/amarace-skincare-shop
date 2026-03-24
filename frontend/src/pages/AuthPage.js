@@ -18,7 +18,7 @@ const AuthPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [clouds, setClouds] = useState([]);
 
-    const { login, register } = useAuth();
+    const { login, register, setUser } = useAuth();
     const { settings } = useSettings();
     const navigate = useNavigate();
     const location = useLocation();
@@ -145,6 +145,7 @@ const AuthPage = () => {
             localStorage.setItem('user', JSON.stringify(data));
             sessionStorage.removeItem('token');
             sessionStorage.removeItem('user');
+            setUser(data);
 
             toast.success(`Welcome, ${data.name}!`);
             navigate(redirect);
@@ -196,6 +197,7 @@ const AuthPage = () => {
                         localStorage.setItem('user', JSON.stringify(data));
                         sessionStorage.removeItem('token');
                         sessionStorage.removeItem('user');
+                        setUser(data);
 
                         toast.success(`Welcome, ${data.name}!`);
                         navigate(redirect);
