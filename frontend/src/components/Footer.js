@@ -91,9 +91,9 @@ const Footer = () => {
                 }}>
                   {settings?.brandName || 'AmaraCé'}
                 </h4>
+                <p className="footer-motto-v2">{settings?.footerMotto || 'Reveal Your Natural Radiance.'}</p>
               </div>
             </div>
-            <p className="footer-motto-v2">{settings?.footerMotto || 'Reveal Your Natural Radiance.'}</p>
           </div>
 
           <div className="nav-col-v2">
@@ -118,8 +118,9 @@ const Footer = () => {
           <div className="nav-col-v2">
             <h4>STORE LOCATION</h4>
             <ul>
-              <li>Canocotan, Tagum City</li>
-              <li>Davao del Norte, 8100</li>
+              <li>Apo Highlands Subdivision,</li>
+              <li>Catalunan Grande, Davao City</li>
+              <li>Davao del Sur, 8000</li>
             </ul>
           </div>
         </div>

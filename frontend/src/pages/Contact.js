@@ -39,13 +39,13 @@ const Contact = () => {
         {
             icon: FiMapPin,
             title: 'Address',
-            content: 'Canocotan, Tagum City, Davao del Norte, 8100',
+            content: 'Apo Highlands Subdivision, Catalunan Grande, Davao City, Davao del Sur, 8000',
         },
         {
             icon: FiMail,
             title: 'Email',
-            content: 'amarace.skincare@gmail.com',
-            link: 'mailto:amarace.skincare@gmail.com',
+            content: 'contact@amaracéskincare.store',
+            link: 'mailto:contact@amaracéskincare.store',
         },
         {
             icon: FiPhone,

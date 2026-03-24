@@ -176,21 +176,22 @@
 }
 
 .footer-brand-name {
-    font-size: 1.75rem;
-    font-weight: 700;
-    font-family: 'Playfair Display', serif;
-    letter-spacing: -0.02em;
-    margin: 0;
-    line-height: 1;
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-family: inherit;
+    margin: 0 0 5px 0;
+    line-height: 1.2;
 }
 
 .footer-motto-v2 {
-    font-size: 0.95rem;
-    line-height: 1.8;
-    color: var(--brand-secondary);
-    margin-bottom: 30px;
-    font-style: italic;
-    opacity: 0.8;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #374151;
+    margin-bottom: 0;
+    font-style: normal;
+    opacity: 1;
 }
 
 .footer-social-links-v2 {
