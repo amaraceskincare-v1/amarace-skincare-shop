@@ -24,10 +24,9 @@ const LoadingScreen = ({ isLoading }) => {
             <div className="loading-content">
                 <div className="loading-logo-wrapper">
                     <img
-                        src={optimizeImage(settings?.navbarLogo || '/logo.png', 200)}
+                        src={settings?.navbarLogo || '/logo.png'}
                         alt="AmaraCé Logo"
                         className="loading-logo-img"
-                        onError={(e) => { e.target.src = 'https://res.cloudinary.com/amarace/image/upload/v1/site-assets/logo.png'; }}
                     />
                 </div>
             </div>

@@ -16,10 +16,9 @@ export const optimizeImage = (url, width) => {
 
     let processedUrl = url;
 
-    // If it's a local path (starts with /), map it to the new Cloudinary account's site-assets
+    // If it's a local path (starts with /), just return it. Local assets are served fast by Vercel CDN anyway.
     if (url.startsWith('/')) {
-        const imageName = url.split('/').pop().split('.')[0];
-        processedUrl = `${CLOUDINARY_BASE_URL}/site-assets/${imageName.replace(/-/g, '_')}`;
+        return url;
     }
 
     // If not a Cloudinary URL at all, return as-is
