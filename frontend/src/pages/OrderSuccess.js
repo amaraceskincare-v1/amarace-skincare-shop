@@ -85,14 +85,18 @@ const OrderSuccess = () => {
         const logoImg = new Image();
         logoImg.src = '/logo.png';
         logoImg.onload = () => {
-            doc.addImage(logoImg, 'PNG', 14, 12, 12, 12);
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const groupWidth = 110; 
+            const startX = (pageWidth - groupWidth) / 2;
+            doc.addImage(logoImg, 'PNG', startX, 12, 12, 12);
             doc.setFontSize(18);
-            doc.text('AmaraCé Skin Care - Order Receipt', 30, 22);
+            doc.text('AmaraCé Skin Care - Order Receipt', startX + 16, 21);
             renderPDF(doc);
         };
         logoImg.onerror = () => {
+            const pageWidth = doc.internal.pageSize.getWidth();
             doc.setFontSize(18);
-            doc.text('AmaraCé Skin Care - Order Receipt', 14, 22);
+            doc.text('AmaraCé Skin Care - Order Receipt', pageWidth / 2, 21, { align: 'center' });
             renderPDF(doc);
         };
     };

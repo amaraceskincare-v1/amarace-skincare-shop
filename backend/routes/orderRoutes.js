@@ -186,18 +186,7 @@ router.post('/cod', protect, async (req, res) => {
     // --- BACKGROUND PROCESSES ---
 
     Order.findById(order._id).populate('items.product').then(async populatedOrder => {
-      // 1. Email Notification
-      try {
-        await sendEmail({
-          to: contactDetails.email,
-          subject: 'AmaraCé Order Received (COD)',
-          html: orderEmailTemplate(populatedOrder, 'COD Order Received'),
-        });
-      } catch (err) {
-        console.error('Email sending failed:', err);
-      }
-
-      // 2. Telegram Notification
+      // 1. Telegram Notification (Instant)
       try {
         const fullItemList = populatedOrder.items.map(i => {
            const productName = i.product ? i.product.name : 'Unknown Product';
@@ -209,6 +198,17 @@ router.post('/cod', protect, async (req, res) => {
         sendTelegram(telegramMsg, firstItemImage);
       } catch (err) {
         console.error('Telegram formatting/sending failed:', err);
+      }
+
+      // 2. Email Notification (Slower)
+      try {
+        await sendEmail({
+          to: contactDetails.email,
+          subject: 'AmaraCé Order Received (COD)',
+          html: orderEmailTemplate(populatedOrder, 'COD Order Received'),
+        });
+      } catch (err) {
+        console.error('Email sending failed:', err);
       }
     }).catch(err => console.error('Background fetch failed:', err));
 
@@ -298,20 +298,7 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
       }
     })();
 
-    // 2. Email Notification
-    Order.findById(order._id).populate('items.product').then(async populatedOrder => {
-      try {
-        await sendEmail({
-          to: parsedContact.email,
-          subject: 'AmaraCé Order Received (GCash)',
-          html: orderEmailTemplate(populatedOrder, 'GCash Order Received'),
-        });
-      } catch (err) {
-        console.error('Email sending failed:', err);
-      }
-    });
-
-    // 3. Telegram Notification
+    // 2. Telegram Notification (Instant)
     const itemList = items.map(item => `• Product (x${item.quantity})`).join('\n'); // Quick formatting
     Order.findById(order._id).populate('items.product').then(async populatedOrder => {
       try {
@@ -325,6 +312,19 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
         sendTelegram(telegramMsg, firstItemImage);
       } catch (err) {
         console.error('Telegram formatting/sending failed:', err);
+      }
+    });
+
+    // 3. Email Notification (Slower)
+    Order.findById(order._id).populate('items.product').then(async populatedOrder => {
+      try {
+        await sendEmail({
+          to: parsedContact.email,
+          subject: 'AmaraCé Order Received (GCash)',
+          html: orderEmailTemplate(populatedOrder, 'GCash Order Received'),
+        });
+      } catch (err) {
+        console.error('Email sending failed:', err);
       }
     });
 

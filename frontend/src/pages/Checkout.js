@@ -78,8 +78,7 @@ const Checkout = () => {
 
   const [paymentMethod, setPaymentMethod] = useState('gcash');
   const [shippingMethod, setShippingMethod] = useState('jnt'); // 'jnt' or 'inhouse'
-  const [requestChange, setRequestChange] = useState(false);
-  const [changeAmount, setChangeAmount] = useState('');
+
 
   // Calculate shipping cost
   const discount = isFirstOrder ? cartTotal * 0.10 : 0;
@@ -126,10 +125,7 @@ const Checkout = () => {
         // COD logic
         const codData = {
           shippingAddress: address,
-          contactDetails: {
-            ...contact,
-            note: requestChange ? `Request for change from ₱${changeAmount}` : ''
-          },
+          contactDetails: contact,
           paymentMethod: 'cod',
           shippingMethod: shippingMethod, // Add shippingMethod
           shippingCost: shipping,
@@ -357,31 +353,6 @@ const Checkout = () => {
                         <li>Payment will be collected by our delivery rider</li>
                         <li>Make sure someone is available to receive the order</li>
                       </ul>
-                    </div>
-
-                    <div className="cod-change-request">
-                      <label className="checkbox-container">
-                        <input
-                          type="checkbox"
-                          checked={requestChange}
-                          onChange={(e) => setRequestChange(e.target.checked)}
-                        />
-                        <span className="checkmark"></span>
-                        Request for change?
-                      </label>
-
-                      {requestChange && (
-                        <div className="change-amount-input">
-                          <span>Amount tendered:</span>
-                          <input
-                            type="number"
-                            placeholder="e.g. 500"
-                            value={changeAmount}
-                            onChange={(e) => setChangeAmount(e.target.value)}
-                            required={requestChange}
-                          />
-                        </div>
-                      )}
                     </div>
                   </div>
                 )}
