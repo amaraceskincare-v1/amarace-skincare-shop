@@ -1,5 +1,6 @@
 const express = require('express');
 const Cart = require('../models/Cart');
+const Product = require('../models/Product');
 const { protect } = require('../middleware/auth');
 
 const router = express.Router();
@@ -17,22 +18,39 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// Add item to cart
+// Add item to cart with server-side stock validation
 router.post('/add', protect, async (req, res) => {
   try {
-    const { productId, quantity } = req.body;
-    let cart = await Cart.findOne({ user: req.user._id });
+    const { productId, quantity = 1 } = req.body;
 
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    if (product.stock === 0) {
+      return res.status(400).json({ message: `${product.name} is currently out of stock` });
+    }
+
+    let cart = await Cart.findOne({ user: req.user._id });
     if (!cart) {
       cart = await Cart.create({ user: req.user._id, items: [] });
     }
 
     const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
+    const currentQtyInCart = itemIndex > -1 ? cart.items[itemIndex].quantity : 0;
+    const requestedTotal = currentQtyInCart + Number(quantity);
+
+    if (requestedTotal > product.stock) {
+      return res.status(400).json({
+        message: `Cannot add ${quantity} more. Only ${product.stock} items available in stock (${currentQtyInCart} already in your bag).`
+      });
+    }
 
     if (itemIndex > -1) {
-      cart.items[itemIndex].quantity += quantity;
+      cart.items[itemIndex].quantity = requestedTotal;
     } else {
-      cart.items.push({ product: productId, quantity });
+      cart.items.push({ product: productId, quantity: Number(quantity) });
     }
 
     await cart.save();
@@ -43,19 +61,31 @@ router.post('/add', protect, async (req, res) => {
   }
 });
 
-// Update cart item quantity
+// Update cart item quantity with server-side stock validation
 router.put('/update', protect, async (req, res) => {
   try {
     const { productId, quantity } = req.body;
-    const cart = await Cart.findOne({ user: req.user._id });
+    const newQty = Number(quantity);
 
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    if (newQty > product.stock) {
+      return res.status(400).json({
+        message: `Only ${product.stock} items available in stock.`
+      });
+    }
+
+    const cart = await Cart.findOne({ user: req.user._id });
     if (cart) {
       const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
       if (itemIndex > -1) {
-        if (quantity <= 0) {
+        if (newQty <= 0) {
           cart.items.splice(itemIndex, 1);
         } else {
-          cart.items[itemIndex].quantity = quantity;
+          cart.items[itemIndex].quantity = newQty;
         }
         await cart.save();
       }

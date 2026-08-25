@@ -451,3 +451,576 @@
     padding: 30px;
     text-align: left;
 }
+
+/* =========================================
+   INVENTORY & PRODUCT CATALOG STYLES
+   ========================================= */
+
+.admin-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.admin-subtitle {
+    margin: 4px 0 0 0;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.btn-add-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--brand-primary, #c41e3a);
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(196, 30, 58, 0.2);
+}
+
+.btn-add-primary:hover {
+    background: #a0172e;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(196, 30, 58, 0.3);
+}
+
+/* ── Inventory Summary Dashboard Grid ────────── */
+.inventory-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.inventory-metric-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.inventory-metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    border-color: #cbd5e1;
+}
+
+.inventory-metric-card.active {
+    border-color: var(--brand-primary, #c41e3a);
+    background: #fffafa;
+    box-shadow: 0 0 0 2px rgba(196, 30, 58, 0.15);
+}
+
+.inventory-metric-card .metric-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.inventory-metric-card .metric-icon.total {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.inventory-metric-card .metric-icon.in-stock {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.inventory-metric-card .metric-icon.low-stock {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+.inventory-metric-card .metric-icon.out-of-stock {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.inventory-metric-card .metric-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.inventory-metric-card .metric-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.inventory-metric-card .metric-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+}
+
+.inventory-metric-card .alert-badge {
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 50px;
+}
+
+.inventory-metric-card .metric-val {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.inventory-metric-card .metric-val.in-stock { color: #059669; }
+.inventory-metric-card .metric-val.low-stock { color: #d97706; }
+.inventory-metric-card .metric-val.out-of-stock { color: #dc2626; }
+
+.inventory-metric-card .metric-sub {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+/* ── Filter Toolbar ──────────────────────────── */
+.admin-filter-toolbar {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.filter-search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.filter-search-box .search-icon {
+    position: absolute;
+    left: 14px;
+    color: #94a3b8;
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
+.filter-search-box input {
+    width: 100%;
+    padding: 10px 38px 10px 40px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #1e293b;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+}
+
+.filter-search-box input:focus {
+    outline: none;
+    border-color: var(--brand-primary, #c41e3a);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
+}
+
+.filter-search-box .clear-icon-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.filter-dropdowns-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.filter-dropdowns-row select {
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: white;
+    color: #334155;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-dropdowns-row select:focus {
+    outline: none;
+    border-color: var(--brand-primary, #c41e3a);
+}
+
+.btn-reset-filters {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-reset-filters:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+/* ── Products Table Custom Elements ─────────── */
+.products-admin-table th {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+}
+
+.sku-badge {
+    font-family: monospace;
+    font-size: 0.82rem;
+    background: #f1f5f9;
+    padding: 3px 6px;
+    border-radius: 4px;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+}
+
+.original-price-sub {
+    display: block;
+    font-size: 0.78rem;
+    color: #94a3b8;
+    text-decoration: line-through;
+}
+
+.inventory-qty-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.inventory-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.inventory-dot.in-stock { background: #10b981; }
+.inventory-dot.low-stock { background: #f59e0b; }
+.inventory-dot.out-of-stock { background: #ef4444; }
+
+.threshold-sub {
+    font-size: 0.72rem;
+    color: #94a3b8;
+}
+
+/* Status Pills */
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 50px;
+}
+
+.status-pill.in-stock {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.status-pill.low-stock {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+.status-pill.out-of-stock {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+/* Visibility Pills */
+.visibility-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.visibility-pill.published {
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.visibility-pill.draft {
+    background: #f8fafc;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+/* Merchandising Tags */
+.merchandising-tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.merch-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.merch-tag.featured {
+    background: #fdf2f8;
+    color: #db2777;
+}
+
+.merch-tag.bestseller {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.merch-tag.new {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.merch-tag.none {
+    background: #f8fafc;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+/* ── Modal Enhancements ──────────────────────── */
+.modal-subtitle {
+    margin: 4px 0 0 0;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.input-prefix-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-prefix-box span {
+    position: absolute;
+    left: 12px;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.input-prefix-box input {
+    padding-left: 28px !important;
+}
+
+.field-hint {
+    display: block;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+
+.live-status-preview-box {
+    padding: 10px 0;
+}
+
+/* Visibility Toggle */
+.visibility-toggle-group {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 18px;
+}
+
+.toggle-switch-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+}
+
+.toggle-switch-label input[type="checkbox"] {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    -webkit-appearance: none;
+    background: #cbd5e1;
+    outline: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    flex-shrink: 0;
+}
+
+.toggle-switch-label input[type="checkbox"]:checked {
+    background: #16a34a;
+}
+
+.toggle-switch-label input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+    background: white;
+    transition: 0.3s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch-label input[type="checkbox"]:checked::before {
+    left: 23px;
+}
+
+.toggle-switch-label strong {
+    display: block;
+    font-size: 0.95rem;
+    color: #0f172a;
+}
+
+.toggle-switch-label p {
+    margin: 2px 0 0 0;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+/* Merchandising Checkbox Grid */
+.merchandising-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.merchandising-checkbox-grid .checkbox-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.merchandising-checkbox-grid .checkbox-card:hover {
+    border-color: #cbd5e1;
+    background: white;
+}
+
+.merchandising-checkbox-grid .checkbox-card input[type="checkbox"] {
+    display: inline-block;
+    margin-top: 3px;
+    accent-color: var(--brand-primary, #c41e3a);
+    width: 16px;
+    height: 16px;
+}
+
+.merchandising-checkbox-grid .cb-content strong {
+    display: block;
+    font-size: 0.88rem;
+    color: #0f172a;
+}
+
+.merchandising-checkbox-grid .cb-content p {
+    margin: 2px 0 0 0;
+    font-size: 0.78rem;
+    color: #64748b;
+}
+
+/* Modal Actions Sticky Footer */
+.modal-actions-sticky {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    padding: 16px 30px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    z-index: 90;
+    border-radius: 0 0 20px 20px;
+}
+
+.btn-cancel-modal {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.btn-submit-modal {
+    background: var(--brand-primary, #c41e3a);
+    color: white;
+    border: none;
+    padding: 10px 26px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(196, 30, 58, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-submit-modal:hover:not(:disabled) {
+    background: #a0172e;
+    transform: translateY(-1px);
+}
+
+.btn-submit-modal:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

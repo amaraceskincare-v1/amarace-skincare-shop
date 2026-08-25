@@ -6,7 +6,6 @@ import ProductCard from '../components/ProductCard';
 import QuickViewModal from '../components/QuickViewModal';
 import { useSettings } from '../context/SettingsContext';
 import { optimizeImage } from '../utils/imageOptimizer';
-import { getActiveShoppers } from '../utils/analytics';
 import '../styles/Products.css';
 
 const PRODUCTS_PER_PAGE = 8;
@@ -21,7 +20,6 @@ const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [error, setError] = useState(null);
-  const [activeShoppers, setActiveShoppers] = useState(1);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [inStockOnly, setInStockOnly] = useState(false);
   const { settings } = useSettings();
@@ -50,15 +48,6 @@ const Products = () => {
       document.title = 'Shop All Collections | AmaraCé Skincare';
     }
   }, [category, search]);
-
-  // Fetch real-time active visitors count
-  useEffect(() => {
-    getActiveShoppers().then(count => setActiveShoppers(count));
-    const interval = setInterval(() => {
-      getActiveShoppers().then(count => setActiveShoppers(count));
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Fetch products and categories
   useEffect(() => {
@@ -181,11 +170,6 @@ const Products = () => {
         <div className="hero-overlay" />
 
         <div className="hero-content">
-          <div className="hero-live-pill">
-            <span className="live-pulse-dot" />
-            <span>{activeShoppers} {activeShoppers === 1 ? 'shopper' : 'shoppers'} browsing now</span>
-          </div>
-
           <span className="hero-tagline">Artisan & Dermatologist Tested</span>
           <h1>{category ? `${category} Collection` : 'Our Beauty Essentials'}</h1>
 

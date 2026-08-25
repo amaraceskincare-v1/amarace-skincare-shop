@@ -4,7 +4,7 @@ import { FiX, FiMinus, FiPlus, FiStar, FiShoppingCart, FiCheck, FiEye } from 're
 import { useCart } from '../context/CartContext';
 import { optimizeImage } from '../utils/imageOptimizer';
 import { flyToCart } from '../utils/animations';
-import { trackAddToCart, getProductActiveViewers } from '../utils/analytics';
+import { trackAddToCart } from '../utils/analytics';
 import { toast } from 'react-toastify';
 import '../styles/QuickViewModal.css';
 
@@ -12,7 +12,6 @@ const QuickViewModal = ({ product, isOpen, onClose }) => {
   const { addToCart } = useCart();
   const [selectedImg, setSelectedImg] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [activeViewers, setActiveViewers] = useState(1);
   const [addedSuccess, setAddedSuccess] = useState(false);
   const modalRef = useRef(null);
 
@@ -21,9 +20,6 @@ const QuickViewModal = ({ product, isOpen, onClose }) => {
       setSelectedImg(0);
       setQuantity(1);
       setAddedSuccess(false);
-
-      // Fetch active viewers for this product
-      getProductActiveViewers(product._id).then(count => setActiveViewers(count));
 
       // Lock body scroll
       document.body.style.overflow = 'hidden';
@@ -134,11 +130,6 @@ const QuickViewModal = ({ product, isOpen, onClose }) => {
                   ))}
                   <span className="qv-review-count">({product.numReviews || 0} reviews)</span>
                 </div>
-
-                <div className="qv-live-viewers">
-                  <span className="qv-live-dot"></span>
-                  <span>{activeViewers} looking now</span>
-                </div>
               </div>
             </div>
 
@@ -161,7 +152,7 @@ const QuickViewModal = ({ product, isOpen, onClose }) => {
             <div className="qv-stock-status">
               {product.stock === 0 ? (
                 <span className="stock-out">✕ Currently Out of Stock</span>
-              ) : product.stock <= 5 ? (
+              ) : product.stock <= (product.lowStockThreshold || 10) ? (
                 <span className="stock-low">⚠ Only {product.stock} items remaining</span>
               ) : (
                 <span className="stock-in">✓ In Stock — Ready for Dispatch</span>

@@ -137,6 +137,15 @@ router.post('/cod', protect, async (req, res) => {
       return res.status(400).json({ message: 'Cart is empty' });
     }
 
+    // Pre-validate stock for all cart items
+    for (const item of cart.items) {
+      if (!item.product || item.product.stock < item.quantity) {
+        return res.status(400).json({
+          message: `Insufficient stock for "${item.product?.name || 'Product'}". Only ${item.product?.stock || 0} remaining.`
+        });
+      }
+    }
+
     const items = cart.items.map(item => ({
       product: item.product._id,
       quantity: item.quantity,
@@ -229,6 +238,15 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
 
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({ message: 'Cart is empty' });
+    }
+
+    // Pre-validate stock for all cart items
+    for (const item of cart.items) {
+      if (!item.product || item.product.stock < item.quantity) {
+        return res.status(400).json({
+          message: `Insufficient stock for "${item.product?.name || 'Product'}". Only ${item.product?.stock || 0} remaining.`
+        });
+      }
     }
 
     if (!req.file) {
@@ -394,10 +412,24 @@ router.put('/:id/status', protect, admin, async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate('items.product');
     if (order) {
+      const prevStatus = order.status;
       order.status = req.body.status;
       if (req.body.status === 'delivered') {
         order.deliveredAt = Date.now();
       }
+
+      // Restore inventory if order is cancelled and was not cancelled before
+      if (req.body.status === 'cancelled' && prevStatus !== 'cancelled') {
+        for (const item of order.items) {
+          if (item.product) {
+            const prodId = item.product._id || item.product;
+            await Product.findByIdAndUpdate(prodId, {
+              $inc: { stock: item.quantity }
+            });
+          }
+        }
+      }
+
       const updatedOrder = await order.save();
 
       // Construct item list for Telegram

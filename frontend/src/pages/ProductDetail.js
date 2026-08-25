@@ -11,7 +11,7 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import { optimizeImage } from '../utils/imageOptimizer';
 import { flyToCart } from '../utils/animations';
-import { trackProductView, trackAddToCart, trackCheckoutStart, getProductActiveViewers } from '../utils/analytics';
+import { trackProductView, trackAddToCart, trackCheckoutStart } from '../utils/analytics';
 import ProductCard from '../components/ProductCard';
 import ProductReviews from '../components/ProductReviews';
 import '../styles/ProductDetail.css';
@@ -27,7 +27,6 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [activeViewers, setActiveViewers] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [addedSuccess, setAddedSuccess] = useState(false);
@@ -98,9 +97,6 @@ const ProductDetail = () => {
 
         // Track Product View event
         trackProductView(data);
-
-        // Fetch active viewers for this item
-        getProductActiveViewers(id).then(count => setActiveViewers(count));
 
         // Fetch related products in the same category
         if (data?.category) {
@@ -292,12 +288,6 @@ const ProductDetail = () => {
 
               <div className="sku-tag">SKU: AM-{product._id?.slice(-6).toUpperCase()}</div>
             </div>
-
-            {/* Real-time Viewers Count */}
-            <div className="detail-live-viewers">
-              <span className="live-pulse-dot" />
-              <span>{activeViewers} {activeViewers === 1 ? 'person is' : 'people are'} looking at this item right now</span>
-            </div>
           </div>
 
           {/* Price Block */}
@@ -315,7 +305,7 @@ const ProductDetail = () => {
           <div className="stock-indicator-row">
             {isOutOfStock ? (
               <span className="stock-pill out">✕ Currently Sold Out</span>
-            ) : product.stock <= 5 ? (
+            ) : product.stock <= (product.lowStockThreshold || 10) ? (
               <span className="stock-pill low">⚠ Only {product.stock} left in stock — order soon</span>
             ) : (
               <span className="stock-pill in">✓ In Stock — Ready to Ship</span>
