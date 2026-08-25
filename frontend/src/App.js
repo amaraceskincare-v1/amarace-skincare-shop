@@ -75,7 +75,7 @@ const App = () => {
       <Navbar />
       <CartDrawer isOpen={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
 
-      <main className="main-content">
+      <main className={`main-content${location.pathname === '/' ? ' home-active' : ''}`}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />

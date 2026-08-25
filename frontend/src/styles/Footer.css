@@ -3,8 +3,8 @@
    ========================================= */
 
 .footer-premium-v2 {
-    background: var(--brand-bg);
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background: var(--ivory, #FAF8F5);
+    border-top: 1px solid var(--stone, #DDD8CF);
 }
 
 /* 1. NEWSLETTER SECTION */
@@ -31,10 +31,12 @@
 }
 
 .newsletter-content-v2 h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 3rem;
+    font-family: var(--font-serif, 'Cormorant Garamond', 'Playfair Display', serif);
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
     margin-bottom: 20px;
     line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.01em;
 }
 
 .newsletter-content-v2 p {
@@ -146,7 +148,7 @@
     padding: 0 2rem;
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1.5fr;
-    gap: 80px;
+    gap: 60px;
 }
 
 .footer-brand-row {
@@ -245,9 +247,9 @@
 
 /* 4. BOTTOM BAR */
 .footer-bottom-v2 {
-    padding: 40px 0;
+    padding: 32px 0;
     background: #fff;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: 1px solid var(--stone, #DDD8CF);
 }
 
 .bottom-content-v2 {

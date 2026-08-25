@@ -7,6 +7,11 @@
   top: 0;
   z-index: 1000;
   background: var(--light);
+  transition: box-shadow 0.3s var(--ease-luxury, ease);
+}
+
+.header.scrolled {
+  box-shadow: 0 2px 24px rgba(28, 28, 30, 0.08);
 }
 
 .header-with-bg {
@@ -15,7 +20,10 @@
 }
 
 .header.scrolled .logo-bar {
-  padding: 0.5rem 0;
+  padding: 0.6rem 0;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 /* Level 1: Announcement Bar */
@@ -75,9 +83,9 @@
 /* Level 2: Logo Bar */
 .logo-bar {
   background: #fff;
-  border-bottom: 1px solid var(--gray);
-  padding: 1.5rem 0;
-  transition: padding 0.3s ease;
+  border-bottom: 1px solid rgba(221, 216, 207, 0.6);
+  padding: 1.2rem 0;
+  transition: padding 0.3s var(--ease-luxury, ease), background 0.3s ease;
 }
 
 .logo-bar-container {
@@ -464,8 +472,8 @@
 /* Level 3: Main Nav Bar */
 .main-nav-bar {
   background: #fff;
-  border-bottom: 1px solid var(--gray);
-  padding: 1rem 0;
+  border-bottom: 1px solid rgba(221, 216, 207, 0.6);
+  padding: 0.85rem 0;
 }
 
 .nav-links-centered {
@@ -483,25 +491,25 @@
 }
 
 .nav-links-centered a {
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--dark);
   text-decoration: none;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   transition: color var(--transition-fast);
-  padding: 8px 0;
+  padding: 6px 0;
 }
 
 .nav-links-centered a::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: -2px;
   left: 0;
   width: 0;
-  height: 2px;
+  height: 1.5px;
   background-color: var(--brand-primary);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.35s var(--ease-luxury, ease);
 }
 
 .nav-links-centered a:hover::after,
