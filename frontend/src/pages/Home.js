@@ -11,18 +11,18 @@ import { optimizeImage } from '../utils/imageOptimizer';
 const SLIDE_DURATION = 5500; // ms
 
 const Home = () => {
-  const [bestSellers, setBestSellers]           = useState([]);
+  const [bestSellers, setBestSellers] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [newArrivals, setNewArrivals]           = useState([]);
-  const [categoryCounts, setCategoryCounts]     = useState({ 'Lip Tint': 0, 'Perfume': 0, 'Bath and Body': 0, 'All': 0 });
-  const [loading, setLoading]                   = useState(true);
-  const [currentSlide, setCurrentSlide]         = useState(0);
-  const [slideKey, setSlideKey]                 = useState(0); // for progress bar reset
-  const [settings, setSettings]                 = useState(null);
+  const [newArrivals, setNewArrivals] = useState([]);
+  const [categoryCounts, setCategoryCounts] = useState({ 'Lip Tint': 0, 'Perfume': 0, 'Bath and Body': 0, 'All': 0 });
+  const [loading, setLoading] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [slideKey, setSlideKey] = useState(0); // for progress bar reset
+  const [settings, setSettings] = useState(null);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [newsletterEmail, setNewsletterEmail]   = useState('');
+  const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterLoading, setNewsletterLoading] = useState(false);
-  const [newsletterDone, setNewsletterDone]     = useState(false);
+  const [newsletterDone, setNewsletterDone] = useState(false);
   const { t } = useLanguage();
   const revealRef = useRef(null);
 
@@ -656,7 +656,7 @@ const Home = () => {
             <em>not a routine.</em>
           </h2>
           <p className="brand-statement-body">
-            We believe every woman deserves skincare that doesn't just work — it transforms. Crafted with intention, elevated for the modern Filipina.
+            We believe every woman deserves skincare that doesn't just work, it transforms. Crafted with intention, elevated for the modern Filipina.
           </p>
           <div className="brand-statement-cta-row">
             <Link to="/about" className="brand-btn-ghost">Our Story →</Link>
