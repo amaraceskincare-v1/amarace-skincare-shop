@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiLayout, FiPackage, FiShoppingCart, FiCreditCard, FiStar, FiArrowLeft, FiSettings, FiUsers, FiMenu, FiX } from 'react-icons/fi';
+import { FiLayout, FiPackage, FiShoppingCart, FiCreditCard, FiStar, FiArrowLeft, FiSettings, FiUsers, FiMenu, FiX, FiTrendingUp } from 'react-icons/fi';
 
 const AdminSidebar = () => {
     const location = useLocation();
@@ -8,6 +8,7 @@ const AdminSidebar = () => {
 
     const menuItems = [
         { path: '/admin', name: 'Dashboard', icon: <FiLayout /> },
+        { path: '/admin/analytics', name: 'Analytics', icon: <FiTrendingUp /> },
         { path: '/admin/products', name: 'Products', icon: <FiPackage /> },
         { path: '/admin/orders', name: 'Orders', icon: <FiShoppingCart /> },
         { path: '/admin/payments', name: 'GCash Payments', icon: <FiCreditCard /> },

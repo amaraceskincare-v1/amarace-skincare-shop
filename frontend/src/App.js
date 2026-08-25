@@ -20,6 +20,7 @@ import Profile from './pages/Profile';
 import Orders from './pages/Orders';
 import OrderSuccess from './pages/OrderSuccess';
 import AdminDashboard from './pages/admin/Dashboard';
+import AdminAnalytics from './pages/admin/Analytics';
 import AdminProducts from './pages/admin/Products';
 import AdminOrders from './pages/admin/Orders';
 import AdminReviews from './pages/admin/Reviews';
@@ -36,6 +37,7 @@ import { CartProvider } from './context/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 import RiderOrder from './pages/RiderOrder';
+import { trackPageView, trackEvent } from './utils/analytics';
 
 const App = () => {
   const location = useLocation();
@@ -43,24 +45,42 @@ const App = () => {
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
 
   const { lang } = useLanguage();
-
   const isFirstLoad = useRef(true);
 
   // Show loading screen on route change or language change
   useEffect(() => {
     setIsLoading(true);
-    
-    // Set a longer delay (1.5s) for the very first visit or hard refresh to show off the neon logo
-    // Keep it extremely snappy (400ms) for subsequent page navigations
+
     const delay = isFirstLoad.current ? 1500 : 400;
-    
+
     const timer = setTimeout(() => {
       setIsLoading(false);
       isFirstLoad.current = false;
     }, delay);
-    
+
     return () => clearTimeout(timer);
   }, [location.pathname, lang, location.search]);
+
+  // Track page views on route transitions
+  useEffect(() => {
+    // Only track non-admin client pageviews
+    if (!location.pathname.startsWith('/admin')) {
+      trackPageView(location.pathname + location.search, document.title);
+    }
+  }, [location.pathname, location.search]);
+
+  // Keep heartbeat active every 60s for accurate live shopper metrics
+  useEffect(() => {
+    if (location.pathname.startsWith('/admin')) return;
+
+    const heartbeatTimer = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        trackEvent('heartbeat');
+      }
+    }, 60000);
+
+    return () => clearInterval(heartbeatTimer);
+  }, [location.pathname]);
 
   // Make cart drawer controls available globally
   useEffect(() => {
@@ -95,7 +115,7 @@ const App = () => {
           <Route path="/policies/privacy" element={<PolicyPage type="privacy" />} />
           <Route path="/policies/refund" element={<PolicyPage type="refund" />} />
 
-          {/* Protected Routes */}
+          {/* Protected User Routes */}
           <Route
             path="/checkout"
             element={
@@ -121,12 +141,20 @@ const App = () => {
             }
           />
 
-          {/* Admin Routes */}
+          {/* Admin Protected Routes */}
           <Route
             path="/admin"
             element={
               <ProtectedRoute adminOnly>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/analytics"
+            element={
+              <ProtectedRoute adminOnly>
+                <AdminAnalytics />
               </ProtectedRoute>
             }
           />

@@ -111,6 +111,7 @@ app.use('/api/reviews', require('./routes/reviewRoutes'));
 app.use('/api/newsletter', require('./routes/newsletterRoutes'));
 app.use('/api/social-auth', require('./routes/socialAuthRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));
+app.use('/api/analytics', require('./routes/analyticsRoutes'));
 
 // Global Error Handler
 app.use((err, req, res, next) => {
