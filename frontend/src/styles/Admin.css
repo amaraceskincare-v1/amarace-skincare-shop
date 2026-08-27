@@ -77,15 +77,21 @@
 /* Main Content Area */
 .admin-main {
     flex: 1;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
     padding: 2rem;
     background: #f8fafc;
+    box-sizing: border-box;
 }
 
 .admin-header {
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .admin-header h1 {
@@ -97,9 +103,9 @@
 /* Stats Cards */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    margin-bottom: 4rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
 }
 
 .stat-card {
@@ -2533,14 +2539,24 @@
 .funnel-container {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    margin-top: 10px;
+    gap: 16px;
+    margin-top: 14px;
 }
 
 .funnel-step {
     display: flex;
     align-items: center;
     gap: 16px;
+    width: 100%;
+}
+
+.funnel-step-label {
+    width: 150px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #334155;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .funnel-bar-wrapper {
@@ -2548,19 +2564,16 @@
     background: #f1f5f9;
     border-radius: 8px;
     overflow: hidden;
-    height: 44px;
+    height: 32px;
+    display: flex;
+    align-items: center;
 }
 
 .funnel-bar {
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
     border-radius: 8px;
-    color: #ffffff;
-    font-weight: 600;
     transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    min-width: 4px;
 }
 
 .funnel-bar.v-100 { background: #0284c7; }
@@ -2569,22 +2582,52 @@
 .funnel-bar.v-25 { background: #f59e0b; }
 .funnel-bar.v-final { background: #10b981; }
 
-.funnel-bar-label {
-    font-size: 0.85rem;
-    white-space: nowrap;
+.funnel-step-stats {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    min-width: 90px;
+    flex-shrink: 0;
 }
 
 .funnel-bar-val {
     font-size: 0.95rem;
     font-weight: 800;
+    color: #1e293b;
 }
 
 .funnel-pct {
-    min-width: 60px;
-    font-size: 0.95rem;
-    font-weight: 800;
+    min-width: 46px;
+    font-size: 0.85rem;
+    font-weight: 700;
     color: #64748b;
     text-align: right;
+}
+
+.funnel-pct.final {
+    color: #10b981;
+}
+
+@media (max-width: 640px) {
+    .funnel-step {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .funnel-step-label {
+        width: 100%;
+    }
+
+    .funnel-bar-wrapper {
+        width: 100%;
+    }
+
+    .funnel-step-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
 }
 
 .funnel-pct.final {

@@ -165,81 +165,86 @@ const AdminAnalytics = () => {
 
               <div className="funnel-container">
                 <div className="funnel-step">
+                  <span className="funnel-step-label">1. Site Visitors</span>
                   <div className="funnel-bar-wrapper">
-                    <div className="funnel-bar v-100" style={{ width: '100%' }}>
-                      <span className="funnel-bar-label">1. Site Visitors</span>
-                      <strong className="funnel-bar-val">{funnel.visitors || 0}</strong>
-                    </div>
+                    <div className="funnel-bar v-100" style={{ width: '100%' }} />
                   </div>
-                  <span className="funnel-pct">100%</span>
+                  <div className="funnel-step-stats">
+                    <strong className="funnel-bar-val">{funnel.visitors || 0}</strong>
+                    <span className="funnel-pct">100%</span>
+                  </div>
                 </div>
 
                 <div className="funnel-step">
+                  <span className="funnel-step-label">2. Product Views</span>
                   <div className="funnel-bar-wrapper">
                     <div
                       className="funnel-bar v-75"
                       style={{
-                        width: `${Math.max(8, funnel.visitors > 0 ? (funnel.productViews / funnel.visitors) * 100 : 0)}%`
+                        width: `${Math.max(2, funnel.visitors > 0 ? (funnel.productViews / funnel.visitors) * 100 : 0)}%`
                       }}
-                    >
-                      <span className="funnel-bar-label">2. Product Views</span>
-                      <strong className="funnel-bar-val">{funnel.productViews || 0}</strong>
-                    </div>
+                    />
                   </div>
-                  <span className="funnel-pct">
-                    {funnel.visitors > 0 ? Math.round((funnel.productViews / funnel.visitors) * 100) : 0}%
-                  </span>
+                  <div className="funnel-step-stats">
+                    <strong className="funnel-bar-val">{funnel.productViews || 0}</strong>
+                    <span className="funnel-pct">
+                      {funnel.visitors > 0 ? Math.round((funnel.productViews / funnel.visitors) * 100) : 0}%
+                    </span>
+                  </div>
                 </div>
 
                 <div className="funnel-step">
+                  <span className="funnel-step-label">3. Add to Bag</span>
                   <div className="funnel-bar-wrapper">
                     <div
                       className="funnel-bar v-50"
                       style={{
-                        width: `${Math.max(6, funnel.visitors > 0 ? (funnel.addToCart / funnel.visitors) * 100 : 0)}%`
+                        width: `${Math.max(2, funnel.visitors > 0 ? (funnel.addToCart / funnel.visitors) * 100 : 0)}%`
                       }}
-                    >
-                      <span className="funnel-bar-label">3. Add to Bag</span>
-                      <strong className="funnel-bar-val">{funnel.addToCart || 0}</strong>
-                    </div>
+                    />
                   </div>
-                  <span className="funnel-pct">
-                    {funnel.visitors > 0 ? Math.round((funnel.addToCart / funnel.visitors) * 100) : 0}%
-                  </span>
+                  <div className="funnel-step-stats">
+                    <strong className="funnel-bar-val">{funnel.addToCart || 0}</strong>
+                    <span className="funnel-pct">
+                      {funnel.visitors > 0 ? Math.round((funnel.addToCart / funnel.visitors) * 100) : 0}%
+                    </span>
+                  </div>
                 </div>
 
                 <div className="funnel-step">
+                  <span className="funnel-step-label">4. Checkout Started</span>
                   <div className="funnel-bar-wrapper">
                     <div
                       className="funnel-bar v-25"
                       style={{
-                        width: `${Math.max(4, funnel.visitors > 0 ? (funnel.checkouts / funnel.visitors) * 100 : 0)}%`
+                        width: `${Math.max(2, funnel.visitors > 0 ? (funnel.checkouts / funnel.visitors) * 100 : 0)}%`
                       }}
-                    >
-                      <span className="funnel-bar-label">4. Checkout Started</span>
-                      <strong className="funnel-bar-val">{funnel.checkouts || 0}</strong>
-                    </div>
+                    />
                   </div>
-                  <span className="funnel-pct">
-                    {funnel.visitors > 0 ? Math.round((funnel.checkouts / funnel.visitors) * 100) : 0}%
-                  </span>
+                  <div className="funnel-step-stats">
+                    <strong className="funnel-bar-val">{funnel.checkouts || 0}</strong>
+                    <span className="funnel-pct">
+                      {funnel.visitors > 0 ? Math.round((funnel.checkouts / funnel.visitors) * 100) : 0}%
+                    </span>
+                  </div>
                 </div>
 
                 <div className="funnel-step final">
+                  <span className="funnel-step-label">5. Orders Completed</span>
                   <div className="funnel-bar-wrapper">
                     <div
                       className="funnel-bar v-final"
                       style={{
-                        width: `${Math.max(3, funnel.visitors > 0 ? (funnel.orders / funnel.visitors) * 100 : 0)}%`
+                        width: `${Math.max(2, funnel.visitors > 0 ? (funnel.orders / funnel.visitors) * 100 : 0)}%`
                       }}
-                    >
-                      <span className="funnel-bar-label">5. Orders Completed</span>
-                      <strong className="funnel-bar-val">{funnel.orders || 0}</strong>
-                    </div>
+                    />
                   </div>
-                  <span className="funnel-pct final">
-                    {funnel.visitors > 0 ? ((funnel.orders / funnel.visitors) * 100).toFixed(1) : 0}%
-                  </span>
+                  <div className="funnel-step-stats">
+                    <strong className="funnel-bar-val">{funnel.orders || 0}</strong>
+                    <span className="funnel-pct final">
+                      {funnel.visitors > 0 ? ((funnel.orders / funnel.visitors) * 100).toFixed(1) : 0}%
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
