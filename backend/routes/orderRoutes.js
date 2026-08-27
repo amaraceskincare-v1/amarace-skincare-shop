@@ -14,7 +14,7 @@ const sendTelegram = require('../utils/sendTelegram');
 const orderEmailTemplate = require('../utils/orderEmailTemplate');
 
 // Helper to extract GCash data from image
-const extractGCashData = async (imagePath) => {
+const extractGCashData = async (imagePath, orderTotal = null) => {
   try {
     // Tesseract can handle URLs directly
     const { data: { text } } = await Tesseract.recognize(imagePath, 'eng');
@@ -25,24 +25,68 @@ const extractGCashData = async (imagePath) => {
       number: 'N/A',
       amountSent: '0.00',
       referenceNo: 'N/A',
-      dateSent: new Date().toLocaleString()
+      dateSent: new Date().toLocaleString(),
+      amountMatches: false,
+      rawText: text || ''
     };
 
-    // Regex for Amount
-    const amountMatch = text.match(/(?:Amount|₱|Total|PHP)\s*[:=]?\s*([\d,]+\.?\d*)/i);
-    if (amountMatch) data.amountSent = amountMatch[1].replace(/,/g, '');
+    if (!text) return data;
 
-    // Regex for Reference Number (GCash usually has 12 or 13 digits)
-    const refMatch = text.match(/(?:Ref(?:\.?)\s*No(?:\.?)|Reference(?:\.?)\s*No(?:\.?))\s*[:=]?\s*(\d{4}\s*\d{3}\s*\d{6}|\d{12,13})/i);
-    if (refMatch) data.referenceNo = refMatch[1].replace(/\s/g, '');
+    // Normalize text spaces
+    const cleanText = text.replace(/\r\n/g, '\n');
 
-    // Regex for Date/Time
-    const dateMatch = text.match(/(?:Date|Time|Sent\s*at)\s*[:=]?\s*([A-Za-z]{3}\s\d{1,2},?\s\d{4},?\s\d{1,2}:\d{2}\s?[AP]M)/i);
-    if (dateMatch) data.dateSent = dateMatch[1];
+    // 1. Regex for Amount (GCash: "Amount PHP 1,250.00", "Amount ₱1,250.00", "Total Paid: 1250", etc.)
+    const amountPatterns = [
+      /(?:Amount|Total\s*Paid|Total\s*Amount|Amount\s*Sent|PHP|₱|Php)\s*[:=]?\s*(?:PHP|₱|Php)?\s*([\d,]+\.?\d{0,2})/i,
+      /(?:PHP|₱|Php)\s*([\d,]+\.?\d{0,2})/i,
+      /\b([\d,]+\.\d{2})\b/
+    ];
 
-    // Regex for Phone
-    const phoneMatch = text.match(/(?:09|\+639)\d{9}/);
-    if (phoneMatch) data.number = phoneMatch[0];
+    for (const pattern of amountPatterns) {
+      const match = cleanText.match(pattern);
+      if (match && match[1]) {
+        const cleaned = match[1].replace(/,/g, '');
+        const val = parseFloat(cleaned);
+        if (!isNaN(val) && val > 0) {
+          data.amountSent = val.toFixed(2);
+          break;
+        }
+      }
+    }
+
+    // 2. Regex for Reference Number (GCash format: 12-13 digits, often formatted "1234 567 89012" or "1234 5678 9012")
+    const refPatterns = [
+      /(?:Ref(?:\.?)\s*No(?:\.?)|Reference(?:\.?)\s*No(?:\.?)|Ref\s*#|Reference\s*#)\s*[:=]?\s*([\d\s]{10,20})/i,
+      /\b(\d{4}\s*\d{3,4}\s*\d{4,6})\b/,
+      /\b(\d{12,13})\b/
+    ];
+
+    for (const pattern of refPatterns) {
+      const match = cleanText.match(pattern);
+      if (match && match[1]) {
+        const cleanedRef = match[1].replace(/\s/g, '');
+        if (cleanedRef.length >= 10 && cleanedRef.length <= 16 && /^\d+$/.test(cleanedRef)) {
+          data.referenceNo = cleanedRef;
+          break;
+        }
+      }
+    }
+
+    // 3. Regex for Date/Time (e.g. "Sep 15, 2025 04:30 PM", "15 Sep 2025, 04:30 PM", "2025-09-15 16:30")
+    const dateMatch = cleanText.match(/(?:Date|Time|Sent\s*at|Paid\s*on)?\s*[:=]?\s*([A-Za-z]{3,9}\s+\d{1,2},?\s+\d{4},?\s+\d{1,2}:\d{2}(?::\d{2})?\s*[AP]M)/i)
+      || cleanText.match(/(\d{1,2}\s+[A-Za-z]{3,9}\s+\d{4},?\s+\d{1,2}:\d{2}\s*[AP]M)/i);
+    if (dateMatch) data.dateSent = dateMatch[1].trim();
+
+    // 4. Regex for Phone (09xx xxx xxxx or +639xxxxxxxxx)
+    const phoneMatch = cleanText.match(/(?:09|\+639)[\d\s-]{9,12}/);
+    if (phoneMatch) data.number = phoneMatch[0].replace(/[\s-]/g, '');
+
+    // 5. Compare with Order Total if provided
+    if (orderTotal !== null && orderTotal !== undefined) {
+      const parsedDetected = parseFloat(data.amountSent) || 0;
+      const targetTotal = parseFloat(orderTotal) || 0;
+      data.amountMatches = Math.abs(parsedDetected - targetTotal) < 0.05;
+    }
 
     return data;
   } catch (error) {
@@ -176,7 +220,8 @@ router.post('/cod', protect, async (req, res) => {
       shippingCost: finalShippingCost,
       total,
       tax: 0,
-      status: 'processing' // COD starts at processing since no verification needed
+      status: 'processing', // COD starts at processing since no verification needed
+      stockDeducted: true
     });
 
     // Update product stock
@@ -286,7 +331,8 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
       shippingCost,
       total,
       tax: 0,
-      status: 'awaiting_payment_verification'
+      status: 'awaiting_payment_verification',
+      stockDeducted: true
     });
 
     // Update product stock
@@ -308,7 +354,7 @@ router.post('/gcash', protect, upload.single('paymentProof'), async (req, res) =
     (async () => {
       try {
         console.log('Background: Extracting GCash data from:', req.file.path);
-        const extractedData = await extractGCashData(req.file.path);
+        const extractedData = await extractGCashData(req.file.path, total);
         console.log('Background: Extracted Data:', extractedData);
         await Order.findByIdAndUpdate(order._id, { paymentData: extractedData });
       } catch (err) {
@@ -413,20 +459,47 @@ router.put('/:id/status', protect, admin, async (req, res) => {
     const order = await Order.findById(req.params.id).populate('items.product');
     if (order) {
       const prevStatus = order.status;
-      order.status = req.body.status;
-      if (req.body.status === 'delivered') {
+      const newStatus = req.body.status;
+      order.status = newStatus;
+
+      if (newStatus === 'delivered') {
         order.deliveredAt = Date.now();
       }
 
-      // Restore inventory if order is cancelled and was not cancelled before
-      if (req.body.status === 'cancelled' && prevStatus !== 'cancelled') {
-        for (const item of order.items) {
-          if (item.product) {
-            const prodId = item.product._id || item.product;
-            await Product.findByIdAndUpdate(prodId, {
-              $inc: { stock: item.quantity }
-            });
+      if (req.body.rejectionReason) {
+        order.rejectionReason = req.body.rejectionReason;
+      }
+      if (req.body.verificationNotes) {
+        order.verificationNotes = req.body.verificationNotes;
+      }
+
+      // Restore inventory if status changed to cancelled or rejected and stock is currently deducted
+      if (['cancelled', 'rejected'].includes(newStatus) && !['cancelled', 'rejected'].includes(prevStatus)) {
+        if (order.stockDeducted !== false) {
+          for (const item of order.items) {
+            if (item.product) {
+              const prodId = item.product._id || item.product;
+              await Product.findByIdAndUpdate(prodId, {
+                $inc: { stock: item.quantity }
+              });
+            }
           }
+          order.stockDeducted = false;
+        }
+      }
+
+      // Re-deduct inventory if reactivated from cancelled/rejected
+      if (!['cancelled', 'rejected'].includes(newStatus) && ['cancelled', 'rejected'].includes(prevStatus)) {
+        if (order.stockDeducted === false) {
+          for (const item of order.items) {
+            if (item.product) {
+              const prodId = item.product._id || item.product;
+              await Product.findByIdAndUpdate(prodId, {
+                $inc: { stock: -item.quantity }
+              });
+            }
+          }
+          order.stockDeducted = true;
         }
       }
 
@@ -435,21 +508,24 @@ router.put('/:id/status', protect, admin, async (req, res) => {
       // Construct item list for Telegram
       const itemList = order.items.map(item => `• ${item.product?.name || 'Product'} (x${item.quantity})`).join('\n');
 
-      // ✅ SEND TELEGRAM notification for status change
+      // SEND TELEGRAM notification for status change
       const statusEmoji = {
+        'awaiting_payment_verification': '🔍',
         'processing': '⏳',
         'shipped': '🚚',
         'delivered': '✅',
-        'cancelled': '❌'
+        'cancelled': '❌',
+        'rejected': '🚫'
       };
-      const emoji = statusEmoji[req.body.status] || '📦';
+      const emoji = statusEmoji[newStatus] || '📦';
 
       const telegramMsg = `<b>Order Status Update</b> ${emoji}\n\n` +
         `Order ID: ${formatOrderId(order.createdAt)}\n` +
         `Total: ₱${order.total.toFixed(2)}\n` +
-        `Customer: ${order.contactDetails?.fullName || 'Admin User'}\n\n` +
+        `Customer: ${order.contactDetails?.fullName || 'Customer'}\n\n` +
         `<b>Items:</b>\n${itemList}\n\n` +
-        `New Status: <b>${req.body.status.toUpperCase()}</b>`;
+        `New Status: <b>${newStatus.toUpperCase().replace(/_/g, ' ')}</b>` +
+        (order.rejectionReason ? `\nReason: <i>${order.rejectionReason}</i>` : '');
 
       const firstItemImage = order.items.length > 0 && order.items[0].product?.images ? order.items[0].product.images[0] : null;
       sendTelegram(telegramMsg, firstItemImage);
@@ -469,29 +545,115 @@ router.put('/:id/verify-payment', protect, admin, async (req, res) => {
     const order = await Order.findById(req.params.id).populate('items.product');
     if (order && order.paymentMethod === 'gcash') {
       order.status = 'processing';
+      order.verifiedAt = Date.now();
+      order.verifiedBy = req.user._id;
+      if (req.body.verificationNotes) {
+        order.verificationNotes = req.body.verificationNotes;
+      }
       order.paymentResult = {
         id: 'gcash_verified',
         status: 'verified',
-        email: order.contactDetails.email
+        email: order.contactDetails?.email
       };
       const updatedOrder = await order.save();
-      // ✅ SEND EMAIL — GCash verified
-      await sendEmail({
-        to: order.contactDetails.email,
-        subject: 'AmaraCé Payment Verified',
-        html: orderEmailTemplate(order, 'GCash Payment Verified'),
-      });
+
+      // SEND EMAIL — GCash verified
+      if (order.contactDetails?.email) {
+        try {
+          await sendEmail({
+            to: order.contactDetails.email,
+            subject: 'AmaraCé Payment Verified',
+            html: orderEmailTemplate(order, 'GCash Payment Verified'),
+          });
+        } catch (emailErr) {
+          console.error('Failed to send verification email:', emailErr);
+        }
+      }
 
       // Construct item list for Telegram
       const itemList = order.items.map(item => `• ${item.product?.name || 'Product'} (x${item.quantity})`).join('\n');
 
-      // ✅ SEND TELEGRAM notification that verification is done
-      const telegramMsg = `<b>Order Status Update</b> ⏳\n\n` +
+      // SEND TELEGRAM notification that verification is done
+      const telegramMsg = `<b>GCash Payment Verified!</b> ⏳\n\n` +
         `Order ID: ${formatOrderId(order.createdAt)}\n` +
         `Total: ₱${order.total.toFixed(2)}\n` +
-        `Customer: ${order.contactDetails?.fullName || 'Admin User'}\n\n` +
+        `Customer: ${order.contactDetails?.fullName || 'Customer'}\n\n` +
         `<b>Items:</b>\n${itemList}\n\n` +
-        `New Status: <b>PROCESSING</b>`;
+        `Status: <b>PROCESSING</b>`;
+
+      const firstItemImage = order.items.length > 0 && order.items[0].product?.images ? order.items[0].product.images[0] : null;
+      sendTelegram(telegramMsg, firstItemImage);
+
+      res.json(updatedOrder);
+    } else {
+      res.status(404).json({ message: 'Order not found or not a GCash order' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Reject GCash payment (Admin)
+router.put('/:id/reject-payment', protect, admin, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id).populate('items.product');
+    if (order && order.paymentMethod === 'gcash') {
+      const prevStatus = order.status;
+      order.status = 'rejected';
+      order.rejectionReason = req.body.rejectionReason || 'Payment proof could not be verified';
+      order.verificationNotes = req.body.verificationNotes || '';
+      order.paymentResult = {
+        id: 'gcash_rejected',
+        status: 'rejected',
+        email: order.contactDetails?.email
+      };
+
+      // Restore inventory safely if stock was deducted
+      if (order.stockDeducted !== false && !['cancelled', 'rejected'].includes(prevStatus)) {
+        for (const item of order.items) {
+          if (item.product) {
+            const prodId = item.product._id || item.product;
+            await Product.findByIdAndUpdate(prodId, {
+              $inc: { stock: item.quantity }
+            });
+          }
+        }
+        order.stockDeducted = false;
+      }
+
+      const updatedOrder = await order.save();
+
+      // SEND EMAIL — Payment rejected notification
+      if (order.contactDetails?.email) {
+        try {
+          await sendEmail({
+            to: order.contactDetails.email,
+            subject: 'AmaraCé — Payment Verification Update',
+            html: `
+              <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+                <h2 style="color: #C41E3A;">Payment Verification Notice</h2>
+                <p>Hello ${order.contactDetails.fullName || 'Customer'},</p>
+                <p>We were unable to verify your GCash payment for Order <strong>#${formatOrderId(order.createdAt)}</strong>.</p>
+                <div style="background: #FFF5F5; padding: 15px; border-radius: 6px; border-left: 4px solid #C41E3A; margin: 20px 0;">
+                  <strong>Reason:</strong> ${order.rejectionReason}
+                </div>
+                <p>If you believe this is a mistake or have already sent the payment, please contact our support team with your GCash receipt reference number.</p>
+                <p>Thank you,<br><strong>AmaraCé Skin Care Team</strong></p>
+              </div>
+            `
+          });
+        } catch (emailErr) {
+          console.error('Failed to send rejection email:', emailErr);
+        }
+      }
+
+      // SEND TELEGRAM notification that payment was rejected
+      const telegramMsg = `<b>GCash Payment Rejected</b> 🚫\n\n` +
+        `Order ID: ${formatOrderId(order.createdAt)}\n` +
+        `Total: ₱${order.total.toFixed(2)}\n` +
+        `Customer: ${order.contactDetails?.fullName || 'Customer'}\n` +
+        `Reason: <i>${order.rejectionReason}</i>\n\n` +
+        `Status: <b>REJECTED</b> (Inventory restored)`;
 
       const firstItemImage = order.items.length > 0 && order.items[0].product?.images ? order.items[0].product.images[0] : null;
       sendTelegram(telegramMsg, firstItemImage);

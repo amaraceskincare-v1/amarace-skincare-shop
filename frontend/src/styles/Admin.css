@@ -2766,4 +2766,87 @@
     color: #94a3b8;
     font-size: 0.9rem;
 }
+
+/* GCash Admin Payments Filter Pills */
+.status-filter-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter-pill {
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 1px solid #E2E8F0;
+    background: #fff;
+    color: #475569;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.filter-pill:hover {
+    background: #F1F5F9;
+    border-color: #CBD5E1;
+}
+
+.filter-pill.active {
+    background: #1C1C1E;
+    color: #fff;
+    border-color: #1C1C1E;
+}
+
+.filter-pill.active.alert {
+    background: #C41E3A;
+    border-color: #C41E3A;
+    color: #fff;
+}
+
+.filter-pill .pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #EF4444;
+}
+
+.filter-pill.active .pill-dot {
+    background: #fff;
+}
+
+.btn-icon-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    background: #fff;
+    color: #334155;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-icon-text:hover {
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+}
+
+.btn-icon-text.download {
+    background: #1C1C1E;
+    color: #fff;
+    border-color: #1C1C1E;
+}
+
+.btn-icon-text.download:hover {
+    background: #C41E3A;
+    border-color: #C41E3A;
+}
+
 

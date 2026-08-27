@@ -586,3 +586,961 @@
         justify-content: center;
     }
 }
+
+/* =========================================
+   LUXURY GCASH CHECKOUT EXPERIENCE
+   ========================================= */
+
+.gcash-premium-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Amount Banner */
+.gcash-amount-banner {
+    background: linear-gradient(135deg, #1C1C1E 0%, #2D2D30 100%);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.amount-subtitle {
+    font-size: 0.725rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #A09890;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.amount-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #FAF8F5;
+    letter-spacing: -0.02em;
+    font-family: var(--font-sans, inherit);
+}
+
+.amount-pill {
+    background: rgba(196, 30, 58, 0.2);
+    border: 1px solid rgba(196, 30, 58, 0.4);
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #FF8093;
+}
+
+/* GCash Account Card */
+.gcash-account-card {
+    background: #FAF8F5;
+    border: 1px solid #EDE8DF;
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 8px rgba(28, 28, 30, 0.04);
+}
+
+.account-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #E5DFD5;
+}
+
+.gcash-logo-badge img {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+}
+
+.account-tagline strong {
+    display: block;
+    font-size: 0.9rem;
+    color: #1C1C1E;
+}
+
+.account-tagline small {
+    color: #6B6560;
+    font-size: 0.775rem;
+}
+
+.account-details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.account-field {
+    background: #fff;
+    border: 1px solid #E5DFD5;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+}
+
+.field-label {
+    font-size: 0.725rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8A827A;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.field-value-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.field-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1C1C1E;
+}
+
+.field-text.number-highlight {
+    font-family: monospace;
+    font-size: 1.05rem;
+    color: #C41E3A;
+    letter-spacing: 0.04em;
+}
+
+.btn-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #DDD8CF;
+    background: #FAF8F5;
+    color: #1C1C1E;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-copy:hover {
+    background: #EDE8DF;
+    border-color: #A09890;
+}
+
+.btn-copy.primary {
+    background: #1C1C1E;
+    color: #FAF8F5;
+    border-color: #1C1C1E;
+}
+
+.btn-copy.primary:hover {
+    background: #C41E3A;
+    border-color: #C41E3A;
+}
+
+/* QR Code Card */
+.gcash-qr-card {
+    background: #fff;
+    border: 1px solid #EDE8DF;
+    border-radius: 14px;
+    padding: 1.25rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(28, 28, 30, 0.04);
+}
+
+.qr-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.qr-title {
+    font-weight: 700;
+    font-size: 0.925rem;
+    color: #1C1C1E;
+}
+
+.qr-hint {
+    font-size: 0.775rem;
+    color: #8A827A;
+}
+
+.qr-frame-wrapper {
+    position: relative;
+    display: inline-block;
+    max-width: 240px;
+    width: 100%;
+    border-radius: 12px;
+    padding: 10px;
+    background: #FAF8F5;
+    border: 1.5px dashed #DDD8CF;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.qr-frame-wrapper:hover {
+    border-color: #C41E3A;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(196, 30, 58, 0.1);
+}
+
+.gcash-qr-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.qr-hover-overlay {
+    position: absolute;
+    inset: 10px;
+    background: rgba(28, 28, 30, 0.8);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.qr-frame-wrapper:hover .qr-hover-overlay {
+    opacity: 1;
+}
+
+/* 3-Step Guide */
+.gcash-steps-guide {
+    background: #FAF8F5;
+    border: 1px solid #EDE8DF;
+    border-radius: 14px;
+    padding: 1.25rem;
+}
+
+.guide-title {
+    font-size: 0.825rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6B6560;
+    margin-bottom: 0.75rem;
+}
+
+.guide-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.guide-step {
+    display: flex;
+    gap: 10px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #EDE8DF;
+}
+
+.step-number {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #1C1C1E;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.step-content strong {
+    font-size: 0.8rem;
+    color: #1C1C1E;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.step-content p {
+    font-size: 0.725rem;
+    color: #6B6560;
+    line-height: 1.35;
+    margin: 0;
+}
+
+/* Receipt Uploader Section */
+.receipt-section-wrapper {
+    background: #fff;
+    border: 1px solid #EDE8DF;
+    border-radius: 14px;
+    padding: 1.25rem;
+}
+
+.receipt-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.receipt-section-header h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #1C1C1E;
+    font-weight: 700;
+}
+
+.required-tag {
+    font-size: 0.7rem;
+    background: #FEE2E2;
+    color: #DC2626;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Dropzone */
+.receipt-dropzone {
+    border: 2px dashed #DDD8CF;
+    border-radius: 12px;
+    padding: 1.75rem 1rem;
+    text-align: center;
+    background: #FAF8F5;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.receipt-dropzone:hover,
+.receipt-dropzone.dragging {
+    border-color: #C41E3A;
+    background: #FFF5F6;
+}
+
+.dropzone-icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #DDD8CF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #C41E3A;
+    font-size: 1.35rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.dropzone-title {
+    display: block;
+    font-weight: 700;
+    font-size: 0.925rem;
+    color: #1C1C1E;
+    margin-bottom: 2px;
+}
+
+.dropzone-subtitle {
+    display: block;
+    font-size: 0.8rem;
+    color: #6B6560;
+    margin-bottom: 4px;
+}
+
+.dropzone-hint {
+    display: block;
+    font-size: 0.725rem;
+    color: #A09890;
+}
+
+/* Attached Receipt Preview Card */
+.receipt-preview-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #F0FDF4;
+    border: 1.5px solid #86EFAC;
+    border-radius: 12px;
+    padding: 12px 16px;
+}
+
+.receipt-preview-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #BBF7D0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.receipt-preview-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.receipt-preview-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.receipt-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #166534;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.receipt-filename {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #1C1C1E;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.receipt-filesize {
+    font-size: 0.775rem;
+    color: #15803D;
+}
+
+.receipt-preview-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-replace-receipt {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #BBF7D0;
+    background: #fff;
+    color: #166534;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-replace-receipt:hover {
+    background: #DCFCE7;
+}
+
+.btn-remove-receipt {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid #FECACA;
+    background: #FEF2F2;
+    color: #DC2626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-remove-receipt:hover {
+    background: #FEE2E2;
+}
+
+/* GCash QR Zoom Modal */
+.gcash-qr-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(28, 28, 30, 0.75);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+    animation: fadeIn 0.25s ease;
+}
+
+.gcash-qr-modal-content {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.qr-modal-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #FAF8F5;
+    border: 1px solid #EDE8DF;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #1C1C1E;
+}
+
+.gcash-qr-modal-content h3 {
+    margin: 0 0 6px;
+    font-size: 1.25rem;
+    color: #1C1C1E;
+}
+
+.gcash-qr-modal-content p {
+    color: #6B6560;
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+}
+
+.qr-modal-image-box {
+    background: #FAF8F5;
+    border: 2px solid #EDE8DF;
+    border-radius: 16px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.qr-modal-full-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.qr-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.qr-download-link,
+.qr-copy-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.qr-download-link {
+    background: #1C1C1E;
+    color: #FAF8F5;
+    border: none;
+}
+
+.qr-copy-action-btn {
+    background: #FAF8F5;
+    color: #1C1C1E;
+    border: 1px solid #DDD8CF;
+}
+
+/* =========================================
+   ORDER SUCCESS V2 - LUXURY CONFIRMATION
+   ========================================= */
+
+.order-success-page-v2 {
+    min-height: 80vh;
+    padding: 4rem 1.5rem;
+    background: var(--ivory, #FAF8F5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.order-success-card {
+    background: #fff;
+    border-radius: 24px;
+    border: 1px solid #EDE8DF;
+    box-shadow: 0 16px 40px rgba(28, 28, 30, 0.08);
+    max-width: 720px;
+    width: 100%;
+    padding: 3rem 2.5rem;
+    text-align: center;
+}
+
+.success-icon-badge {
+    margin-bottom: 1.5rem;
+}
+
+.gcash-success-icon-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #FEF3C7;
+    color: #D97706;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 2.5rem;
+    box-shadow: 0 8px 24px rgba(217, 119, 6, 0.2);
+}
+
+.cod-success-icon-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #DCFCE7;
+    color: #16A34A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 2.5rem;
+    box-shadow: 0 8px 24px rgba(22, 163, 74, 0.2);
+}
+
+.success-headline {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1C1C1E;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.success-subheading {
+    font-size: 1rem;
+    color: #6B6560;
+    max-width: 520px;
+    margin: 0 auto 2rem;
+    line-height: 1.5;
+}
+
+.order-meta-pillbox {
+    background: #FAF8F5;
+    border: 1px solid #EDE8DF;
+    border-radius: 14px;
+    padding: 1.25rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.meta-pill-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pill-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8A827A;
+    font-weight: 700;
+}
+
+.pill-value {
+    font-size: 1.05rem;
+    color: #1C1C1E;
+    font-weight: 700;
+}
+
+.pill-value.total-highlight {
+    color: #C41E3A;
+    font-size: 1.2rem;
+}
+
+.meta-pill-divider {
+    width: 1px;
+    height: 36px;
+    background: #DDD8CF;
+}
+
+.gcash-verification-status-card {
+    background: #FFFBEB;
+    border: 1.5px solid #FDE68A;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: left;
+    margin-bottom: 2rem;
+}
+
+.status-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.verification-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FEF3C7;
+    color: #92400E;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 0.85rem;
+}
+
+.pulsing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #D97706;
+    box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.7);
+    animation: pulse 1.6s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(217, 119, 6, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(217, 119, 6, 0); }
+}
+
+.secure-badge {
+    font-size: 0.8rem;
+    color: #78350F;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+}
+
+.receipt-proof-attached-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #FDE68A;
+    margin-bottom: 1.25rem;
+}
+
+.proof-mini-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    flex-shrink: 0;
+}
+
+.proof-mini-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.proof-mini-text strong {
+    display: block;
+    font-size: 0.85rem;
+    color: #166534;
+}
+
+.proof-mini-text small {
+    color: #666;
+    font-size: 0.75rem;
+}
+
+.timeline-steps {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 0 10px;
+}
+
+.timeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    z-index: 1;
+}
+
+.step-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.timeline-step.completed .step-dot {
+    background: #16A34A;
+    color: #fff;
+}
+
+.timeline-step.current .step-dot {
+    background: #D97706;
+    color: #fff;
+}
+
+.timeline-step.pending .step-dot {
+    background: #E5E7EB;
+    color: #9CA3AF;
+}
+
+.step-info strong {
+    display: block;
+    font-size: 0.8rem;
+    color: #1C1C1E;
+}
+
+.step-info small {
+    font-size: 0.7rem;
+    color: #6B6560;
+}
+
+.timeline-connector {
+    flex: 1;
+    height: 2px;
+    background: #E5E7EB;
+    margin: 0 8px;
+    margin-bottom: 24px;
+}
+
+.cod-confirmation-card {
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: left;
+    margin-bottom: 2rem;
+}
+
+.cod-confirmation-card h3 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    color: #1C1C1E;
+}
+
+.cod-confirmation-card ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #4B5563;
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+.order-success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-download-receipt,
+.btn-view-orders,
+.btn-continue-shopping {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-size: 0.925rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-download-receipt {
+    background: #FAF8F5;
+    border: 1px solid #DDD8CF;
+    color: #1C1C1E;
+}
+
+.btn-download-receipt:hover {
+    background: #EDE8DF;
+}
+
+.btn-view-orders {
+    background: #1C1C1E;
+    color: #FAF8F5;
+    border: none;
+}
+
+.btn-view-orders:hover {
+    background: #C41E3A;
+}
+
+.btn-continue-shopping {
+    background: transparent;
+    border: 1px solid #E5E7EB;
+    color: #6B7280;
+}
+
+.btn-continue-shopping:hover {
+    color: #1C1C1E;
+    border-color: #1C1C1E;
+}
+
+@media (max-width: 640px) {
+    .guide-steps-grid {
+        grid-template-columns: 1fr;
+    }
+    .order-meta-pillbox {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .meta-pill-divider {
+        width: 80%;
+        height: 1px;
+    }
+    .order-success-card {
+        padding: 2rem 1.25rem;
+    }
+    .timeline-steps {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+    .timeline-step {
+        flex-direction: row;
+        text-align: left;
+    }
+    .timeline-connector {
+        display: none;
+    }
+}

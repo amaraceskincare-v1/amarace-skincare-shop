@@ -32,7 +32,9 @@ const orderSchema = new mongoose.Schema({
     number: String,
     amountSent: Number,
     referenceNo: String,
-    dateSent: String
+    dateSent: String,
+    amountMatches: Boolean,
+    rawText: String
   },
   discount: { type: Number, default: 0 },
   subtotal: { type: Number, required: true },
@@ -41,9 +43,14 @@ const orderSchema = new mongoose.Schema({
   total: { type: Number, required: true },
   status: {
     type: String,
-    enum: ['pending', 'awaiting_payment_verification', 'processing', 'shipped', 'delivered', 'cancelled'],
+    enum: ['pending', 'awaiting_payment_verification', 'processing', 'shipped', 'delivered', 'cancelled', 'rejected'],
     default: 'pending'
   },
+  rejectionReason: { type: String },
+  verificationNotes: { type: String },
+  verifiedAt: { type: Date },
+  verifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  stockDeducted: { type: Boolean, default: true },
   deliveredAt: Date,
   trackingNumber: { type: String },
   deliveryProof: { type: String } // URL for proof of delivery image

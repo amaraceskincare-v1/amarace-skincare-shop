@@ -11,7 +11,7 @@ const AdminSettings = () => {
     const { refreshSettings } = useSettings();
     const [settings, setSettings] = useState({
         logo: '', navbarLogo: '', sideAd: '', headerBackground: '',
-        heroImages: [], gcashQRCode: '', footerSmallIcon: '',
+        heroImages: [], gcashQRCode: '', gcashAccountName: '', gcashAccountNumber: '', footerSmallIcon: '',
         lipTintImage: '', perfumeImage: '', beautySoapImage: '',
         allBestSellersImage: '', ourStoryImage: '', productHeroMedia: '',
         premiumBannerMedia: '', teamImages: [], galleryImages: [],
@@ -87,7 +87,7 @@ const AdminSettings = () => {
         });
 
         // Append text fields
-        const textFields = ['brandName', 'showBrandName', 'brandNamePosition', 'brandNameColor', 'brandNameFontSize', 'brandNameFontWeight', 'headerLogoSize'];
+        const textFields = ['brandName', 'showBrandName', 'brandNamePosition', 'brandNameColor', 'brandNameFontSize', 'brandNameFontWeight', 'headerLogoSize', 'gcashAccountName', 'gcashAccountNumber'];
         textFields.forEach(field => {
             if (settings[field] !== undefined) formData.append(field, settings[field]);
         });
@@ -334,10 +334,36 @@ const AdminSettings = () => {
                     {/* ── PAYMENTS ─────────────────────────────── */}
                     {activeTab === 'payments' && (
                         <div className="settings-section">
-                            <div className="settings-section-title">Payment Settings</div>
-                            <p className="settings-section-desc">QR codes and payment method logos shown during checkout.</p>
+                            <div className="settings-section-title">GCash Account Details</div>
+                            <p className="settings-section-desc">Manage your GCash receiving account details displayed on the checkout page.</p>
+
+                            <div className="settings-form-row" style={{ marginBottom: '1.5rem' }}>
+                                <div className="settings-form-group">
+                                    <label>GCash Account Name</label>
+                                    <input
+                                        className="settings-input"
+                                        value={settings.gcashAccountName || ''}
+                                        onChange={e => setSettings(p => ({ ...p, gcashAccountName: e.target.value }))}
+                                        placeholder="e.g. AmaraCé Skincare / Maria S."
+                                    />
+                                    <small style={{ color: '#888', marginTop: '4px', fontSize: '0.8rem' }}>Customer sees this name to confirm they're paying the right account</small>
+                                </div>
+                                <div className="settings-form-group">
+                                    <label>GCash Mobile Number</label>
+                                    <input
+                                        className="settings-input"
+                                        value={settings.gcashAccountNumber || ''}
+                                        onChange={e => setSettings(p => ({ ...p, gcashAccountNumber: e.target.value }))}
+                                        placeholder="e.g. 0917 123 4567"
+                                    />
+                                    <small style={{ color: '#888', marginTop: '4px', fontSize: '0.8rem' }}>Supports one-click copy on the checkout page</small>
+                                </div>
+                            </div>
+
+                            <div className="settings-section-title" style={{ marginTop: '2rem' }}>GCash QR Code</div>
+                            <p className="settings-section-desc">Upload your high-resolution GCash QR code image scanned by customers during checkout.</p>
                             <div className="settings-image-grid">
-                                <ImageCard label="GCash QR Code" field="gcashQRCode" hint="QR code image for GCash payments" icon={FiCreditCard} />
+                                <ImageCard label="GCash QR Code" field="gcashQRCode" hint="Square or standard QR code screenshot" icon={FiCreditCard} />
                             </div>
 
                             <div className="settings-section-title" style={{ marginTop: '2rem' }}>Payment Method Icons</div>

@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import { FiMinus, FiPlus, FiX } from 'react-icons/fi';
 import { optimizeImage } from '../utils/imageOptimizer';
+import GCashPaymentSection from '../components/checkout/GCashPaymentSection';
 import '../styles/Checkout.css';
 
 // Davao Del Norte data
@@ -318,27 +319,12 @@ const Checkout = () => {
               {/* Conditional Payment Details */}
               <div className="payment-details-v2">
                 {paymentMethod === 'gcash' ? (
-                  <div className="payment-instruction-box gcash-box" style={{ textAlign: 'center' }}>
-                    <p style={{ textAlign: 'center' }}>Scan the QR code below and pay <strong>₱{total.toFixed(2)}</strong></p>
-                    <div className="qr-container" style={{ display: 'flex', justifyContent: 'center', margin: '16px 0' }}>
-                      <img
-                        src={optimizeImage(settings?.gcashQRCode || "/gcash-qr.png", 300)}
-                        alt="GCash QR"
-                        className="qr-code"
-                        style={{ maxWidth: '260px', width: '100%', borderRadius: '12px' }}
-                      />
-                    </div>
-                    <p className="upload-label" style={{ textAlign: 'center' }}>Upload payment screenshot:</p>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setProofImage(e.target.files[0])}
-                        required={paymentMethod === 'gcash'}
-                      />
-                    </div>
-                    {proofImage && <p className="file-name" style={{ textAlign: 'center' }}>✓ {proofImage.name}</p>}
-                  </div>
+                  <GCashPaymentSection
+                    total={total}
+                    settings={settings}
+                    proofImage={proofImage}
+                    setProofImage={setProofImage}
+                  />
                 ) : (
                   <div className="payment-instruction-box cod-box">
                     <div className="cod-info-header">

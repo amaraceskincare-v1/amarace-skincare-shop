@@ -7,6 +7,8 @@ const siteSettingsSchema = new mongoose.Schema({
     headerBackground: { type: String, default: '' },
     heroImages: { type: [String], default: [] }, // Array of images/videos
     gcashQRCode: { type: String, default: '' },
+    gcashAccountName: { type: String, default: 'AmaraCé Skincare' },
+    gcashAccountNumber: { type: String, default: '0917 123 4567' },
     paymentLogos: { type: [String], default: [] }, // Array of payment logos
     footerSmallIcon: { type: String, default: '' },
     lipTintImage: { type: String, default: '' },

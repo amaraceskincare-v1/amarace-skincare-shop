@@ -178,8 +178,13 @@ const AdminOrders = () => {
                   {/* Status */}
                   <td className="status-cell" data-label="Status">
                     <span className={`status-badge-orders ${order.status}`}>
-                      {order.status}
+                      {order.status === 'awaiting_payment_verification' ? 'Awaiting Verification' : order.status}
                     </span>
+                    {order.paymentMethod === 'gcash' && order.status === 'awaiting_payment_verification' && (
+                      <a href="/admin/payments" className="verify-shortcut-link" style={{ display: 'block', fontSize: '0.75rem', color: '#C41E3A', marginTop: '4px', fontWeight: '700' }}>
+                        Verify in Payments →
+                      </a>
+                    )}
                   </td>
 
                   {/* Tracking Number / Delivery - Dedicated Column */}
@@ -248,10 +253,12 @@ const AdminOrders = () => {
                       className="status-select"
                     >
                       <option value="pending">Pending</option>
+                      <option value="awaiting_payment_verification">Awaiting Verification</option>
                       <option value="processing">Processing</option>
                       <option value="shipped">Shipped</option>
                       <option value="delivered">Delivered</option>
                       <option value="cancelled">Cancelled</option>
+                      <option value="rejected">Rejected</option>
                     </select>
 
                     <button

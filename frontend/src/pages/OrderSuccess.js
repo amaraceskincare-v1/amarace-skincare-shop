@@ -3,8 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import api from '../utils/api';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { FiCheckCircle, FiDownload, FiShoppingBag } from 'react-icons/fi';
-import '../styles/Checkout.css'; // Reusing checkout styles or create new
+import { FiCheckCircle, FiClock, FiDownload, FiShoppingBag, FiFileText, FiArrowRight, FiShield } from 'react-icons/fi';
+import '../styles/Checkout.css';
 
 const OrderSuccess = () => {
     const { id } = useParams();
@@ -12,6 +12,7 @@ const OrderSuccess = () => {
     const [loading, setLoading] = useState(true);
 
     const formatOrderId = (date) => {
+        if (!date) return 'N/A';
         const d = new Date(date);
         const year = d.getFullYear();
         const mmdd = `${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
@@ -39,8 +40,9 @@ const OrderSuccess = () => {
         const renderPDF = (doc) => {
             doc.setFontSize(12);
             doc.text(`Order ID: ${formatOrderId(order.createdAt)}`, 14, 32);
-            doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`, 14, 38);
-            doc.text(`Status: ${order.status}`, 14, 44);
+            doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString('en-PH')}`, 14, 38);
+            doc.text(`Payment: ${order.paymentMethod?.toUpperCase()}`, 14, 44);
+            doc.text(`Status: ${order.status?.toUpperCase()?.replace(/_/g, ' ')}`, 14, 50);
 
             const tableColumn = ["Item", "Quantity", "Price", "Total"];
             const tableRows = [];
@@ -58,13 +60,13 @@ const OrderSuccess = () => {
             autoTable(doc, {
                 head: [tableColumn],
                 body: tableRows,
-                startY: 50,
+                startY: 56,
             });
 
             const finalY = doc.lastAutoTable.finalY || 60;
 
             doc.text(`Subtotal: P${order.subtotal?.toFixed(2)}`, 14, finalY + 10);
-            
+
             let currentY = finalY + 16;
             if (order.discount && order.discount > 0) {
                 doc.setTextColor(255, 107, 107);
@@ -81,12 +83,12 @@ const OrderSuccess = () => {
         };
 
         const doc = new jsPDF();
-        
+
         const logoImg = new Image();
         logoImg.src = '/logo.png';
         logoImg.onload = () => {
             const pageWidth = doc.internal.pageSize.getWidth();
-            const groupWidth = 110; 
+            const groupWidth = 110;
             const startX = (pageWidth - groupWidth) / 2;
             doc.addImage(logoImg, 'PNG', startX, 12, 12, 12);
             doc.setFontSize(18);
@@ -101,43 +103,135 @@ const OrderSuccess = () => {
         };
     };
 
-    if (loading) return <div className="loading">Loading order details...</div>;
+    if (loading) return <div className="loading" style={{ textAlign: 'center', padding: '100px 20px', fontSize: '1.2rem', color: '#666' }}>Loading order details...</div>;
 
-    if (!order) return <div className="error">Order not found.</div>;
+    if (!order) return <div className="error" style={{ textAlign: 'center', padding: '100px 20px', fontSize: '1.2rem', color: '#C41E3A' }}>Order not found.</div>;
+
+    const isGCash = order.paymentMethod === 'gcash';
 
     return (
-        <div className="order-success-page" style={{ textAlign: 'center', padding: '50px 20px', maxWidth: '800px', margin: '0 auto' }}>
-            <FiCheckCircle size={80} color="#4f46e5" style={{ marginBottom: '20px' }} />
-            <h1 style={{ fontSize: '2.5rem', marginBottom: '10px' }}>Thank You for Your Order!</h1>
-            <p style={{ color: '#666', fontSize: '1.2rem', marginBottom: '30px' }}>
-                Your order <strong>#{formatOrderId(order.createdAt)}</strong> has been placed successfully.
-            </p>
+        <div className="order-success-page-v2">
+            <div className="order-success-card">
+                {/* Header Icon & Title */}
+                <div className="success-icon-badge">
+                    {isGCash ? (
+                        <div className="gcash-success-icon-ring">
+                            <FiClock className="success-main-icon clock" />
+                        </div>
+                    ) : (
+                        <div className="cod-success-icon-ring">
+                            <FiCheckCircle className="success-main-icon check" />
+                        </div>
+                    )}
+                </div>
 
-            <div className="success-actions" style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
-                <button
-                    onClick={generatePDF}
-                    className="btn-secondary"
-                    style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 24px', borderRadius: '8px', border: '1px solid #ddd', background: 'white', cursor: 'pointer', fontSize: '1rem' }}
-                >
-                    <FiDownload /> Download Receipt
-                </button>
+                <h1 className="success-headline">
+                    {isGCash ? 'GCash Payment Submitted!' : 'Thank You for Your Order!'}
+                </h1>
 
-                <Link
-                    to="/products"
-                    className="btn-primary"
-                    style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 24px', borderRadius: '8px', background: '#4f46e5', color: 'white', textDecoration: 'none', fontSize: '1rem' }}
-                >
-                    <FiShoppingBag /> Continue Shopping
-                </Link>
-            </div>
+                <p className="success-subheading">
+                    {isGCash
+                        ? 'We have received your GCash receipt. Our team will verify your payment shortly.'
+                        : 'Your order has been placed and is now being processed.'}
+                </p>
 
-            <div style={{ marginTop: '40px', padding: '20px', background: '#f9fafb', borderRadius: '12px', textAlign: 'left' }}>
-                <h3>What's Next?</h3>
-                <ul style={{ paddingLeft: '20px', lineHeight: '1.6', color: '#555' }}>
-                    <li>We will verify your payment within 24 hours.</li>
-                    <li>You will receive an email confirmation shortly.</li>
-                    <li>You can track your order status in your <Link to="/orders" style={{ color: '#4f46e5' }}>My Orders</Link> page.</li>
-                </ul>
+                {/* Order Summary Pill Box */}
+                <div className="order-meta-pillbox">
+                    <div className="meta-pill-item">
+                        <span className="pill-label">ORDER NUMBER</span>
+                        <strong className="pill-value">#{formatOrderId(order.createdAt)}</strong>
+                    </div>
+                    <div className="meta-pill-divider" />
+                    <div className="meta-pill-item">
+                        <span className="pill-label">TOTAL AMOUNT</span>
+                        <strong className="pill-value total-highlight">₱{(order.total || 0).toFixed(2)}</strong>
+                    </div>
+                    <div className="meta-pill-divider" />
+                    <div className="meta-pill-item">
+                        <span className="pill-label">PAYMENT METHOD</span>
+                        <strong className="pill-value">{isGCash ? 'GCash QR' : 'Cash On Delivery'}</strong>
+                    </div>
+                </div>
+
+                {/* GCash Verification Specific Card */}
+                {isGCash && (
+                    <div className="gcash-verification-status-card">
+                        <div className="status-card-header">
+                            <div className="verification-pill">
+                                <span className="pulsing-dot" /> Awaiting Payment Verification
+                            </div>
+                            <span className="secure-badge"><FiShield /> AmaraCé Verified Merchant</span>
+                        </div>
+
+                        {order.paymentProof && (
+                            <div className="receipt-proof-attached-row">
+                                <div className="proof-mini-thumb">
+                                    <img src={order.paymentProof} alt="Payment Proof" />
+                                </div>
+                                <div className="proof-mini-text">
+                                    <strong>Payment Proof Attached ✓</strong>
+                                    <small>Receipt screenshot securely uploaded for merchant verification.</small>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="timeline-steps">
+                            <div className="timeline-step completed">
+                                <div className="step-dot">✓</div>
+                                <div className="step-info">
+                                    <strong>Order &amp; Receipt Received</strong>
+                                    <small>Payment proof submitted</small>
+                                </div>
+                            </div>
+                            <div className="timeline-connector" />
+                            <div className="timeline-step current">
+                                <div className="step-dot">2</div>
+                                <div className="step-info">
+                                    <strong>Merchant Verification</strong>
+                                    <small>Usually within 1–2 hours</small>
+                                </div>
+                            </div>
+                            <div className="timeline-connector" />
+                            <div className="timeline-step pending">
+                                <div className="step-dot">3</div>
+                                <div className="step-info">
+                                    <strong>Order Dispatch</strong>
+                                    <small>Shipped to your address</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* COD Specific Card */}
+                {!isGCash && (
+                    <div className="cod-confirmation-card">
+                        <h3>Delivery &amp; Payment Reminders</h3>
+                        <ul>
+                            <li>Please prepare exact cash of <strong>₱{(order.total || 0).toFixed(2)}</strong> upon delivery.</li>
+                            <li>Our rider will hand over your packaged items and collect payment.</li>
+                            <li>You will receive an SMS/Email update once the rider is on the way.</li>
+                        </ul>
+                    </div>
+                )}
+
+                {/* Actions */}
+                <div className="order-success-actions">
+                    <button
+                        onClick={generatePDF}
+                        className="btn-download-receipt"
+                    >
+                        <FiDownload /> Download Receipt (PDF)
+                    </button>
+
+                    <Link to="/orders" className="btn-view-orders">
+                        View My Orders <FiArrowRight />
+                    </Link>
+
+                    <Link to="/products" className="btn-continue-shopping">
+                        <FiShoppingBag /> Continue Shopping
+                    </Link>
+                </div>
             </div>
         </div>
     );

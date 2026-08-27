@@ -62,7 +62,7 @@ router.put('/', protect, admin, upload.fields([
 
         const singleFields = [
             'logo', 'navbarLogo', 'sideAd', 'headerBackground',
-            'gcashQRCode',
+            'gcashQRCode', 'gcashAccountName', 'gcashAccountNumber',
             'footerSmallIcon', 'lipTintImage', 'perfumeImage',
             'beautySoapImage', 'allBestSellersImage', 'ourStoryImage',
             'brandName', 'showBrandName', 'brandNamePosition',
