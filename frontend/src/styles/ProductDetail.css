@@ -848,26 +848,36 @@
     margin-bottom: 20px;
   }
 
-  .breadcrumb-inner {
-    padding: 0 1.25rem;
-    font-size: 0.75rem;
+  .detail-breadcrumb-bar {
+    margin-bottom: 20px;
+    padding: 10px 0;
   }
 
-  .product-layout-v2 {
-    padding: 0 1.25rem;
-    gap: 28px;
+  .breadcrumb-inner {
+    padding: 0 1rem;
+    font-size: 0.72rem;
+    gap: 6px;
     width: 100%;
     box-sizing: border-box;
   }
 
+  .product-layout-v2 {
+    padding: 0 1rem;
+    gap: 24px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
   .main-image-container-v2 {
-    padding: 20px;
+    padding: 16px;
     border-radius: 12px;
     border: 1px solid #EDE8DF;
     background: radial-gradient(circle at 50% 40%, #ffffff 0%, #FAF8F5 60%, #F5F0E8 100%);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     aspect-ratio: 4 / 5;
     width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
   }
 

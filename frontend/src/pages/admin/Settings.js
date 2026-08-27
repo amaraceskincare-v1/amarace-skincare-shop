@@ -235,16 +235,36 @@ const AdminSettings = () => {
                     </button>
                 </div>
 
-                {/* Tab Navigation */}
+                {/* Mobile Section Dropdown Selector */}
+                <div className="settings-mobile-tab-bar">
+                    <label htmlFor="settings-mobile-select" className="settings-mobile-tab-label">
+                        Section:
+                    </label>
+                    <select
+                        id="settings-mobile-select"
+                        className="settings-mobile-tab-select"
+                        value={activeTab}
+                        onChange={(e) => setActiveTab(e.target.value)}
+                    >
+                        {tabs.map(tab => (
+                            <option key={tab.id} value={tab.id}>
+                                {tab.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Tab Navigation Pills */}
                 <div className="settings-tabs">
                     {tabs.map(tab => (
                         <button
                             key={tab.id}
                             className={`settings-tab ${activeTab === tab.id ? 'active' : ''}`}
                             onClick={() => setActiveTab(tab.id)}
+                            type="button"
                         >
                             <tab.icon size={15} />
-                            {tab.label}
+                            <span>{tab.label}</span>
                         </button>
                     ))}
                 </div>

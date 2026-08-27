@@ -133,13 +133,20 @@ body {
   min-height: calc(100vh - 250px);
 }
 
-/* Home page & Admin pages — escape padding/max-width constraint */
+/* Home page, Admin pages, and Product Detail — escape outer container constraint */
 .main-content.home-active,
-.main-content.admin-active {
+.main-content.admin-active,
+.main-content.product-detail-active {
   padding: 0;
   max-width: none;
   margin: 0;
   width: 100%;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
 }
 
 /* ── Common Helpers ────────────────────────────── */

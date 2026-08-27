@@ -64,6 +64,43 @@
     cursor: not-allowed;
 }
 
+/* ─── Mobile Tab Dropdown ───────────────────── */
+.settings-mobile-tab-bar {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1.5px solid #e2e8f0;
+    margin-bottom: 1.25rem;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.settings-mobile-tab-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.settings-mobile-tab-select {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #1e293b;
+    background: #f8fafc;
+    cursor: pointer;
+    outline: none;
+}
+
 /* ─── Tab Navigation ────────────────────────── */
 .settings-tabs {
     display: flex;
@@ -71,12 +108,22 @@
     border-bottom: 2px solid #e2e8f0;
     margin-bottom: 2rem;
     overflow-x: auto;
-    padding-bottom: 0;
-    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
 }
 
 .settings-tabs::-webkit-scrollbar {
-    display: none;
+    height: 4px;
+}
+
+.settings-tabs::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
 }
 
 .settings-tab {
@@ -95,6 +142,7 @@
     transition: all 0.2s;
     white-space: nowrap;
     border-radius: 8px 8px 0 0;
+    flex-shrink: 0;
 }
 
 .settings-tab:hover {
@@ -545,13 +593,26 @@
 
 /* ─── Responsive ────────────────────────────── */
 @media (max-width: 768px) {
+    .settings-mobile-tab-bar {
+        display: flex;
+    }
+
     .settings-tabs {
         flex-wrap: nowrap;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 1.25rem;
     }
 
     .settings-page-header {
         flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .settings-save-btn {
+        width: 100%;
+        justify-content: center;
     }
 
     .settings-float-save {
