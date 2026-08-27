@@ -322,14 +322,18 @@
 }
 
 /* Compact Table Styles */
+.product-thumb-small,
 .compact-table .product-thumb-small {
-    width: 50px !important;
-    height: 50px !important;
-    min-width: 50px !important;
-    min-height: 50px !important;
-    object-fit: cover !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    object-fit: contain !important;
+    background: radial-gradient(circle at 50% 40%, #ffffff 0%, #FAF8F5 100%) !important;
     border-radius: 6px;
-    border: 1px solid #eee;
+    border: 1px solid #EDE8DF !important;
+    padding: 3px;
+    box-sizing: border-box;
 }
 
 .product-info-cell {

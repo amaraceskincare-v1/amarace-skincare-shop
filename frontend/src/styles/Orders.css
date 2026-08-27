@@ -112,9 +112,12 @@
 .order-item-img {
     width: 50px;
     height: 50px;
-    object-fit: cover;
+    object-fit: contain;
+    background: radial-gradient(circle at 50% 40%, #ffffff 0%, #FAF8F5 100%);
     border-radius: 6px;
-    border: 1px solid #eaeaea;
+    border: 1px solid #ede8df;
+    padding: 2px;
+    box-sizing: border-box;
 }
 
 .order-item-details {

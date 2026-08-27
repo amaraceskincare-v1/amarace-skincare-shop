@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiShoppingCart, FiHeart, FiEye, FiCheck } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
@@ -21,6 +21,19 @@ const ProductCard = ({ product, isBestSeller = false, isNewArrival = false, onQu
       return saved.includes(product?._id);
     } catch { return false; }
   });
+
+  const primaryImg = product?.images?.[0] || '/placeholder.jpg';
+  const secondaryImg = product?.images?.[1] || null;
+
+  const [primaryLoaded, setPrimaryLoaded] = useState(false);
+  const [primarySrc, setPrimarySrc] = useState(() => optimizeImage(primaryImg, 600));
+  const [secondarySrc, setSecondarySrc] = useState(() => secondaryImg ? optimizeImage(secondaryImg, 600) : null);
+
+  // Sync state when product images change
+  useEffect(() => {
+    setPrimarySrc(optimizeImage(primaryImg, 600));
+    setSecondarySrc(secondaryImg ? optimizeImage(secondaryImg, 600) : null);
+  }, [primaryImg, secondaryImg]);
 
   if (!product) return null;
 
@@ -77,9 +90,6 @@ const ProductCard = ({ product, isBestSeller = false, isNewArrival = false, onQu
     }
   };
 
-  const primaryImg = product.images?.[0] || '/placeholder.jpg';
-  const secondaryImg = product.images?.[1] || null;
-
   const isSoldOut = product.stock === 0;
   const isBest = isBestSeller || product.bestSeller;
   const isNew = isNewArrival || product.isNewProduct || product.newArrival;
@@ -89,22 +99,30 @@ const ProductCard = ({ product, isBestSeller = false, isNewArrival = false, onQu
       <div className={`product-card-v2 ${isSoldOut ? 'is-sold-out' : ''}`}>
         <Link to={`/products/${product._id}`} className="product-link-v2">
           <div className="product-image-v2">
-            <img
-              src={optimizeImage(primaryImg, 600)}
-              alt={product.name}
-              className="primary-img"
-              loading="lazy"
-              decoding="async"
-            />
-            {secondaryImg && (
+            <div className={`product-stage-canvas ${primaryLoaded ? 'loaded' : 'loading'}`}>
               <img
-                src={optimizeImage(secondaryImg, 600)}
-                alt={`${product.name} alternate view`}
-                className="secondary-img"
+                src={primarySrc}
+                alt={product.name}
+                className="primary-img"
                 loading="lazy"
                 decoding="async"
+                onLoad={() => setPrimaryLoaded(true)}
+                onError={() => {
+                  setPrimarySrc('/placeholder.jpg');
+                  setPrimaryLoaded(true);
+                }}
               />
-            )}
+              {secondarySrc && (
+                <img
+                  src={secondarySrc}
+                  alt={`${product.name} alternate view`}
+                  className="secondary-img"
+                  loading="lazy"
+                  decoding="async"
+                  onError={() => setSecondarySrc(null)}
+                />
+              )}
+            </div>
 
             {/* Badge Layer */}
             <div className="product-badges-v2">

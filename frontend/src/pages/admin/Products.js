@@ -2,7 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   FiPlus, FiEdit, FiTrash2, FiPackage, FiSearch, FiX,
   FiUpload, FiStar, FiTrendingUp, FiZap, FiEye, FiEyeOff,
-  FiCheck, FiAlertTriangle, FiRefreshCw, FiFilter, FiCheckCircle
+  FiCheck, FiAlertTriangle, FiRefreshCw, FiFilter, FiCheckCircle,
+  FiArrowLeft, FiArrowRight, FiMaximize2, FiImage, FiSmartphone,
+  FiMonitor, FiLayers, FiInfo, FiHeart, FiShoppingCart
 } from 'react-icons/fi';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
@@ -34,6 +36,12 @@ const AdminProducts = () => {
   const [showModal, setShowModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [saving, setSaving] = useState(false);
+
+  // Media Manager & Live Preview State
+  const [mediaViewMode, setMediaViewMode] = useState('manager'); // 'manager' | 'preview'
+  const [previewDevice, setPreviewDevice] = useState('desktop'); // 'desktop' | 'mobile'
+  const [previewZoomImg, setPreviewZoomImg] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   // Filters State
   const [searchQuery, setSearchQuery] = useState('');
@@ -114,18 +122,88 @@ const AdminProducts = () => {
     fetchSummary();
   }, [fetchProducts, fetchSummary]);
 
-  // Handle Image Upload & Previews
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const newFiles = [...images, ...files];
-    setImages(newFiles);
+  // Handle Drag & Drop
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
 
-    const newPreviews = files.map(file => ({
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    if (e.dataTransfer && e.dataTransfer.files) {
+      processSelectedFiles(Array.from(e.dataTransfer.files));
+    }
+  };
+
+  const processSelectedFiles = (files) => {
+    const validImageFiles = files.filter(f => f.type.startsWith('image/'));
+    if (validImageFiles.length === 0) {
+      return toast.error('Please select valid image files (JPG, PNG, WebP)');
+    }
+
+    if (productImages.length + validImageFiles.length > 10) {
+      toast.warning('Maximum 10 product images allowed. Excess images were omitted.');
+    }
+
+    const availableSlots = Math.max(0, 10 - productImages.length);
+    const filesToAdd = validImageFiles.slice(0, availableSlots);
+
+    const oversizedFiles = filesToAdd.filter(f => f.size > 50 * 1024 * 1024);
+    if (oversizedFiles.length > 0) {
+      return toast.error('Each image must be less than 50MB');
+    }
+
+    setImages(prev => [...prev, ...filesToAdd]);
+
+    const newPreviews = filesToAdd.map(file => ({
       url: URL.createObjectURL(file),
       file: file,
       isNew: true
     }));
-    setProductImages([...productImages, ...newPreviews]);
+
+    setProductImages(prev => [...prev, ...newPreviews]);
+  };
+
+  // Handle File Input Selection
+  const handleImageUpload = (e) => {
+    if (e.target.files) {
+      processSelectedFiles(Array.from(e.target.files));
+    }
+  };
+
+  // Detect Aspect Ratio and Dimensions
+  const handleImageLoaded = (index, e) => {
+    const { naturalWidth, naturalHeight } = e.target;
+    if (naturalWidth && naturalHeight) {
+      const ratioVal = naturalWidth / naturalHeight;
+      let ratioLabel = '1:1 Square';
+      if (ratioVal < 0.75) ratioLabel = '9:16 Portrait';
+      else if (ratioVal < 0.9) ratioLabel = '4:5 Portrait';
+      else if (ratioVal < 1.1) ratioLabel = '1:1 Square';
+      else if (ratioVal < 1.5) ratioLabel = '4:3 Landscape';
+      else ratioLabel = '16:9 Landscape';
+
+      setProductImages(prev => {
+        const copy = [...prev];
+        if (copy[index]) {
+          copy[index] = {
+            ...copy[index],
+            ratio: ratioLabel,
+            dims: `${naturalWidth}×${naturalHeight}`
+          };
+        }
+        return copy;
+      });
+    }
   };
 
   const removeImage = (index) => {
@@ -133,10 +211,34 @@ const AdminProducts = () => {
     const newProductImages = productImages.filter((_, i) => i !== index);
     setProductImages(newProductImages);
 
-    if (imageToRemove.isNew) {
+    if (imageToRemove?.isNew) {
       const newImages = images.filter(file => file !== imageToRemove.file);
       setImages(newImages);
     }
+  };
+
+  const moveImage = (index, direction) => {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= productImages.length) return;
+
+    setProductImages(prev => {
+      const copy = [...prev];
+      const temp = copy[index];
+      copy[index] = copy[targetIndex];
+      copy[targetIndex] = temp;
+      return copy;
+    });
+  };
+
+  const makePrimary = (index) => {
+    if (index <= 0 || index >= productImages.length) return;
+    setProductImages(prev => {
+      const copy = [...prev];
+      const [item] = copy.splice(index, 1);
+      copy.unshift(item);
+      return copy;
+    });
+    toast.info('Primary cover image updated');
   };
 
   const handleInputChange = (e) => {
@@ -152,6 +254,8 @@ const AdminProducts = () => {
   // Open Modal for Add
   const openAdd = () => {
     setEditProduct(null);
+    setMediaViewMode('manager');
+    setPreviewZoomImg(null);
     setFormData({
       name: '',
       description: '',
@@ -177,6 +281,8 @@ const AdminProducts = () => {
   // Open Modal for Edit
   const openEdit = (product) => {
     setEditProduct(product);
+    setMediaViewMode('manager');
+    setPreviewZoomImg(null);
     setFormData({
       name: product.name || '',
       description: product.description || '',
@@ -227,6 +333,17 @@ const AdminProducts = () => {
     data.append('published', formData.published ? 'true' : 'false');
     data.append('ingredients', formData.ingredients || '');
     data.append('howToUse', formData.howToUse || '');
+
+    // Construct imageMap preserving exact sequence
+    const imageMap = productImages.map(img => {
+      if (!img.isNew) {
+        return { type: 'existing', url: img.url };
+      } else {
+        const fileIdx = images.indexOf(img.file);
+        return { type: 'new', index: fileIdx >= 0 ? fileIdx : 0 };
+      }
+    });
+    data.append('imageMap', JSON.stringify(imageMap));
 
     const existingImageUrls = productImages.filter(img => !img.isNew).map(img => img.url);
     data.append('existingImages', JSON.stringify(existingImageUrls));
@@ -649,44 +766,252 @@ const AdminProducts = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="redesigned-form">
-                {/* ── SECTION 1: IMAGES ── */}
-                <div className="form-section">
-                  <h3 className="section-title">1. Product Media</h3>
-                  <p className="section-description">High-resolution imagery (Cloudinary auto-optimized). First image is primary.</p>
+                {/* ── SECTION 1: PRODUCT MEDIA & LIVE PREVIEW ── */}
+                <div className="form-section admin-media-section">
+                  <div className="section-header-with-tabs">
+                    <div>
+                      <h3 className="section-title">1. Product Media & Adaptive Studio Stage</h3>
+                      <p className="section-description">
+                        Upload up to 10 product images. AmaraCé uses an adaptive ivory stage (4:5) to showcase your complete packaging and bottles without cropping.
+                      </p>
+                    </div>
 
-                  <div className="image-upload-container">
-                    <div className="image-preview-grid">
-                      {productImages.map((image, index) => (
-                        <div key={index} className="image-preview-item">
-                          <img src={optimizeImage(image.url, 200)} alt={`Product ${index + 1}`} />
-                          <button
-                            type="button"
-                            className="remove-image-btn"
-                            onClick={() => removeImage(index)}
-                            title="Remove image"
-                          >
-                            <FiX size={14} />
-                          </button>
-                          {index === 0 && <span className="primary-badge">Primary Cover</span>}
-                        </div>
-                      ))}
+                    <div className="media-mode-toggle-pill">
+                      <button
+                        type="button"
+                        className={`mode-pill-btn ${mediaViewMode === 'manager' ? 'active' : ''}`}
+                        onClick={() => setMediaViewMode('manager')}
+                      >
+                        <FiImage size={14} /> Media Manager ({productImages.length}/10)
+                      </button>
+                      <button
+                        type="button"
+                        className={`mode-pill-btn ${mediaViewMode === 'preview' ? 'active' : ''}`}
+                        onClick={() => setMediaViewMode('preview')}
+                      >
+                        <FiEye size={14} /> Live Storefront Preview
+                      </button>
+                    </div>
+                  </div>
 
-                      <label className="image-upload-card">
+                  {mediaViewMode === 'manager' ? (
+                    <div className="admin-media-manager-body">
+                      {/* Drag & Drop Zone */}
+                      <div
+                        className={`admin-dropzone-box ${isDragging ? 'is-dragging' : ''}`}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                      >
                         <input
                           type="file"
+                          id="product-media-upload-input"
                           multiple
-                          accept="image/*"
+                          accept="image/png,image/jpeg,image/jpg,image/webp"
                           onChange={handleImageUpload}
                           style={{ display: 'none' }}
                         />
-                        <div className="upload-placeholder">
-                          <FiUpload size={28} />
-                          <span>Add Media</span>
-                          <small>JPG, PNG, WebP up to 50MB</small>
+                        <label htmlFor="product-media-upload-input" className="dropzone-inner-content">
+                          <div className="dropzone-icon-circle">
+                            <FiUpload size={22} />
+                          </div>
+                          <div className="dropzone-text-group">
+                            <strong>Drop product images here, or <span className="browse-link">browse files</span></strong>
+                            <small>Supports PNG, JPG, WebP up to 50MB (Adaptive ivory stage preserves complete bottle & details)</small>
+                          </div>
+                          <div className="dropzone-count-pill">
+                            <span>{productImages.length} of 10</span>
+                          </div>
+                        </label>
+                      </div>
+
+                      {/* Image Preview Grid */}
+                      {productImages.length > 0 ? (
+                        <div className="admin-media-cards-grid">
+                          {productImages.map((image, index) => (
+                            <div key={index} className={`admin-media-card ${index === 0 ? 'is-primary' : index === 1 ? 'is-secondary' : ''}`}>
+                              {/* Stage Frame */}
+                              <div className="admin-media-stage">
+                                <img
+                                  src={optimizeImage(image.url, 400)}
+                                  alt={`Upload ${index + 1}`}
+                                  onLoad={(e) => handleImageLoaded(index, e)}
+                                />
+
+                                {/* Badges */}
+                                <div className="admin-media-badges">
+                                  {index === 0 ? (
+                                    <span className="admin-badge-role primary">
+                                      <FiStar size={10} /> Primary Cover
+                                    </span>
+                                  ) : index === 1 ? (
+                                    <span className="admin-badge-role secondary">
+                                      <FiEye size={10} /> Hover View
+                                    </span>
+                                  ) : (
+                                    <span className="admin-badge-role position">#{index + 1}</span>
+                                  )}
+
+                                  {image.ratio && (
+                                    <span className="admin-badge-ratio" title={image.dims || ''}>
+                                      {image.ratio}
+                                    </span>
+                                  )}
+                                </div>
+
+                                {/* Floating Quick Zoom */}
+                                <button
+                                  type="button"
+                                  className="admin-stage-zoom-btn"
+                                  onClick={() => setPreviewZoomImg(image.url)}
+                                  title="Inspect full image"
+                                >
+                                  <FiMaximize2 size={13} />
+                                </button>
+                              </div>
+
+                              {/* Card Toolbar */}
+                              <div className="admin-media-toolbar">
+                                <div className="reorder-btn-group">
+                                  <button
+                                    type="button"
+                                    className="media-tool-btn"
+                                    onClick={() => moveImage(index, -1)}
+                                    disabled={index === 0}
+                                    title="Move left"
+                                  >
+                                    <FiArrowLeft size={13} />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="media-tool-btn"
+                                    onClick={() => moveImage(index, 1)}
+                                    disabled={index === productImages.length - 1}
+                                    title="Move right"
+                                  >
+                                    <FiArrowRight size={13} />
+                                  </button>
+                                  {index > 0 && (
+                                    <button
+                                      type="button"
+                                      className="media-tool-btn make-primary-btn"
+                                      onClick={() => makePrimary(index)}
+                                      title="Set as Cover Image"
+                                    >
+                                      <FiStar size={12} /> Set Primary
+                                    </button>
+                                  )}
+                                </div>
+
+                                <button
+                                  type="button"
+                                  className="media-tool-btn delete-btn"
+                                  onClick={() => removeImage(index)}
+                                  title="Delete image"
+                                >
+                                  <FiTrash2 size={13} />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      </label>
+                      ) : (
+                        <div className="admin-media-empty-notice">
+                          <p>No media added yet. Upload high-quality product photography to display on the storefront.</p>
+                        </div>
+                      )}
                     </div>
-                  </div>
+                  ) : (
+                    /* ── LIVE STOREFRONT PREVIEW TAB ── */
+                    <div className="admin-storefront-live-preview">
+                      <div className="preview-toolbar-header">
+                        <div className="preview-status-pill">
+                          <span className="live-dot"></span> Live Storefront Simulation
+                        </div>
+                        <div className="device-switcher-pill">
+                          <button
+                            type="button"
+                            className={`device-btn ${previewDevice === 'desktop' ? 'active' : ''}`}
+                            onClick={() => setPreviewDevice('desktop')}
+                          >
+                            <FiMonitor size={14} /> Desktop Grid
+                          </button>
+                          <button
+                            type="button"
+                            className={`device-btn ${previewDevice === 'mobile' ? 'active' : ''}`}
+                            onClick={() => setPreviewDevice('mobile')}
+                          >
+                            <FiSmartphone size={14} /> Mobile View
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="preview-simulation-arena">
+                        {/* Simulated Storefront Card */}
+                        <div className={`storefront-card-preview-shell device-${previewDevice}`}>
+                          <div className="preview-card-frame">
+                            <div className="preview-card-stage">
+                              <div className="preview-stage-canvas">
+                                <img
+                                  src={optimizeImage(productImages[0]?.url || '/placeholder.jpg', 600)}
+                                  alt="Primary view"
+                                  className="preview-primary-img"
+                                />
+                                {productImages[1] && (
+                                  <img
+                                    src={optimizeImage(productImages[1].url, 600)}
+                                    alt="Hover view"
+                                    className="preview-secondary-img"
+                                  />
+                                )}
+                              </div>
+
+                              {/* Badges */}
+                              <div className="preview-badges-layer">
+                                {Number(formData.stock) === 0 ? (
+                                  <span className="preview-badge sold-out">Sold Out</span>
+                                ) : formData.bestSeller ? (
+                                  <span className="preview-badge best-seller">★ Best Seller</span>
+                                ) : formData.newArrival ? (
+                                  <span className="preview-badge new">New Arrival</span>
+                                ) : null}
+                              </div>
+
+                              {/* Action buttons */}
+                              <div className="preview-top-actions">
+                                <span className="preview-action-icon"><FiHeart size={14} /></span>
+                                <span className="preview-action-icon"><FiEye size={14} /></span>
+                              </div>
+
+                              <div className="preview-quick-add-bar">
+                                <span><FiShoppingCart size={13} /> {Number(formData.stock) === 0 ? 'Sold Out' : 'Quick Add'}</span>
+                              </div>
+                            </div>
+
+                            <div className="preview-card-meta">
+                              <span className="preview-cat-text">{formData.category || 'Collection'}</span>
+                              <h4 className="preview-title-text">{formData.name || 'Product Title Preview'}</h4>
+                              <div className="preview-price-row">
+                                <span className="preview-price-val">₱{Number(formData.price || 0).toFixed(2)}</span>
+                                {formData.originalPrice && Number(formData.originalPrice) > Number(formData.price) && (
+                                  <span className="preview-old-price">₱{Number(formData.originalPrice).toFixed(2)}</span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="preview-guidance-card">
+                            <h5>💡 Live Visual Verification:</h5>
+                            <ul>
+                              <li><strong>Zero Cropping:</strong> Your product is framed in a warm ivory stage (`#FAF8F5`) so labels, bottle tops, and packaging text are 100% visible.</li>
+                              <li><strong>Hover State:</strong> {productImages[1] ? 'Hovering over this card on the storefront will cross-fade to your second image.' : 'Add a 2nd image if you want customers to see an alternate view on hover.'}</li>
+                              <li><strong>Catalog Alignment:</strong> All storefront cards maintain a strict `4:5` luxury aspect ratio to avoid jagged column heights.</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* ── SECTION 2: BASIC INFORMATION ── */}
@@ -943,6 +1268,25 @@ const AdminProducts = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* ── Image Zoom Lightbox Overlay ───────────── */}
+        {previewZoomImg && (
+          <div className="admin-image-zoom-overlay" onClick={() => setPreviewZoomImg(null)}>
+            <div className="admin-image-zoom-dialog" onClick={(e) => e.stopPropagation()}>
+              <button
+                type="button"
+                className="zoom-close-btn"
+                onClick={() => setPreviewZoomImg(null)}
+                aria-label="Close zoom preview"
+              >
+                <FiX size={20} />
+              </button>
+              <div className="zoom-stage-view">
+                <img src={previewZoomImg} alt="Enlarged view" />
+              </div>
             </div>
           </div>
         )}

@@ -200,9 +200,26 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create product (Admin)
-router.post('/', protect, admin, upload.array('images', 5), async (req, res) => {
+router.post('/', protect, admin, upload.array('images', 10), async (req, res) => {
   try {
-    const images = req.files?.map(file => file.path) || [];
+    const newFiles = req.files?.map(file => file.path) || [];
+    let images = newFiles;
+
+    if (req.body.imageMap) {
+      try {
+        const map = JSON.parse(req.body.imageMap);
+        let newFileCursor = 0;
+        const ordered = map.map(item => {
+          if (item.type === 'new') {
+            return (typeof item.index === 'number' && newFiles[item.index]) ? newFiles[item.index] : newFiles[newFileCursor++];
+          }
+          return null;
+        }).filter(Boolean);
+        if (ordered.length > 0) images = ordered;
+      } catch (err) {
+        console.error('Error parsing imageMap in POST:', err);
+      }
+    }
 
     const productData = {
       name: req.body.name,
@@ -232,7 +249,7 @@ router.post('/', protect, admin, upload.array('images', 5), async (req, res) => 
 });
 
 // Update product (Admin)
-router.put('/:id', protect, admin, upload.array('images', 5), async (req, res) => {
+router.put('/:id', protect, admin, upload.array('images', 10), async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
@@ -273,22 +290,44 @@ router.put('/:id', protect, admin, upload.array('images', 5), async (req, res) =
       product.published = req.body.published === 'true' || req.body.published === true;
     }
 
-    // Handle images
+    // Handle ordered images blending existing Cloudinary URLs & new uploads
     let updatedImages = [];
-    if (req.body.existingImages) {
+    const newFiles = (req.files && req.files.length > 0) ? req.files.map(file => file.path) : [];
+
+    if (req.body.imageMap) {
       try {
-        updatedImages = JSON.parse(req.body.existingImages);
-      } catch {
-        updatedImages = [];
+        const map = JSON.parse(req.body.imageMap);
+        let newFileCursor = 0;
+        updatedImages = map.map(item => {
+          if (item.type === 'existing' && item.url) {
+            return item.url;
+          } else if (item.type === 'new') {
+            const fileUrl = (typeof item.index === 'number' && newFiles[item.index])
+              ? newFiles[item.index]
+              : newFiles[newFileCursor++];
+            return fileUrl;
+          }
+          return null;
+        }).filter(Boolean);
+      } catch (err) {
+        console.error('Error parsing imageMap in PUT:', err);
       }
     }
 
-    if (req.files && req.files.length > 0) {
-      const newImages = req.files.map(file => file.path);
-      updatedImages = [...updatedImages, ...newImages];
+    // Fallback if imageMap was not sent or produced empty
+    if (updatedImages.length === 0 && (req.body.existingImages !== undefined || newFiles.length > 0)) {
+      let existing = [];
+      if (req.body.existingImages) {
+        try {
+          existing = JSON.parse(req.body.existingImages);
+        } catch {
+          existing = [];
+        }
+      }
+      updatedImages = [...existing, ...newFiles];
     }
 
-    if (updatedImages.length > 0 || req.body.existingImages) {
+    if (updatedImages.length > 0 || req.body.existingImages !== undefined || req.body.imageMap !== undefined) {
       product.images = updatedImages;
     }
 
