@@ -96,7 +96,8 @@
   aspect-ratio: 4 / 5;
   background: radial-gradient(circle at 50% 40%, #ffffff 0%, #FAF8F5 60%, #F5F0E8 100%);
   border-radius: 8px;
-  overflow: hidden;
+  /* overflow visible so the border/shadow is never clipped on any screen */
+  overflow: visible;
   border: 1px solid #ede8df;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
   display: flex;
@@ -830,8 +831,8 @@
 @media (max-width: 960px) {
   .product-layout-v2 {
     grid-template-columns: 1fr;
-    gap: 28px;
-    padding: 0 1.25rem;
+    gap: 24px;
+    padding: 0;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -842,12 +843,33 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    /* No side padding — image stage is full-width with its own internal margins */
+    padding: 0 1rem;
   }
 
+  .product-main-info-v2 {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0 1rem;
+    min-width: 0;
+  }
+
+  /* CTA stack: two full-width stacked buttons on mobile */
   .actions-stack-v2 {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
     width: 100%;
+    box-sizing: border-box;
+  }
+
+  .btn-add-to-cart-v2,
+  .btn-buy-now-v2 {
+    width: 100%;
+    height: 50px;
+    font-size: 0.84rem;
+    border-radius: 6px;
     box-sizing: border-box;
   }
 
@@ -870,8 +892,9 @@
 }
 
 @media (max-width: 768px) {
+  /* ── Breadcrumb ── */
   .detail-breadcrumb-bar {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     padding: 10px 0;
     width: 100%;
     box-sizing: border-box;
@@ -879,55 +902,88 @@
 
   .breadcrumb-inner {
     padding: 0 1rem;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     gap: 6px;
     width: 100%;
     box-sizing: border-box;
+    flex-wrap: wrap;
   }
 
+  /* ── Layout: single column, no horizontal overflow ── */
   .product-layout-v2 {
-    padding: 0 1rem;
-    gap: 20px;
+    padding: 0;
+    gap: 0;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+  }
+
+  /* ── Gallery / Image Stage ── */
+  .product-gallery-v2 {
+    padding: 0 1rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    gap: 10px;
+    margin-bottom: 4px;
   }
 
   .main-image-container-v2 {
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid #EDE8DF;
-    background: radial-gradient(circle at 50% 40%, #ffffff 0%, #FAF8F5 60%, #F5F0E8 100%);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    /* Square stage — works for all product shapes */
     aspect-ratio: 1 / 1;
-    max-height: 400px;
+    /* Cap height on small screens */
+    max-height: min(90vw, 380px);
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px solid #EDE8DF;
+    background: radial-gradient(circle at 50% 40%, #ffffff 0%, #FAF8F5 60%, #F5F0E8 100%);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
     display: flex;
     align-items: center;
     justify-content: center;
+    /* overflow:visible already set on base — preserves the border/shadow */
   }
 
   .main-view-v2 {
-    max-width: 100%;
-    max-height: 100%;
     width: 100%;
     height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     object-position: center;
     filter: drop-shadow(0 6px 16px rgba(35, 25, 15, 0.08));
     display: block;
+    /* Kill zoom hover on mobile — avoid accidental scroll-trigger */
+    transform: none !important;
   }
 
+  /* Badge & wishlist button stay clipped to the container edge */
+  .gallery-badge-layer {
+    top: 12px;
+    left: 12px;
+  }
+
+  .detail-wishlist-btn {
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
+  }
+
+  /* ── Thumbnails ── */
   .thumbnails-grid-v2 {
     display: flex;
     gap: 8px;
     overflow-x: auto;
-    padding: 4px 0 6px;
+    padding: 4px 0 8px;
     width: 100%;
     box-sizing: border-box;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   .thumbnails-grid-v2::-webkit-scrollbar {
@@ -935,112 +991,175 @@
   }
 
   .thumb-item-v2 {
-    width: 64px;
-    height: 76px;
+    width: 60px;
+    height: 72px;
     border-radius: 6px;
-    padding: 3px;
+    padding: 4px;
     flex-shrink: 0;
     box-sizing: border-box;
   }
 
+  /* ── Product Info Column ── */
   .product-main-info-v2 {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    padding: 20px 1rem 0;
+    min-width: 0;
+  }
+
+  .info-header-v2 {
+    margin-bottom: 14px;
+  }
+
+  .info-category-v2 {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    margin-bottom: 6px;
   }
 
   .info-title-v2 {
-    font-size: 1.45rem;
-    line-height: 1.25;
+    font-size: 1.55rem;
+    line-height: 1.2;
     margin-bottom: 10px;
     word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   .info-meta-v2 {
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 8px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
     width: 100%;
     box-sizing: border-box;
+    align-items: center;
   }
 
+  .sku-tag {
+    font-size: 0.72rem;
+    padding: 2px 7px;
+  }
+
+  /* ── Price ── */
   .info-price-v2 {
-    margin: 12px 0 10px;
+    margin: 10px 0 8px;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
     align-items: baseline;
     width: 100%;
     box-sizing: border-box;
   }
 
   .price-current-v2 {
-    font-size: 1.75rem;
+    font-size: 1.85rem;
   }
 
+  .price-old-v2 {
+    font-size: 1.1rem;
+  }
+
+  .price-save-v2 {
+    font-size: 0.68rem;
+    padding: 3px 8px;
+  }
+
+  /* ── Stock ── */
+  .stock-indicator-row {
+    margin-bottom: 14px;
+  }
+
+  .stock-pill {
+    font-size: 0.78rem;
+  }
+
+  /* ── Description ── */
   .info-description-v2 {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    margin-bottom: 20px;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    margin-bottom: 18px;
     word-break: break-word;
+    overflow-wrap: break-word;
     width: 100%;
     box-sizing: border-box;
   }
 
+  /* ── Purchase Card ── */
   .purchase-controls-v2 {
-    padding: 16px 14px;
-    border-radius: 10px;
-    margin-bottom: 20px;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 18px;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    /* Ensure card border is fully visible — no surrounding overflow clip */
+    overflow: visible;
   }
 
   .control-group-v2 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     gap: 8px;
     width: 100%;
     box-sizing: border-box;
   }
 
+  .control-group-v2 label {
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+  }
+
   .quantity-box-v2 {
-    height: 40px;
+    height: 42px;
     box-sizing: border-box;
   }
 
   .quantity-box-v2 button {
-    width: 36px;
+    width: 38px;
     box-sizing: border-box;
   }
 
   .quantity-box-v2 input {
-    width: 36px;
+    width: 38px;
     font-size: 0.9rem;
     box-sizing: border-box;
   }
 
+  /* ── Mobile CTAs: Full-width stacked ── */
   .actions-stack-v2 {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 10px;
     width: 100%;
     box-sizing: border-box;
   }
 
-  .btn-add-to-cart-v2,
-  .btn-buy-now-v2 {
-    height: 48px;
-    font-size: 0.82rem;
+  .btn-add-to-cart-v2 {
     width: 100%;
+    height: 52px;
+    font-size: 0.84rem;
+    letter-spacing: 0.1em;
     border-radius: 6px;
     box-sizing: border-box;
+    border: none;
   }
 
+  .btn-buy-now-v2 {
+    width: 100%;
+    height: 52px;
+    font-size: 0.84rem;
+    letter-spacing: 0.1em;
+    border-radius: 6px;
+    box-sizing: border-box;
+    border: 1.5px solid #1c1c1e;
+  }
+
+  /* ── Trust Perks ── */
   .product-perks-v2 {
     padding: 14px 0;
-    margin-bottom: 20px;
-    gap: 10px;
+    margin-bottom: 18px;
+    gap: 12px;
     width: 100%;
     box-sizing: border-box;
   }
@@ -1048,6 +1167,11 @@
   .perk-item-v2 {
     width: 100%;
     box-sizing: border-box;
+    gap: 12px;
+  }
+
+  .perk-icon {
+    font-size: 1.1rem;
   }
 
   .perk-text-v2 {
@@ -1057,20 +1181,26 @@
   }
 
   .perk-text-v2 strong {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
+    display: block;
+    margin-bottom: 1px;
   }
 
   .perk-text-v2 span {
-    font-size: 0.72rem;
-    line-height: 1.3;
+    font-size: 0.7rem;
+    line-height: 1.35;
     word-break: break-word;
+    overflow-wrap: break-word;
+    color: #777;
   }
 
+  /* ── Info Tabs ── */
   .info-tabs-v2 {
-    border-radius: 8px;
+    border-radius: 10px;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    overflow: hidden;
   }
 
   .tab-nav-bar {
@@ -1078,37 +1208,72 @@
     -webkit-overflow-scrolling: touch;
     width: 100%;
     box-sizing: border-box;
+    scrollbar-width: none;
+  }
+
+  .tab-nav-bar::-webkit-scrollbar {
+    display: none;
   }
 
   .tab-nav-item {
     padding: 10px 14px;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
     flex-shrink: 0;
   }
 
   .tab-content-panel {
-    padding: 16px 14px;
-    font-size: 0.88rem;
-    line-height: 1.6;
+    padding: 16px;
+    font-size: 0.87rem;
+    line-height: 1.65;
     word-break: break-word;
+    overflow-wrap: break-word;
     width: 100%;
     box-sizing: border-box;
   }
 
+  .tab-pane-content p {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* ── Related / Reviews ── */
   .related-products-section,
   .reviews-wrapper-v2 {
     padding: 0 1rem;
-    margin-top: 36px;
+    margin-top: 32px;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
 
-  .related-title {
-    font-size: 1.65rem;
+  .related-header {
+    margin-bottom: 24px;
   }
 
+  .related-eyebrow {
+    font-size: 0.7rem;
+  }
+
+  .related-title {
+    font-size: 1.55rem;
+  }
+
+  /* ── Sticky Bar ── */
   .sticky-purchase-bar {
     padding: 10px 1rem;
+  }
+
+  /* ── Skeleton: single column ── */
+  .product-detail-skeleton-container {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+    gap: 24px;
+    margin-top: 20px;
+  }
+
+  .skeleton-gallery-v2 {
+    aspect-ratio: 1 / 1;
+    max-height: min(90vw, 380px);
   }
 }
