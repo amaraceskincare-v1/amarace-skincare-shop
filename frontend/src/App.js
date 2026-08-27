@@ -95,7 +95,7 @@ const App = () => {
       <Navbar />
       <CartDrawer isOpen={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
 
-      <main className={`main-content${location.pathname === '/' ? ' home-active' : ''}`}>
+      <main className={`main-content${location.pathname === '/' ? ' home-active' : ''}${location.pathname.startsWith('/admin') ? ' admin-active' : ''}`}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />

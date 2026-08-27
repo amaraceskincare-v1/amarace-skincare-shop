@@ -5,12 +5,16 @@
 .admin-layout {
     display: flex;
     min-height: 100vh;
+    width: 100%;
+    max-width: 100%;
     background: var(--light);
+    box-sizing: border-box;
 }
 
 /* Sidebar */
 .admin-sidebar {
     width: 240px;
+    flex-shrink: 0;
     background: #fff;
     color: var(--dark);
     display: flex;
@@ -18,6 +22,7 @@
     padding: 2rem 0;
     min-height: 100vh;
     border-right: 1px solid var(--gray);
+    box-sizing: border-box;
 }
 
 .sidebar-logo {
@@ -2217,17 +2222,16 @@
     }
 }
 
-/* Fix for "Desktop site" view on mobile where overflow might happen */
 @media screen and (min-width: 901px) {
     .admin-layout {
-        overflow-x: hidden;
-        width: 100vw;
+        width: 100%;
+        max-width: 100%;
     }
     .admin-main {
         flex: 1;
         min-width: 0;
-        padding: 2.5rem 4rem;
-        overflow-x: auto;
+        padding: 2rem;
+        box-sizing: border-box;
     }
 }
 

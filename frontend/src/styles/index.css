@@ -133,8 +133,9 @@ body {
   min-height: calc(100vh - 250px);
 }
 
-/* Home page — escape padding/max-width constraint */
-.main-content.home-active {
+/* Home page & Admin pages — escape padding/max-width constraint */
+.main-content.home-active,
+.main-content.admin-active {
   padding: 0;
   max-width: none;
   margin: 0;
