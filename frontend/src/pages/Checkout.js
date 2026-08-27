@@ -378,7 +378,9 @@ const Checkout = () => {
           >
             <div className="mobile-summary-left">
               <FiShoppingBag className="summary-bag-icon" />
-              <span>{mobileSummaryOpen ? 'Hide order summary' : 'Show order summary'} ({items.length} {items.length === 1 ? 'item' : 'items'})</span>
+              <span className="mobile-summary-title">
+                {mobileSummaryOpen ? 'Hide Order Summary' : `Your Order · ${items.length} ${items.length === 1 ? 'item' : 'items'}`}
+              </span>
               <FiChevronDown className={`summary-arrow ${mobileSummaryOpen ? 'open' : ''}`} />
             </div>
             <div className="mobile-summary-right">

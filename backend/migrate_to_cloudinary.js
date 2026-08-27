@@ -23,10 +23,7 @@ const filesToUpload = [
     { name: 'favicon_32', path: '../frontend/public/favicon-32x32.png' },
     { name: 'og_image', path: '../frontend/public/og-image.jpg' },
     { name: 'cod_icon', path: '../frontend/public/images/payment/cod-icon.png' },
-    { name: 'gcash_logo', path: '../frontend/public/images/payment/gcash-logo.png' },
-    { name: 'lip_tint_bg', path: '../frontend/src/assets/backgrounds/lip_tint.png' },
-    { name: 'perfume_bg', path: '../frontend/src/assets/backgrounds/perfume.png' },
-    { name: 'soap_bg', path: '../frontend/src/assets/backgrounds/soap.png' },
+    { name: 'gcash_logo', path: '../frontend/public/images/payment/gcash-logo.png' }
 ];
 
 const uploadFiles = async () => {
