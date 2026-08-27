@@ -78,20 +78,18 @@
 .admin-main {
     flex: 1;
     min-width: 0;
-    width: 100%;
-    max-width: 100%;
     padding: 2rem;
     background: #f8fafc;
+    max-width: 100%;
+    overflow-x: hidden;
     box-sizing: border-box;
 }
 
 .admin-header {
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
 }
 
 .admin-header h1 {
@@ -104,8 +102,8 @@
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
+    gap: 2rem;
+    margin-bottom: 4rem;
 }
 
 .stat-card {
@@ -2547,33 +2545,37 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    width: 100%;
 }
 
 .funnel-step-label {
-    width: 150px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: #334155;
+    flex: 0 0 160px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1e293b;
     white-space: nowrap;
-    flex-shrink: 0;
 }
 
 .funnel-bar-wrapper {
     flex: 1;
+    min-width: 0;
     background: #f1f5f9;
     border-radius: 8px;
     overflow: hidden;
-    height: 32px;
-    display: flex;
-    align-items: center;
+    height: 44px;
 }
 
 .funnel-bar {
     height: 100%;
+    min-width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 16px;
     border-radius: 8px;
+    color: #ffffff;
+    font-weight: 600;
     transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    min-width: 4px;
+    box-sizing: border-box;
 }
 
 .funnel-bar.v-100 { background: #0284c7; }
@@ -2582,25 +2584,16 @@
 .funnel-bar.v-25 { background: #f59e0b; }
 .funnel-bar.v-final { background: #10b981; }
 
-.funnel-step-stats {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-    min-width: 90px;
-    flex-shrink: 0;
-}
-
 .funnel-bar-val {
     font-size: 0.95rem;
     font-weight: 800;
-    color: #1e293b;
+    white-space: nowrap;
 }
 
 .funnel-pct {
-    min-width: 46px;
-    font-size: 0.85rem;
-    font-weight: 700;
+    flex: 0 0 60px;
+    font-size: 0.95rem;
+    font-weight: 800;
     color: #64748b;
     text-align: right;
 }
@@ -2610,23 +2603,10 @@
 }
 
 @media (max-width: 640px) {
-    .funnel-step {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-    }
-
     .funnel-step-label {
-        width: 100%;
-    }
-
-    .funnel-bar-wrapper {
-        width: 100%;
-    }
-
-    .funnel-step-stats {
-        width: 100%;
-        justify-content: space-between;
+        flex-basis: 96px;
+        font-size: 0.75rem;
+        white-space: normal;
     }
 }
 
