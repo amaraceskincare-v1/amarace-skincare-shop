@@ -14,8 +14,8 @@ const GCashPaymentSection = ({
     const [copiedName, setCopiedName] = useState(false);
     const [showQrModal, setShowQrModal] = useState(false);
 
-    const accountName = settings?.gcashAccountName || 'AmaraCé Skincare';
-    const accountNumber = settings?.gcashAccountNumber || '0917 123 4567';
+    const accountName = settings?.gcashAccountName || 'PE**R JO*N C.';
+    const accountNumber = settings?.gcashAccountNumber || '0915 266 2648';
     const qrImage = settings?.gcashQRCode || '/gcash-qr.png';
 
     const handleCopyNumber = () => {
