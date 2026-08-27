@@ -92,10 +92,13 @@
   --transition-cinematic: 0.8s var(--ease-cinematic);
 }
 
-/* ── Smooth Scrolling ──────────────────────────── */
+/* ── Smooth Scrolling & Global Viewport Containment ── */
 html {
   scroll-behavior: smooth;
   scrollbar-gutter: stable;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 body {
@@ -105,13 +108,19 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
-/* ── App Shell ─────────────────────────────────── */
+#root,
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 /* Standard content pages */

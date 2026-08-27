@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
 import { toast } from 'react-toastify';
-import { FiMinus, FiPlus, FiX } from 'react-icons/fi';
+import { FiMinus, FiPlus, FiX, FiChevronDown, FiShoppingBag } from 'react-icons/fi';
 import { optimizeImage } from '../utils/imageOptimizer';
 import GCashPaymentSection from '../components/checkout/GCashPaymentSection';
 import '../styles/Checkout.css';
@@ -40,6 +40,7 @@ const Checkout = () => {
   const [proofImage, setProofImage] = useState(null);
   const [settings, setSettings] = useState(null);
   const [isFirstOrder, setIsFirstOrder] = useState(false);
+  const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -368,86 +369,105 @@ const Checkout = () => {
 
         {/* Right - Order Summary */}
         <div className="checkout-summary-section">
-          <div className="order-items">
-            {items.map((item) => (
-              <div key={item.product?._id || item.productId} className="summary-item-modern">
-                <div className="item-image">
-                  <img src={optimizeImage(item.product?.images?.[0] || '/placeholder.jpg', 150)} alt={item.product?.name} />
-                </div>
+          {/* Mobile Collapsible Toggle Bar */}
+          <div
+            className="mobile-order-summary-bar"
+            onClick={() => setMobileSummaryOpen(!mobileSummaryOpen)}
+            role="button"
+            tabIndex={0}
+          >
+            <div className="mobile-summary-left">
+              <FiShoppingBag className="summary-bag-icon" />
+              <span>{mobileSummaryOpen ? 'Hide order summary' : 'Show order summary'} ({items.length} {items.length === 1 ? 'item' : 'items'})</span>
+              <FiChevronDown className={`summary-arrow ${mobileSummaryOpen ? 'open' : ''}`} />
+            </div>
+            <div className="mobile-summary-right">
+              <strong>₱{total.toFixed(2)}</strong>
+            </div>
+          </div>
 
-                <div className="item-details">
-                  <h4 className="item-name">{item.product?.name}</h4>
-                  <p className="item-price">₱{item.product?.price?.toFixed(2)}</p>
+          <div className={`checkout-summary-body ${mobileSummaryOpen ? 'mobile-open' : ''}`}>
+            <div className="order-items">
+              {items.map((item) => (
+                <div key={item.product?._id || item.productId} className="summary-item-modern">
+                  <div className="item-image">
+                    <img src={optimizeImage(item.product?.images?.[0] || '/placeholder.jpg', 150)} alt={item.product?.name} />
+                  </div>
 
-                  <div className="item-controls">
-                    <div className="qty-controls">
+                  <div className="item-details">
+                    <h4 className="item-name">{item.product?.name}</h4>
+                    <p className="item-price">₱{item.product?.price?.toFixed(2)}</p>
+
+                    <div className="item-controls">
+                      <div className="qty-controls">
+                        <button
+                          type="button"
+                          onClick={() => updateQuantity(item.product?._id, item.quantity - 1)}
+                          disabled={item.quantity <= 1}
+                        >
+                          <FiMinus />
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button
+                          type="button"
+                          onClick={() => updateQuantity(item.product?._id, item.quantity + 1)}
+                        >
+                          <FiPlus />
+                        </button>
+                      </div>
+
                       <button
                         type="button"
-                        onClick={() => updateQuantity(item.product?._id, item.quantity - 1)}
-                        disabled={item.quantity <= 1}
+                        className="remove-btn"
+                        onClick={() => removeFromCart(item.product?._id)}
                       >
-                        <FiMinus />
-                      </button>
-                      <span>{item.quantity}</span>
-                      <button
-                        type="button"
-                        onClick={() => updateQuantity(item.product?._id, item.quantity + 1)}
-                      >
-                        <FiPlus />
+                        <FiX /> Remove
                       </button>
                     </div>
-
-                    <button
-                      type="button"
-                      className="remove-btn"
-                      onClick={() => removeFromCart(item.product?._id)}
-                    >
-                      <FiX /> Remove
-                    </button>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <div className="summary-totals">
-            <div className="summary-row">
-              <span>Subtotal</span>
-              <span>₱{cartTotal.toFixed(2)}</span>
-            </div>
-            {discount > 0 && (
-              <div className="summary-row" style={{ color: '#ff6b6b' }}>
-                <span>First Order Discount (10%)</span>
-                <span>-₱{discount.toFixed(2)}</span>
+            <div className="summary-totals">
+              <div className="summary-row">
+                <span>Subtotal</span>
+                <span>₱{cartTotal.toFixed(2)}</span>
               </div>
-            )}
-            <div className="summary-row">
-              <span>Shipping</span>
-              <span>{shipping === 0 ? 'FREE' : `₱${shipping.toFixed(2)}`}</span>
-            </div>
-            <div className="summary-row total">
-              <span>Total</span>
-              <span>₱{total.toFixed(2)}</span>
-            </div>
-          </div>
-
-          <div className="accepted-payment-methods">
-            <p className="payment-methods-title">WE ACCEPT:</p>
-            <div className="payment-icons-row">
-              {settings?.paymentLogos && settings.paymentLogos.length > 0 ? (
-                settings.paymentLogos.map((logo, idx) => (
-                  <div key={idx} className="payment-method-icon-card">
-                    <img
-                      src={logo}
-                      alt="Payment Method"
-                      className="payment-method-icon"
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                  </div>
-                ))
-              ) : (
-                <span style={{ fontSize: '0.8rem', color: '#999' }}>GCash &amp; COD</span>
+              {discount > 0 && (
+                <div className="summary-row" style={{ color: '#ff6b6b' }}>
+                  <span>First Order Discount (10%)</span>
+                  <span>-₱{discount.toFixed(2)}</span>
+                </div>
               )}
+              <div className="summary-row">
+                <span>Shipping</span>
+                <span>{shipping === 0 ? 'FREE' : `₱${shipping.toFixed(2)}`}</span>
+              </div>
+              <div className="summary-row total">
+                <span>Total</span>
+                <span>₱{total.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div className="accepted-payment-methods">
+              <p className="payment-methods-title">WE ACCEPT:</p>
+              <div className="payment-icons-row">
+                {effectiveSettings?.paymentLogos && effectiveSettings.paymentLogos.length > 0 ? (
+                  effectiveSettings.paymentLogos.map((logo, idx) => (
+                    <div key={idx} className="payment-method-icon-card">
+                      <img
+                        src={logo}
+                        alt="Payment Method"
+                        className="payment-method-icon"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <span style={{ fontSize: '0.8rem', color: '#999' }}>GCash &amp; COD</span>
+                )}
+              </div>
             </div>
           </div>
         </div>
