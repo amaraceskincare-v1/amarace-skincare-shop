@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../utils/api';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import { toast } from 'react-toastify';
 import { FiMinus, FiPlus, FiX } from 'react-icons/fi';
 import { optimizeImage } from '../utils/imageOptimizer';
@@ -34,6 +35,7 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { cart, cartTotal, clearCart, updateQuantity, removeFromCart } = useCart();
   const { user } = useAuth();
+  const { settings: globalSettings } = useSettings();
   const [loading, setLoading] = useState(false);
   const [proofImage, setProofImage] = useState(null);
   const [settings, setSettings] = useState(null);
@@ -63,6 +65,8 @@ const Checkout = () => {
         checkFirstOrder();
     }
   }, [user]);
+
+  const effectiveSettings = settings || globalSettings;
 
   // Get items array safely
   const items = cart?.items || [];
@@ -162,11 +166,12 @@ const Checkout = () => {
       <div className="checkout-container">
         {/* Left - Form */}
         <div className="checkout-form-section">
-          <Link to="/" className="checkout-logo">AmaraCé</Link>
-
-          <nav className="checkout-breadcrumb">
-            <Link to="/cart">Cart</Link> <span>›</span> <span className="active">Checkout</span>
-          </nav>
+          <div className="checkout-header-group">
+            <h1 className="checkout-main-title">Checkout</h1>
+            <nav className="checkout-breadcrumb">
+              <Link to="/cart">Bag</Link> <span className="breadcrumb-separator">›</span> <span className="active">Checkout</span> <span className="breadcrumb-separator">›</span> <span className="disabled">Confirmation</span>
+            </nav>
+          </div>
 
           <form onSubmit={handleSubmit} className="checkout-form">
             {/* Contact */}
@@ -321,7 +326,7 @@ const Checkout = () => {
                 {paymentMethod === 'gcash' ? (
                   <GCashPaymentSection
                     total={total}
-                    settings={settings}
+                    settings={effectiveSettings}
                     proofImage={proofImage}
                     setProofImage={setProofImage}
                   />

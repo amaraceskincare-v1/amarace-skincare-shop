@@ -29,6 +29,20 @@ router.get('/', async (req, res) => {
         let settings = await SiteSettings.findOne();
         if (!settings) {
             settings = await SiteSettings.create({});
+        } else {
+            // Normalize legacy placeholder defaults to current merchant
+            let modified = false;
+            if (!settings.gcashAccountName || settings.gcashAccountName === 'AmaraCé Skincare') {
+                settings.gcashAccountName = 'PE**R JO*N C.';
+                modified = true;
+            }
+            if (!settings.gcashAccountNumber || settings.gcashAccountNumber === '0917 123 4567') {
+                settings.gcashAccountNumber = '0915 266 2648';
+                modified = true;
+            }
+            if (modified) {
+                await settings.save();
+            }
         }
         res.json(settings);
     } catch (error) {
