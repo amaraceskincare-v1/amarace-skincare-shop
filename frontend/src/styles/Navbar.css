@@ -475,14 +475,14 @@
 .main-nav-bar {
   background: #fff;
   border-bottom: 1px solid rgba(221, 216, 207, 0.6);
-  padding: 0.85rem 0;
+  padding: 0.92rem 0;
 }
 
 .nav-links-centered {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 40px;
+  gap: 36px;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -493,14 +493,15 @@
 }
 
 .nav-links-centered a {
-  font-size: 0.78rem;
+  font-size: 0.91rem;
   font-weight: 600;
   color: var(--dark);
   text-decoration: none;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition: color var(--transition-fast);
   padding: 6px 0;
+  display: inline-block;
 }
 
 .nav-links-centered a::after {
@@ -509,7 +510,7 @@
   bottom: -2px;
   left: 0;
   width: 0;
-  height: 1.5px;
+  height: 2px;
   background-color: var(--brand-primary);
   transition: width 0.35s var(--ease-luxury, ease);
 }
@@ -584,11 +585,12 @@
 
 .mobile-links a,
 .mobile-links .logout-link {
-  font-size: 1.1rem;
+  font-size: 1.22rem;
   font-weight: 700;
   text-decoration: none;
   color: var(--dark);
   text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .logout-link {

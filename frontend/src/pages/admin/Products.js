@@ -632,8 +632,11 @@ const AdminProducts = () => {
 
                       {/* Inventory Count */}
                       <td className="inventory-qty-cell">
-                        <span className={`inventory-dot ${invStatus.class}`} />
-                        <strong>{product.stock}</strong>
+                        <div className="inventory-qty-row">
+                          <span className={`inventory-dot ${invStatus.class}`} />
+                          <span className="inventory-num">{product.stock}</span>
+                          <span className="inventory-unit">units</span>
+                        </div>
                         <small className="threshold-sub">Alert: ≤{product.lowStockThreshold || 10}</small>
                       </td>
 

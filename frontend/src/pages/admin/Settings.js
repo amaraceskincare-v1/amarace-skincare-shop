@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FiSave, FiUpload, FiTrash2, FiImage, FiLayout, FiShoppingBag, FiCreditCard, FiGrid, FiUsers, FiCamera } from 'react-icons/fi';
+import { FiSave, FiUpload, FiTrash2, FiImage, FiLayout, FiShoppingBag, FiCreditCard, FiGrid, FiUsers, FiCamera, FiCheck, FiPlus } from 'react-icons/fi';
 import api from '../../utils/api';
 import { toast } from 'react-toastify';
 import { useSettings } from '../../context/SettingsContext';
@@ -127,78 +127,259 @@ const AdminSettings = () => {
 
     // ─── Sub-components ──────────────────────────────────────────────────────────
 
+    // ─── Sub-components ──────────────────────────────────────────────────────────
+
     const isVideoUrl = (url) => url && /\.(mp4|mov|webm|avi)$/i.test(url.split('?')[0]);
 
-    const ImageCard = ({ label, field, hint, icon: Icon = FiImage }) => (
-        <div className="settings-image-card">
-            <div className="sic-header">
-                <div className="sic-icon"><Icon size={16} /></div>
-                <div>
-                    <div className="sic-label">{label}</div>
-                    {hint && <div className="sic-hint">{hint}</div>}
+    const ImageCard = ({ label, field, hint, icon: Icon = FiImage }) => {
+        const [isDragOver, setIsDragOver] = useState(false);
+        const hasMedia = Boolean(settings[field]);
+        const isStaged = Boolean(files[field]);
+        const isVideo = isVideoUrl(settings[field]);
+
+        const handleDragOver = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDragOver(true);
+        };
+
+        const handleDragLeave = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDragOver(false);
+        };
+
+        const handleDrop = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDragOver(false);
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                const file = e.dataTransfer.files[0];
+                setFiles(prev => ({ ...prev, [field]: file }));
+                const reader = new FileReader();
+                reader.onloadend = () => setSettings(prev => ({ ...prev, [field]: reader.result }));
+                reader.readAsDataURL(file);
+                toast.success(`Selected "${file.name}" for ${label}`);
+            }
+        };
+
+        return (
+            <div className={`settings-image-card ${isDragOver ? 'drag-over' : ''}`}>
+                <div className="sic-header">
+                    <div className="sic-icon"><Icon size={16} /></div>
+                    <div className="sic-header-text">
+                        <div className="sic-label">{label}</div>
+                        {hint && <div className="sic-hint">{hint}</div>}
+                    </div>
+                </div>
+
+                <div
+                    className={`sic-preview-box ${!hasMedia ? 'empty' : ''} ${isDragOver ? 'drag-active' : ''}`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                >
+                    {hasMedia ? (
+                        <div className="sic-media-container">
+                            {isVideo ? (
+                                <video
+                                    src={settings[field]}
+                                    className="sic-media-element video"
+                                    muted
+                                    preload="metadata"
+                                    controls={false}
+                                />
+                            ) : (
+                                <img
+                                    src={settings[field]}
+                                    alt={label}
+                                    className="sic-media-element image"
+                                    onError={(e) => {
+                                        e.target.style.display = 'none';
+                                        if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
+                                    }}
+                                />
+                            )}
+                            <div className="sic-fallback-empty" style={{ display: 'none' }}>
+                                <FiImage size={24} />
+                                <span>Preview Unavailable</span>
+                            </div>
+
+                            {/* Status Badges */}
+                            <div className="sic-badge-layer">
+                                {isStaged && (
+                                    <span className="sic-status-pill staged">
+                                        <FiCheck size={11} /> Changed (Unsaved)
+                                    </span>
+                                )}
+                                <span className="sic-type-pill">
+                                    {isVideo ? 'VIDEO (MP4)' : 'IMAGE (CONTAINED)'}
+                                </span>
+                            </div>
+
+                            {/* Floating Action Controls */}
+                            <div className="sic-actions-overlay">
+                                <label className="sic-action-btn replace" title="Replace with new file">
+                                    <input
+                                        type="file"
+                                        accept="image/*,video/mp4,video/mov,video/webm"
+                                        onChange={(e) => handleFileChange(e, field)}
+                                        style={{ display: 'none' }}
+                                    />
+                                    <FiUpload size={13} />
+                                    <span>Replace</span>
+                                </label>
+
+                                <button
+                                    type="button"
+                                    className="sic-action-btn remove"
+                                    onClick={() => handleRemoveField(field)}
+                                    title="Remove this media"
+                                >
+                                    <FiTrash2 size={13} />
+                                    <span>Remove</span>
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <label className="sic-dropzone">
+                            <input
+                                type="file"
+                                accept="image/*,video/mp4,video/mov,video/webm"
+                                onChange={(e) => handleFileChange(e, field)}
+                                style={{ display: 'none' }}
+                            />
+                            <div className="sic-dropzone-icon">
+                                <FiUpload size={24} />
+                            </div>
+                            <div className="sic-dropzone-main-text">
+                                <strong>Click to upload</strong> or drag & drop
+                            </div>
+                            <div className="sic-dropzone-sub-text">
+                                PNG, JPG, WEBM, MP4 • 100% Uncropped
+                            </div>
+                        </label>
+                    )}
+                </div>
+
+                {isStaged && files[field]?.name && (
+                    <div className="sic-file-meta">
+                        <span className="sic-file-name" title={files[field].name}>
+                            📁 {files[field].name}
+                        </span>
+                        <span className="sic-file-size">
+                            {(files[field].size / 1024).toFixed(1)} KB
+                        </span>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
+    const ArrayImageSection = ({ label, field, maxCount, hint, icon: Icon = FiCamera }) => {
+        const [isDragOver, setIsDragOver] = useState(false);
+        const currentItems = settings[field] || [];
+        const isStaged = Boolean(files[field]);
+
+        const handleDragOver = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDragOver(true);
+        };
+
+        const handleDragLeave = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDragOver(false);
+        };
+
+        const handleDrop = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDragOver(false);
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                const newFiles = Array.from(e.dataTransfer.files);
+                setFiles(prev => ({ ...prev, [field]: newFiles }));
+                toast.info(`${newFiles.length} file(s) staged for ${label}`);
+            }
+        };
+
+        return (
+            <div className="settings-array-section">
+                <div className="sas-header">
+                    <div className="sas-title-row">
+                        <div className="sas-title"><Icon size={16} /> {label}</div>
+                        <span className="sas-count-pill">
+                            {currentItems.length} / {maxCount} Media Slots
+                        </span>
+                    </div>
+                    {hint && <p className="sas-hint">{hint}</p>}
+                </div>
+
+                <div
+                    className={`sas-grid-container ${isDragOver ? 'drag-over' : ''}`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                >
+                    {currentItems.map((url, i) => (
+                        <div key={i} className="sas-item-card">
+                            <div className="sas-preview-wrapper">
+                                {isVideoUrl(url) ? (
+                                    <video
+                                        src={url}
+                                        className="sas-media-element"
+                                        preload="metadata"
+                                        muted
+                                    />
+                                ) : (
+                                    <img
+                                        src={url}
+                                        alt={`${label} ${i + 1}`}
+                                        className="sas-media-element"
+                                    />
+                                )}
+                                <div className="sas-item-overlay">
+                                    <button
+                                        type="button"
+                                        className="sas-item-remove-btn"
+                                        onClick={() => handleRemoveArrayItem(field, i)}
+                                        title="Delete this image"
+                                    >
+                                        <FiTrash2 size={13} />
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="sas-item-footer">
+                                <span className="sas-item-index">#{i + 1}</span>
+                                {i === 0 && <span className="sas-primary-pill">Primary</span>}
+                            </div>
+                        </div>
+                    ))}
+
+                    {currentItems.length < maxCount && (
+                        <label className={`sas-add-dropzone ${isDragOver ? 'active' : ''}`}>
+                            <input
+                                type="file"
+                                accept="image/*,video/mp4,video/mov,video/webm"
+                                multiple
+                                onChange={(e) => handleFileChange(e, field, true)}
+                                style={{ display: 'none' }}
+                            />
+                            <div className="sas-add-icon"><FiPlus size={20} /></div>
+                            <span className="sas-add-main">Add {label}</span>
+                            <span className="sas-add-sub">Drag & drop or browse</span>
+                            {isStaged && (
+                                <span className="sas-selected-badge">
+                                    <FiCheck size={10} /> {files[field].length} selected
+                                </span>
+                            )}
+                        </label>
+                    )}
                 </div>
             </div>
-            <div className="sic-preview">
-                {settings[field] ? (
-                    <div className="sic-img-wrapper">
-                        {isVideoUrl(settings[field]) ? (
-                            <video src={settings[field]} className="sic-video-preview" muted preload="metadata" />
-                        ) : (
-                            <img
-                                src={settings[field]}
-                                alt={label}
-                                onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling && (e.target.nextSibling.style.display = 'flex'); }}
-                            />
-                        )}
-                        <div className="sic-empty" style={{ display: 'none' }}>No image</div>
-                        <button className="sic-remove-btn" onClick={() => handleRemoveField(field)} title="Remove"><FiTrash2 size={14} /></button>
-                    </div>
-                ) : (
-                    <div className="sic-empty">No image</div>
-                )}
-            </div>
-            <label className="sic-upload-btn">
-                <input type="file" accept="image/*,video/mp4,video/mov,video/webm" onChange={(e) => handleFileChange(e, field)} style={{ display: 'none' }} />
-                <FiUpload size={14} /> {files[field] ? 'Changed ✓' : 'Upload'}
-            </label>
-        </div>
-    );
-
-    const ArrayImageSection = ({ label, field, maxCount, hint, icon: Icon = FiCamera }) => (
-        <div className="settings-array-section">
-            <div className="sas-header">
-                <div className="sas-title"><Icon size={16} /> {label}</div>
-                {hint && <p className="sas-hint">{hint}</p>}
-            </div>
-            <div className="sas-grid">
-                {(settings[field] || []).map((url, i) => (
-                    <div key={i} className="sas-item">
-                        {isVideoUrl(url) ? (
-                            <video
-                                src={url}
-                                className="sic-video-preview"
-                                preload="metadata"
-                                muted
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            />
-                        ) : (
-                            <img src={url} alt={`${label} ${i + 1}`} />
-                        )}
-                        <button className="sas-remove" onClick={() => handleRemoveArrayItem(field, i)}><FiTrash2 size={12} /></button>
-                        {i === 0 && <span className="sas-primary-badge">Primary</span>}
-                    </div>
-                ))}
-                {(settings[field] || []).length < maxCount && (
-                    <label className="sas-add-card">
-                        <input type="file" accept="image/*,video/mp4,video/mov,video/webm" multiple onChange={(e) => handleFileChange(e, field, true)} style={{ display: 'none' }} />
-                        <FiUpload size={24} />
-                        <span>Add {label}</span>
-                        {files[field] && <span className="sas-selected">{files[field].length} selected</span>}
-                    </label>
-                )}
-            </div>
-        </div>
-    );
+        );
+    };
 
     // ─── Tab Content ─────────────────────────────────────────────────────────────
 

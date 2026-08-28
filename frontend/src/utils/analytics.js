@@ -62,10 +62,32 @@ const getUtmParams = () => {
   }
 };
 
+// Check if current session belongs to an admin account
+export const isAdminUser = () => {
+  try {
+    const rawUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (rawUser) {
+      const user = JSON.parse(rawUser);
+      if (user && (user.role === 'admin' || user.isAdmin)) {
+        return true;
+      }
+    }
+  } catch {
+    // Ignore JSON parse errors
+  }
+  return false;
+};
+
 /**
  * Dispatch tracking event to backend API (fails silently without disrupting UX)
+ * Strictly excludes any admin accounts and sessions from customer analytics
  */
 export const trackEvent = async (eventType, payload = {}) => {
+  // Never track admin browsing activity in customer analytics
+  if (isAdminUser()) {
+    return;
+  }
+
   try {
     const visitorId = getVisitorId();
     const sessionId = getSessionId();

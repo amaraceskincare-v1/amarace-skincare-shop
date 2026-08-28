@@ -16,7 +16,8 @@ const visitorSessionSchema = new mongoose.Schema({
   pageViewsCount: { type: Number, default: 1 },
   eventsCount: { type: Number, default: 0 },
   hasPurchased: { type: Boolean, default: false },
-  totalSpent: { type: Number, default: 0 }
+  totalSpent: { type: Number, default: 0 },
+  isAdmin: { type: Boolean, default: false, index: true }
 }, { timestamps: true });
 
 // Compound index for active sessions query

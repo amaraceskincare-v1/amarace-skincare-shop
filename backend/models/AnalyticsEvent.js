@@ -19,6 +19,7 @@ const analyticsEventSchema = new mongoose.Schema({
   orderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', default: null },
   revenue: { type: Number, default: 0 },
   metadata: { type: mongoose.Schema.Types.Mixed, default: {} },
+  isAdmin: { type: Boolean, default: false, index: true },
   timestamp: { type: Date, default: Date.now, index: true }
 }, { timestamps: true });
 
@@ -26,5 +27,6 @@ const analyticsEventSchema = new mongoose.Schema({
 analyticsEventSchema.index({ eventType: 1, timestamp: -1 });
 analyticsEventSchema.index({ productId: 1, eventType: 1 });
 analyticsEventSchema.index({ timestamp: -1 });
+analyticsEventSchema.index({ isAdmin: 1, timestamp: -1 });
 
 module.exports = mongoose.model('AnalyticsEvent', analyticsEventSchema);

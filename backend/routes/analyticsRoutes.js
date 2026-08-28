@@ -5,6 +5,32 @@ const AnalyticsEvent = require('../models/AnalyticsEvent');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const { protect, admin } = require('../middleware/auth');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
+/**
+ * Helper to check if incoming request belongs to an admin
+ */
+const checkIfAdminRequest = async (req) => {
+  try {
+    if (req.body && req.body.isAdmin === true) return true;
+    if (req.headers['x-is-admin'] === 'true') return true;
+
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      const token = req.headers.authorization.split(' ')[1];
+      if (token && process.env.JWT_SECRET) {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        if (decoded && decoded.id) {
+          const user = await User.findById(decoded.id).select('role');
+          if (user && user.role === 'admin') return true;
+        }
+      }
+    }
+  } catch {
+    // If token verification fails, proceed as normal visitor
+  }
+  return false;
+};
 
 /**
  * Helper to classify traffic source based on referrer & UTM
@@ -30,7 +56,7 @@ const getTrafficSource = (referrer, utmSource) => {
 
 /**
  * POST /api/analytics/track
- * Ingests tracking events (pageviews, heartbeats, product views, add-to-cart, checkout, etc.)
+ * Ingests tracking events (strictly excludes admin accounts & sessions)
  */
 router.post('/track', async (req, res) => {
   try {
@@ -54,8 +80,15 @@ router.post('/track', async (req, res) => {
       quantity = 1,
       orderId = null,
       revenue = 0,
-      metadata = {}
+      metadata = {},
+      isAdmin = false
     } = req.body;
+
+    // Check if session/caller is an admin — never record admin activity in customer analytics
+    const isRequestAdmin = isAdmin || (await checkIfAdminRequest(req));
+    if (isRequestAdmin) {
+      return res.status(200).json({ success: true, ignored: true });
+    }
 
     if (!sessionId || !visitorId) {
       return res.status(400).json({ success: false, message: 'Missing session or visitor ID' });
@@ -64,7 +97,7 @@ router.post('/track', async (req, res) => {
     const now = new Date();
     const trafficSource = getTrafficSource(referrer, utmSource);
 
-    // Upsert or update VisitorSession
+    // Upsert or update VisitorSession (real customers only)
     await VisitorSession.findOneAndUpdate(
       { sessionId },
       {
@@ -79,6 +112,7 @@ router.post('/track', async (req, res) => {
           utmSource,
           utmMedium,
           utmCampaign,
+          isAdmin: false,
           firstSeen: now
         },
         $set: {
@@ -109,6 +143,7 @@ router.post('/track', async (req, res) => {
         quantity: Number(quantity) || 1,
         orderId: orderId || undefined,
         revenue: Number(revenue) || 0,
+        isAdmin: false,
         metadata,
         timestamp: now
       });
@@ -124,13 +159,14 @@ router.post('/track', async (req, res) => {
 
 /**
  * GET /api/analytics/active
- * Real-time active shoppers browsing now (sessions active within last 5 minutes)
+ * Real-time active shoppers browsing now (customers active in last 5 min, excluding admins)
  */
 router.get('/active', async (req, res) => {
   try {
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
     const activeCount = await VisitorSession.countDocuments({
-      lastSeen: { $gte: fiveMinutesAgo }
+      lastSeen: { $gte: fiveMinutesAgo },
+      isAdmin: { $ne: true }
     });
 
     res.json({
@@ -155,7 +191,8 @@ router.get('/product-active/:id', async (req, res) => {
     const activeEvents = await AnalyticsEvent.distinct('sessionId', {
       productId: id,
       eventType: 'product_view',
-      timestamp: { $gte: fiveMinutesAgo }
+      timestamp: { $gte: fiveMinutesAgo },
+      isAdmin: { $ne: true }
     });
 
     res.json({
@@ -190,10 +227,10 @@ router.get('/dashboard', protect, admin, async (req, res) => {
       startDate = new Date(0); // Beginning of time
     }
 
-    const dateFilter = { createdAt: { $gte: startDate } };
-    const eventDateFilter = { timestamp: { $gte: startDate } };
+    const dateFilter = { createdAt: { $gte: startDate }, isAdmin: { $ne: true } };
+    const eventDateFilter = { timestamp: { $gte: startDate }, isAdmin: { $ne: true } };
 
-    // 1. Core Summary Metrics
+    // 1. Core Summary Metrics (Real Customer Traffic Only)
     const [
       totalSessions,
       uniqueVisitorsArr,
@@ -209,7 +246,7 @@ router.get('/dashboard', protect, admin, async (req, res) => {
       AnalyticsEvent.countDocuments({ ...eventDateFilter, eventType: 'product_view' }),
       AnalyticsEvent.countDocuments({ ...eventDateFilter, eventType: 'add_to_cart' }),
       AnalyticsEvent.countDocuments({ ...eventDateFilter, eventType: 'checkout_start' }),
-      VisitorSession.countDocuments({ lastSeen: { $gte: new Date(Date.now() - 5 * 60 * 1000) } })
+      VisitorSession.countDocuments({ lastSeen: { $gte: new Date(Date.now() - 5 * 60 * 1000) }, isAdmin: { $ne: true } })
     ]);
 
     const uniqueVisitors = uniqueVisitorsArr.length;

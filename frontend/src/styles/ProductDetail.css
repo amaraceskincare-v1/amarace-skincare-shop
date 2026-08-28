@@ -929,22 +929,21 @@
   }
 
   .main-image-container-v2 {
-    /* Square stage — works for all product shapes */
+    /* Responsive square stage maximizing artwork presence */
     aspect-ratio: 1 / 1;
-    /* Cap height on small screens */
-    max-height: min(90vw, 380px);
+    max-height: min(92vw, 420px);
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    padding: 16px;
+    /* Reduced internal padding on mobile so artwork occupies more of the frame */
+    padding: 6px 8px;
     border-radius: 14px;
     border: 1px solid #EDE8DF;
-    background: radial-gradient(circle at 50% 40%, #ffffff 0%, #FAF8F5 60%, #F5F0E8 100%);
+    background: radial-gradient(circle at 50% 40%, #ffffff 0%, #FAF8F5 65%, #F5F0E8 100%);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
     display: flex;
     align-items: center;
     justify-content: center;
-    /* overflow:visible already set on base — preserves the border/shadow */
   }
 
   .main-view-v2 {
@@ -952,26 +951,28 @@
     height: 100%;
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain;
+    object-fit: contain !important;
     object-position: center;
-    filter: drop-shadow(0 6px 16px rgba(35, 25, 15, 0.08));
+    filter: drop-shadow(0 8px 20px rgba(35, 25, 15, 0.09));
     display: block;
-    /* Kill zoom hover on mobile — avoid accidental scroll-trigger */
+    /* Maintain entire original image — never cropped or stretched */
     transform: none !important;
   }
 
-  /* Badge & wishlist button stay clipped to the container edge */
+  /* Badge & wishlist button safely positioned within top corners */
   .gallery-badge-layer {
-    top: 12px;
-    left: 12px;
+    top: 10px;
+    left: 10px;
+    z-index: 5;
   }
 
   .detail-wishlist-btn {
-    top: 12px;
-    right: 12px;
+    top: 10px;
+    right: 10px;
     width: 36px;
     height: 36px;
     font-size: 0.95rem;
+    z-index: 6;
   }
 
   /* ── Thumbnails ── */

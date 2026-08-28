@@ -37,7 +37,7 @@ import { CartProvider } from './context/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ScrollToTop from './components/ScrollToTop';
 import RiderOrder from './pages/RiderOrder';
-import { trackPageView, trackEvent } from './utils/analytics';
+import { trackPageView, trackEvent, isAdminUser } from './utils/analytics';
 
 const App = () => {
   const location = useLocation();
@@ -61,20 +61,19 @@ const App = () => {
     return () => clearTimeout(timer);
   }, [location.pathname, lang, location.search]);
 
-  // Track page views on route transitions
+  // Track page views on route transitions (strictly non-admin client pageviews)
   useEffect(() => {
-    // Only track non-admin client pageviews
-    if (!location.pathname.startsWith('/admin')) {
+    if (!location.pathname.startsWith('/admin') && !isAdminUser()) {
       trackPageView(location.pathname + location.search, document.title);
     }
   }, [location.pathname, location.search]);
 
-  // Keep heartbeat active every 60s for accurate live shopper metrics
+  // Keep heartbeat active every 60s for accurate live customer metrics (excluding admins)
   useEffect(() => {
-    if (location.pathname.startsWith('/admin')) return;
+    if (location.pathname.startsWith('/admin') || isAdminUser()) return;
 
     const heartbeatTimer = setInterval(() => {
-      if (document.visibilityState === 'visible') {
+      if (document.visibilityState === 'visible' && !isAdminUser()) {
         trackEvent('heartbeat');
       }
     }, 60000);
