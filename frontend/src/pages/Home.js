@@ -511,22 +511,22 @@ const Home = () => {
       </section>
 
       {/* ════════════════════════════════════════════
-          6. PREMIUM CAMPAIGN BANNER
+          6. PREMIUM COLLECTION / BEAUTY ESSENTIALS (LIGHT LUXURY EDITORIAL)
           ════════════════════════════════════════════ */}
-      <section className="premium-banner-v2">
-        <div className="banner-panel dark-panel">
+      <section className="premium-banner-v2 light-editorial">
+        <div className="banner-panel editorial-text-panel">
           <div className="panel-content" data-reveal="fade-right">
             <span className="panel-tagline">Premium Collection</span>
-            <h2 className="panel-title">Beauty<br />Essentials</h2>
-            <p className="panel-desc">Discover our bestselling formulas that customers can't get enough of. Beauty that works.</p>
-            <Link to="/products" className="panel-btn">Shop Collection</Link>
+            <h2 className="panel-title">Beauty<br /><em>Essentials</em></h2>
+            <p className="panel-desc">Discover our bestselling formulas that redefine your everyday routine. Clean, radiant, and made to inspire confidence.</p>
+            <Link to="/products" className="panel-btn editorial-btn">Shop Collection</Link>
           </div>
           <div className="panel-decoration">
             <div className="sparkle s1">✦</div>
             <div className="sparkle s2">✦</div>
           </div>
         </div>
-        <div className="banner-panel light-panel">
+        <div className="banner-panel editorial-media-panel">
           {isVideo(settings?.premiumBannerMedia) ? (
             <video
               src={settings.premiumBannerMedia}
@@ -536,7 +536,7 @@ const Home = () => {
           ) : settings?.premiumBannerMedia ? (
             <img
               src={settings.premiumBannerMedia}
-              alt="AmaraCé Product Showcase"
+              alt="AmaraCé Beauty Essentials"
               className="full-panel-img"
               loading="lazy"
             />

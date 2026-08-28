@@ -839,6 +839,19 @@
 
 /* ─── Responsive ────────────────────────────── */
 @media (max-width: 768px) {
+    .settings-main {
+        padding: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .settings-section {
+        padding: 1.25rem;
+        border-radius: 14px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
     .settings-mobile-tab-bar {
         display: flex;
     }
@@ -864,5 +877,67 @@
     .settings-float-save {
         bottom: 1rem;
         right: 1rem;
+    }
+
+    /* ── Uniform 1-Column Full-Width Media Containers ── */
+    .settings-image-grid {
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+        gap: 1.25rem !important;
+        box-sizing: border-box !important;
+    }
+
+    .settings-image-card {
+        width: 100% !important;
+        border-radius: 14px !important;
+        padding: 14px !important;
+        box-sizing: border-box !important;
+    }
+
+    .sic-preview-box {
+        width: 100% !important;
+        height: 190px !important;
+        min-height: 190px !important;
+        border-radius: 10px !important;
+        box-sizing: border-box !important;
+    }
+
+    .sic-actions-overlay {
+        position: static !important;
+        margin-top: 8px !important;
+        width: 100% !important;
+        display: flex !important;
+        gap: 8px !important;
+        opacity: 1 !important;
+    }
+
+    .sic-action-btn {
+        height: 38px !important;
+        font-size: 0.82rem !important;
+    }
+
+    .sas-grid-container {
+        width: 100% !important;
+        padding: 10px !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        box-sizing: border-box !important;
+    }
+
+    .sas-item-card {
+        width: 100% !important;
+    }
+
+    .sas-preview-wrapper {
+        width: 100% !important;
+        height: 125px !important;
+        border-radius: 10px !important;
+    }
+
+    .sas-add-dropzone {
+        width: 100% !important;
+        height: 125px !important;
+        border-radius: 10px !important;
     }
 }
