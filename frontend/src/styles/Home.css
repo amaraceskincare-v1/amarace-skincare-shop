@@ -877,13 +877,14 @@
 .full-panel-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center center;
   display: block;
   transition: transform 0.8s var(--ease-luxury, ease);
 }
 
 .editorial-media-panel:hover .full-panel-img {
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
 
 .banner-fallback-gradient {
